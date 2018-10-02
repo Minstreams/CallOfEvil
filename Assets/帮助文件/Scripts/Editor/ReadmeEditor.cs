@@ -9,7 +9,7 @@ using System.Reflection;
 public class ReadmeEditor : Editor
 {
 
-    //static string kShowedReadmeSessionStateName = "ReadmeEditor.showedHelp";
+    static string kShowedReadmeSessionStateName = "ReadmeEditor.showedHelp";
 
     static float kSpace = 16f;
 
@@ -17,20 +17,23 @@ public class ReadmeEditor : Editor
 
     static ReadmeEditor()
     {
-        EditorApplication.delayCall += SelectReadme;
+        EditorApplication.delayCall += SelectReadmeAutomatically;
     }
 
 
-    //static void SelectReadmeAutomatically()
-    //{
-    //    if (!SessionState.GetBool(kShowedReadmeSessionStateName, false))
-    //    {
-    //        SelectReadme();
-    //        SessionState.SetBool(kShowedReadmeSessionStateName, true);
-    //    }
-    //}
+    /// <summary>
+    /// 确保只调用一次SelectReadme
+    /// </summary>
+    static void SelectReadmeAutomatically()
+    {
+        if (!SessionState.GetBool(kShowedReadmeSessionStateName, false))
+        {
+            SelectReadme();
+            SessionState.SetBool(kShowedReadmeSessionStateName, true);
+        }
+    }
 
-    [MenuItem("Developer Tools/编辑ReadMe %#e")]
+    [MenuItem("开发者工具/编辑ReadMe %#e")]
     [AddComponentMenu("编辑ReadMe")]
     static void SwitchEditMode()
     {
@@ -44,7 +47,7 @@ public class ReadmeEditor : Editor
     //    method.Invoke(null, new object[] { Path.Combine(Application.dataPath, "Layout.wlt"), false });
     //}
 
-    [MenuItem("自制脚本/Help")]
+    [MenuItem("自制工具/Help _F12")]
     static void SelectReadme()
     {
         var ids = AssetDatabase.FindAssets("Help t:Readme");
@@ -62,13 +65,12 @@ public class ReadmeEditor : Editor
         var readme = (Readme)target;
         Init();
 
-        var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f);
-
         GUILayout.BeginHorizontal("In BigTitle");
         {
             if (readme.icon)
             {
-                GUILayout.Label(readme.icon, GUILayout.Width(iconWidth), GUILayout.Height(iconWidth));
+                var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.icon.width);
+                GUILayout.Label(readme.icon, GUILayout.Width(iconWidth));
             }
             GUILayout.Label(readme.title, TitleStyle);
         }
@@ -77,30 +79,24 @@ public class ReadmeEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        var readme = (Readme)target;
         if (editMode)
         {
             DrawDefaultInspector();
-            var fontsize = GUI.skin.button.fontSize;
-            GUI.skin.button.fontSize = 30;
-            if (GUILayout.Button(new GUIContent("结束编辑"), GUILayout.Height(60)))
+            if (BigButton("结束编辑", 30))
             {
                 SwitchEditMode();
             }
-            GUI.skin.button.fontSize = fontsize;
             DrawHeader();
         }
-        var readme = (Readme)target;
         Init();
 
         if (readme.sections == null || readme.sections.Length == 0)
         {
-            var fontsize = GUI.skin.button.fontSize;
-            GUI.skin.button.fontSize = 30;
-            if (!editMode && GUILayout.Button(new GUIContent("编辑内容"), GUILayout.Height(60)))
+            if (!editMode && BigButton("编辑内容", 30))
             {
                 SwitchEditMode();
             }
-            GUI.skin.button.fontSize = fontsize;
             return;
         }
 
@@ -190,6 +186,15 @@ public class ReadmeEditor : Editor
         EditorGUIUtility.AddCursorRect(position, MouseCursor.Link);
 
         return GUI.Button(position, label, LinkStyle);
+    }
+
+    bool BigButton(string content, int fontsize)
+    {
+        var origSize = GUI.skin.button.fontSize;
+        GUI.skin.button.fontSize = fontsize;
+        bool output = GUILayout.Button(content, GUILayout.Height(fontsize + 30));
+        GUI.skin.button.fontSize = origSize;
+        return output;
     }
 }
 

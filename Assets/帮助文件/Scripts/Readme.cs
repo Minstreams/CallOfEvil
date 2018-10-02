@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Readme File", menuName = "My Scriptable Object/Readme File")]
+[CreateAssetMenu(fileName = "New Readme", menuName = "帮助文件/Readme File")]
 public class Readme : ScriptableObject
 {
     public Texture2D icon;

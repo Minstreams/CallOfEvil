@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Help
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 68383f8b42f8efe48ad7cc69ec1e38c4, type: 3}
+  title: "\u5E2E\u52A9\u6587\u4EF6\u9996\u9875"
+  sections:
+  - heading: "\u6982\u8FF0"
+    picture: {fileID: 0}
+    text: "\u6A21\u4EFF\u7740\u5199\u4E86\u4E00\u4E2A\u9AD8\u7EA7\u7684\u5E2E\u52A9\u6587\u4EF6\uFF0C\u63A5\u4E0B\u6765\u6240\u6709\u81EA\u5236\u7684\u5DE5\u5177\u6559\u7A0B\u4F1A\u4EE5\u76EE\u5F55\u7684\u5F62\u5F0F\u5728\u8FD9\u91CC\u653E\u51FA\u94FE\u63A5\u3002\n\n\u6240\u6709\u7684\u5DE5\u5177\u5C06\u4F1A\u5728\u9876\u7AEF\u83DC\u5355\u680F\u7684\"\u81EA\u5236\u5DE5\u5177\"\u4E00\u680F\u4E0B\u3002\n"
+    linkText: 
+    url: 
+    selectedObject: {fileID: 0}
+  - heading: 
+    picture: {fileID: 2800000, guid: fb2cdda11cac81745b8135696f46cefb, type: 3}
+    text: 
+    linkText: "\u968F\u65F6\u6309\u952E\u76D8\u4E0A\u7684F12\u6253\u5F00\u6B64\u5E2E\u52A9\u754C\u9762\u3002"
+    url: 
+    selectedObject: {fileID: 11400000}
