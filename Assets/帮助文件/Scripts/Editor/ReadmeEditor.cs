@@ -111,7 +111,7 @@ public class ReadmeEditor : Editor
             }
             if (section.picture)
             {
-                float picWidth = Mathf.Min(EditorGUIUtility.currentViewWidth - 40f, section.picture.width);
+                float picWidth = Mathf.Min(EditorGUIUtility.currentViewWidth - 48f, section.picture.width);
                 float picHeight = section.picture.height * picWidth / section.picture.width;
                 GUILayout.Label(section.picture, GUILayout.Width(picWidth), GUILayout.Height(picHeight));
             }
