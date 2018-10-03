@@ -9,7 +9,7 @@ public class ReadmeGUIStyles : ScriptableObject
 {
     [ContextMenuItem("Set", "Setheader")] public GUIStyle header;
     [ContextMenuItem("Set", "Setbody")] public GUIStyle body;
-    [ContextMenuItem("Set", "Settexture")] public GUIStyle texture;
+    [ContextMenuItem("Set", "Seticon")] public GUIStyle icon;
     [ContextMenuItem("Set", "Settitle")] public GUIStyle title;
     [ContextMenuItem("Set", "Setsection")] public GUIStyle section;
     [ContextMenuItem("Set", "Setheading")] public GUIStyle heading;
@@ -22,7 +22,7 @@ public class ReadmeGUIStyles : ScriptableObject
     {
         SetStyle(ref header);
         SetStyle(ref body);
-        SetStyle(ref texture);
+        SetStyle(ref icon);
         SetStyle(ref title);
         SetStyle(ref section);
         SetStyle(ref heading);
@@ -48,7 +48,7 @@ public class ReadmeGUIStyles : ScriptableObject
 
     void Setheader() { SetStyle(ref header); }
     void Setbody() { SetStyle(ref body); }
-    void Settexture() { SetStyle(ref texture); }
+    void Seticon() { SetStyle(ref icon); }
     void Settitle() { SetStyle(ref title); }
     void Setsection() { SetStyle(ref section); }
     void Setheading() { SetStyle(ref heading); }

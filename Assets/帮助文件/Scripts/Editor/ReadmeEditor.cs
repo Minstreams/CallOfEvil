@@ -65,7 +65,7 @@ public class ReadmeEditor : Editor
             float iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.tIcon.width);
             float iconHeight = readme.tIcon.height * iconWidth / readme.tIcon.width;
             GUILayout.BeginHorizontal(Styles.header, GUILayout.Height(iconHeight));
-            GUILayout.Label(readme.tIcon, Styles.texture, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
+            GUILayout.Label(readme.tIcon, Styles.icon, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
             GUILayout.Label(readme.title, Styles.title);
             GUILayout.EndHorizontal();
         }
