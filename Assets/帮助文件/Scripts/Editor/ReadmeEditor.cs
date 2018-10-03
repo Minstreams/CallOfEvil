@@ -8,7 +8,6 @@ using System.Reflection;
 [InitializeOnLoad]
 public class ReadmeEditor : Editor
 {
-
     static string kShowedReadmeSessionStateName = "ReadmeEditor.showedHelp";
 
     static bool editMode = false;
@@ -63,8 +62,8 @@ public class ReadmeEditor : Editor
 
         if (readme.tIcon)
         {
-            var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.tIcon.width);
-            var iconHeight = readme.tIcon.height * iconWidth / readme.tIcon.width;
+            float iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.tIcon.width);
+            float iconHeight = readme.tIcon.height * iconWidth / readme.tIcon.width;
             GUILayout.BeginHorizontal(Styles.header, GUILayout.Height(iconHeight));
             GUILayout.Label(readme.tIcon, Styles.texture, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
             GUILayout.Label(readme.title, Styles.title);
@@ -99,6 +98,7 @@ public class ReadmeEditor : Editor
             {
                 SwitchEditMode();
             }
+            GUILayout.EndVertical();
             return;
         }
 
@@ -112,7 +112,8 @@ public class ReadmeEditor : Editor
             if (section.picture)
             {
                 float picWidth = Mathf.Min(EditorGUIUtility.currentViewWidth - 40f, section.picture.width);
-                GUILayout.Label(section.picture, GUILayout.Width(picWidth));
+                float picHeight = section.picture.height * picWidth / section.picture.width;
+                GUILayout.Label(section.picture, GUILayout.Width(picWidth), GUILayout.Height(picHeight));
             }
             if (!string.IsNullOrEmpty(section.text))
             {
