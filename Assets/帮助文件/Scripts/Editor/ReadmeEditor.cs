@@ -29,7 +29,7 @@ public class ReadmeEditor : Editor
         }
     }
 
-    [MenuItem("开发者工具/编辑ReadMe %#e")]
+    [MenuItem("开发者工具/编辑ReadMe %e")]
     [AddComponentMenu("编辑ReadMe")]
     static void SwitchEditMode()
     {
