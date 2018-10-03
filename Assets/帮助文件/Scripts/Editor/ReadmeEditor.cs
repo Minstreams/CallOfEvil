@@ -11,15 +11,12 @@ public class ReadmeEditor : Editor
 
     static string kShowedReadmeSessionStateName = "ReadmeEditor.showedHelp";
 
-    static float kSpace = 16f;
-
     static bool editMode = false;
 
     static ReadmeEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
     }
-
 
     /// <summary>
     /// 确保只调用一次SelectReadme
@@ -63,18 +60,22 @@ public class ReadmeEditor : Editor
     protected override void OnHeaderGUI()
     {
         var readme = (Readme)target;
-        Init();
 
-        GUILayout.BeginHorizontal("In BigTitle");
+        if (readme.tIcon)
         {
-            if (readme.icon)
-            {
-                var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.icon.width);
-                GUILayout.Label(readme.icon, GUILayout.Width(iconWidth));
-            }
-            GUILayout.Label(readme.title, TitleStyle);
+            var iconWidth = Mathf.Min(EditorGUIUtility.currentViewWidth / 3f - 20f, 128f, readme.tIcon.width);
+            var iconHeight = readme.tIcon.height * iconWidth / readme.tIcon.width;
+            GUILayout.BeginHorizontal(Styles.header, GUILayout.Height(iconHeight));
+            GUILayout.Label(readme.tIcon, Styles.texture, GUILayout.Width(iconWidth), GUILayout.Height(iconHeight));
+            GUILayout.Label(readme.title, Styles.title);
+            GUILayout.EndHorizontal();
         }
-        GUILayout.EndHorizontal();
+        else
+        {
+            GUILayout.BeginHorizontal(Styles.header, GUILayout.Height(Styles.title.CalcHeight(new GUIContent(readme.title), EditorGUIUtility.currentViewWidth)));
+            GUILayout.Label(readme.title, Styles.title);
+            GUILayout.EndHorizontal();
+        }
     }
 
     public override void OnInspectorGUI()
@@ -83,17 +84,18 @@ public class ReadmeEditor : Editor
         if (editMode)
         {
             DrawDefaultInspector();
-            if (BigButton("结束编辑", 30))
+            if (GUILayout.Button("结束编辑", Styles.button))
             {
                 SwitchEditMode();
             }
             DrawHeader();
         }
-        Init();
+
+        GUILayout.BeginVertical(Styles.body);
 
         if (readme.sections == null || readme.sections.Length == 0)
         {
-            if (!editMode && BigButton("编辑内容", 30))
+            if (!editMode && GUILayout.Button("编辑内容", Styles.button))
             {
                 SwitchEditMode();
             }
@@ -102,19 +104,19 @@ public class ReadmeEditor : Editor
 
         foreach (var section in readme.sections)
         {
+            GUILayout.BeginVertical(Styles.section);
             if (!string.IsNullOrEmpty(section.heading))
             {
-                GUILayout.Label(section.heading, HeadingStyle);
+                GUILayout.Label(section.heading, Styles.heading);
             }
             if (section.picture)
             {
                 float picWidth = Mathf.Min(EditorGUIUtility.currentViewWidth - 40f, section.picture.width);
                 GUILayout.Label(section.picture, GUILayout.Width(picWidth));
-
             }
             if (!string.IsNullOrEmpty(section.text))
             {
-                GUILayout.Label(section.text, BodyStyle);
+                GUILayout.Label(section.text, Styles.text);
             }
             if (!string.IsNullOrEmpty(section.linkText))
             {
@@ -130,71 +132,36 @@ public class ReadmeEditor : Editor
                     }
                 }
             }
-            GUILayout.Space(kSpace);
+            GUILayout.EndVertical();
+        }
+
+        GUILayout.EndVertical();
+    }
+
+    ReadmeGUIStyles Styles
+    {
+        get
+        {
+            if (((Readme)target).styleOverride != null) return ((Readme)target).styleOverride;
+            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)AssetDatabase.LoadMainAssetAtPath("Assets/帮助文件/Styles/Default.asset");
+            return m_Styles;
         }
     }
-
-
-    bool m_Initialized;
-
-    GUIStyle LinkStyle { get { return m_LinkStyle; } }
-    [SerializeField] GUIStyle m_LinkStyle;
-
-    GUIStyle TitleStyle { get { return m_TitleStyle; } }
-    [SerializeField] GUIStyle m_TitleStyle;
-
-    GUIStyle HeadingStyle { get { return m_HeadingStyle; } }
-    [SerializeField] GUIStyle m_HeadingStyle;
-
-    GUIStyle BodyStyle { get { return m_BodyStyle; } }
-    [SerializeField] GUIStyle m_BodyStyle;
-
-    void Init()
-    {
-        if (m_Initialized)
-            return;
-        //初始化各个Style
-        m_BodyStyle = new GUIStyle(EditorStyles.label);
-        m_BodyStyle.wordWrap = true;
-        m_BodyStyle.fontSize = 14;
-
-        m_TitleStyle = new GUIStyle(m_BodyStyle);
-        m_TitleStyle.fontSize = 26;
-
-        m_HeadingStyle = new GUIStyle(m_BodyStyle);
-        m_HeadingStyle.fontSize = 18;
-
-        m_LinkStyle = new GUIStyle(m_BodyStyle);
-        m_LinkStyle.wordWrap = false;
-        // Match selection color which works nicely for both light and dark skins
-        m_LinkStyle.normal.textColor = new Color(0x00 / 255f, 0x78 / 255f, 0xDA / 255f, 1f);
-        m_LinkStyle.stretchWidth = false;
-
-        m_Initialized = true;
-    }
+    ReadmeGUIStyles m_Styles = null;
 
     bool LinkLabel(GUIContent label, params GUILayoutOption[] options)
     {
-        var position = GUILayoutUtility.GetRect(label, LinkStyle, options);
+        var position = GUILayoutUtility.GetRect(label, Styles.link, options);
 
         Handles.BeginGUI();
-        Handles.color = LinkStyle.normal.textColor;
+        Handles.color = Styles.link.normal.textColor;
         Handles.DrawLine(new Vector3(position.xMin, position.yMax), new Vector3(position.xMax, position.yMax));
         Handles.color = Color.white;
         Handles.EndGUI();
 
         EditorGUIUtility.AddCursorRect(position, MouseCursor.Link);
 
-        return GUI.Button(position, label, LinkStyle);
-    }
-
-    bool BigButton(string content, int fontsize)
-    {
-        var origSize = GUI.skin.button.fontSize;
-        GUI.skin.button.fontSize = fontsize;
-        bool output = GUILayout.Button(content, GUILayout.Height(fontsize + 30));
-        GUI.skin.button.fontSize = origSize;
-        return output;
+        return GUI.Button(position, label, Styles.link);
     }
 }
 

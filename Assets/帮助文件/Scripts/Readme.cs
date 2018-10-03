@@ -4,8 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Readme", menuName = "帮助文件/Readme File")]
 public class Readme : ScriptableObject
 {
-    public Texture2D icon;
+    public Texture2D tIcon;
     public string title = "Readme";
+    public ReadmeGUIStyles styleOverride = null;
     public Section[] sections;
 
     [Serializable]
