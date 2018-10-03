@@ -126,8 +126,8 @@ MonoBehaviour:
       m_Top: 2
       m_Bottom: 2
     m_Padding:
-      m_Left: 2
-      m_Right: 2
+      m_Left: 0
+      m_Right: 0
       m_Top: 1
       m_Bottom: 2
     m_Overflow:
@@ -139,15 +139,15 @@ MonoBehaviour:
       type: 0}
     m_FontSize: 28
     m_FontStyle: 0
-    m_Alignment: 2
+    m_Alignment: 0
     m_WordWrap: 1
     m_RichText: 0
-    m_TextClipping: 1
+    m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
-    m_StretchWidth: 1
+    m_StretchWidth: 0
     m_StretchHeight: 0
   icon:
     m_Name: label
@@ -343,13 +343,13 @@ MonoBehaviour:
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0
-    m_RichText: 1
+    m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
     m_FixedHeight: 0
-    m_StretchWidth: 1
+    m_StretchWidth: 0
     m_StretchHeight: 0
   heading:
     m_Name: label
