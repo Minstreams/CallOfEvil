@@ -163,7 +163,7 @@ namespace GameSystem
             Debug.Log(data.name + " \tloaded!");
         }
 
-        [ContextMenu("Save All")]
+        [ContextMenu("Save All Data")]
         public void SaveAll()
         {
             foreach (SavableObject so in dataToSave)
@@ -181,7 +181,7 @@ namespace GameSystem
                 Load(so);
             }
         }
-        [ContextMenu("Delete All")]
+        [ContextMenu("Delete All Data")]
         public void DeleteAll()
         {
             PlayerPrefs.DeleteAll();
