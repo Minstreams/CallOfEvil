@@ -11,10 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee803f3ab1d40c34d95380146a6e6ea6, type: 3}
   m_Name: Label GUI Style
   m_EditorClassIdentifier: 
-  backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  backgroundColorSelected: {r: 0, g: 0, b: 0, a: 0}
+  enlargeFactor: 4
+  maxDistanceRange: 15
+  edges: {x: 18, y: -3}
+  backgroundColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
+  backgroundColorSelected: {r: 1, g: 0.49803922, b: 0, a: 0}
   style:
-    m_Name: 
+    m_Name: AA
     m_Normal:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -67,11 +70,11 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 0}
-    m_FontSize: 0
+    m_Font: {fileID: 12800000, guid: cfbf9a83b64123c48a7f4dfda4b1d766, type: 3}
+    m_FontSize: 12
     m_FontStyle: 0
-    m_Alignment: 0
-    m_WordWrap: 0
+    m_Alignment: 7
+    m_WordWrap: 1
     m_RichText: 1
     m_TextClipping: 0
     m_ImagePosition: 0
