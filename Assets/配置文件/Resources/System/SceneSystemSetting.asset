@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccde9903d15f4b54a90f23f1eb1461b2, type: 3}
   m_Name: SceneSystemSetting
   m_EditorClassIdentifier: 
-  test1: 0
+  loadingScene: LoadingScene
