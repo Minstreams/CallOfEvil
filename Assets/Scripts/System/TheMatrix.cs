@@ -142,21 +142,25 @@ namespace GameSystem
             string stream = JsonUtility.ToJson(data);
             PlayerPrefs.SetString(data.ToString(), stream);
             data.saved = true;
+            Debug.Log(data.name + " \tsaved!");
         }
         public static void Save(SavableObject data)
         {
             SaveTemporary(data);
             PlayerPrefs.Save();
+            Debug.Log("Data saved to disc.");
         }
         public static void Load(SavableObject data)
         {
             if (!PlayerPrefs.HasKey(data.ToString()))
             {
+                Debug.Log("No data found for " + data.name);
                 return;
             }
             string stream = PlayerPrefs.GetString(data.ToString());
             JsonUtility.FromJsonOverwrite(stream, data);
             data.saved = true;
+            Debug.Log(data.name + " \tloaded!");
         }
 
         [ContextMenu("Save All")]
@@ -168,8 +172,8 @@ namespace GameSystem
                 SaveTemporary(so);
             }
             PlayerPrefs.Save();
+            Debug.Log("Data saved to disc.");
         }
-
         public void LoadAll()
         {
             foreach (SavableObject so in dataToSave)
@@ -177,6 +181,14 @@ namespace GameSystem
                 Load(so);
             }
         }
+        [ContextMenu("Delete All")]
+        public void DeleteAll()
+        {
+            PlayerPrefs.DeleteAll();
+            Debug.Log("All saved data deleted!");
+        }
+        
+        
         //游戏启动----------------------------
         private void Awake()
         {
@@ -187,8 +199,8 @@ namespace GameSystem
 #if UNITY_EDITOR
             if (test)
 #endif
-                LoadAll();
-            StartCoroutine(start());
+                StartCoroutine(start());
+            LoadAll();
         }
         private void OnDestroy()
         {
