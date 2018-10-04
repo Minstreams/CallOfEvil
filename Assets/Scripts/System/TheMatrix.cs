@@ -133,6 +133,50 @@ namespace GameSystem
         }
 
 
+        //存档控制----------------------------
+        [SerializeField]
+        private SavableObject[] dataToSave;
+
+        private static void SaveTemporary(SavableObject data)
+        {
+            string stream = JsonUtility.ToJson(data);
+            PlayerPrefs.SetString(data.ToString(), stream);
+            data.saved = true;
+        }
+        public static void Save(SavableObject data)
+        {
+            SaveTemporary(data);
+            PlayerPrefs.Save();
+        }
+        public static void Load(SavableObject data)
+        {
+            if (!PlayerPrefs.HasKey(data.ToString()))
+            {
+                return;
+            }
+            string stream = PlayerPrefs.GetString(data.ToString());
+            JsonUtility.FromJsonOverwrite(stream, data);
+            data.saved = true;
+        }
+
+        [ContextMenu("Save All")]
+        public void SaveAll()
+        {
+            foreach (SavableObject so in dataToSave)
+            {
+                if (so.saved) continue;
+                SaveTemporary(so);
+            }
+            PlayerPrefs.Save();
+        }
+
+        public void LoadAll()
+        {
+            foreach (SavableObject so in dataToSave)
+            {
+                Load(so);
+            }
+        }
         //游戏启动----------------------------
         private void Awake()
         {
@@ -143,7 +187,12 @@ namespace GameSystem
 #if UNITY_EDITOR
             if (test)
 #endif
-                StartCoroutine(start());
+                LoadAll();
+            StartCoroutine(start());
+        }
+        private void OnDestroy()
+        {
+            SaveAll();
         }
     }
 
