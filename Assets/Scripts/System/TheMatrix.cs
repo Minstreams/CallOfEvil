@@ -115,7 +115,6 @@ namespace GameSystem
 
             foreach (Coroutine c in linkedList)
             {
-                print(c);
                 Instance.StopCoroutine(c);
             }
 
@@ -123,11 +122,9 @@ namespace GameSystem
         }
         public static void StopCoroutine(LinkedListNode<Coroutine> node)
         {
-            print(node);
             if (node == null || node.List == null) return;
             Instance.StopCoroutine(node.Value);
             node.List.Remove(node);
-            print("Stop Successed!");
         }
         private static IEnumerator SubCoroutine(IEnumerator inCoroutine, LinkedListNode<Coroutine> node)
         {
