@@ -22,10 +22,5 @@ namespace GameSystem
                 return _Setting;
             }
         }
-
-        /// <summary>
-        /// 用于给Matrix进行分配的协程ID
-        /// </summary>
-        protected int routineId = -1;
     }
 }
