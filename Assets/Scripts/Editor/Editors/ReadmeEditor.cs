@@ -9,19 +9,26 @@ using System.Reflection;
 public class ReadmeEditor : Editor
 {
     static string kShowedReadmeSessionStateName = "ReadmeEditor.showedHelp";
-
     static bool editMode = false;
+
+    ReadmeGUIStyles Styles
+    {
+        get
+        {
+            if (((Readme)target).styleOverride != null) return ((Readme)target).styleOverride;
+            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)AssetDatabase.LoadMainAssetAtPath("Assets/Editor Default Resources/Styles/Default.asset");
+            return m_Styles;
+        }
+    }
+    ReadmeGUIStyles m_Styles = null;
 
     static ReadmeEditor()
     {
         EditorApplication.delayCall += SelectReadmeAutomatically;
     }
-
-    /// <summary>
-    /// 确保只调用一次SelectReadme
-    /// </summary>
     static void SelectReadmeAutomatically()
     {
+        // 确保只调用一次SelectReadme
         if (!SessionState.GetBool(kShowedReadmeSessionStateName, false))
         {
             SelectReadme();
@@ -139,16 +146,6 @@ public class ReadmeEditor : Editor
         GUILayout.EndVertical();
     }
 
-    ReadmeGUIStyles Styles
-    {
-        get
-        {
-            if (((Readme)target).styleOverride != null) return ((Readme)target).styleOverride;
-            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)AssetDatabase.LoadMainAssetAtPath("Assets/Editor Default Resources/Styles/Default.asset");
-            return m_Styles;
-        }
-    }
-    ReadmeGUIStyles m_Styles = null;
 
     bool LinkLabel(GUIContent label, params GUILayoutOption[] options)
     {

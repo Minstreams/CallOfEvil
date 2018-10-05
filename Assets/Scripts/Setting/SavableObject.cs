@@ -10,6 +10,6 @@ public abstract class SavableObject : ScriptableObject
     /// <summary>
     /// 是否已经保存
     /// </summary>
-    [System.NonSerialized, HideInInspector]
+    [System.NonSerialized]
     public bool saved;
 }

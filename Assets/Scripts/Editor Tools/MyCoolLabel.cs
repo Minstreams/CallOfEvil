@@ -16,33 +16,38 @@ public class MyCoolLabel : MonoBehaviour
     public string text = "新标签";
     [Range(0.1f, 2)]
     public float size = 1f;
-    private static MyCoolLabelGUIStyle style;
-    private static MyCoolLabelGUIStyle Style
+
+    [MenuItem("自制工具/给选中的游戏物体添加标签 %L")]
+    static void AddToActiveGameObject()
     {
-        get
+        GameObject[] g = Selection.gameObjects;
+        if (g == null || g.Length == 0)
         {
-            if (style == null)
-            {
-                style = (MyCoolLabelGUIStyle)EditorGUIUtility.Load("Label GUI Style.asset");
-            }
-            return style;
+            Debug.LogAssertion("没有选中游戏物体");
+            return;
+        }
+        foreach (GameObject gg in g)
+        {
+            gg.AddComponent<MyCoolLabel>();
         }
     }
 
-    private bool styleInited = false;
+
+
+
+
+    [System.NonSerialized]
+    public Rect rect;
+
+    private static MyCoolLabelGUIStyle style;
+    public static MyCoolLabelGUIStyle Style { get { if (style == null) { style = (MyCoolLabelGUIStyle)EditorGUIUtility.Load("Label GUI Style.asset"); } return style; } }
+
     private GUIStyle gStyle = null;
-    private GUIStyle GStyle
+    public GUIStyle GStyle { get { if (gStyle == null) gStyle = new GUIStyle(Style.style); return gStyle; } }
+
+    private void OnEnable()
     {
-        get
-        {
-            if (!styleInited)
-            {
-                gStyle = new GUIStyle(Style.style);
-                MyCoolLabelGUIStyle.updateStyle += UpdateGStyle;
-                styleInited = true;
-            }
-            return gStyle;
-        }
+        MyCoolLabelGUIStyle.updateStyle += UpdateGStyle;
     }
 
     [ContextMenu("UpdateStyle")]
@@ -50,8 +55,7 @@ public class MyCoolLabel : MonoBehaviour
     {
         gStyle = new GUIStyle(Style.style);
     }
-
-    private void DrawLabel(bool selected)
+    public void DrawLabel(bool selected)
     {
         if (text == "") return;
         Vector3 point = transform.position;
@@ -81,19 +85,21 @@ public class MyCoolLabel : MonoBehaviour
 
         //绘制
         Handles.BeginGUI();
+
+        rect.size = strSize;
+        rect.center = scPos - new Vector2(0, strSize.y / 2);
+
+        Color bc = selected ? Style.backgroundColorSelected : Style.backgroundColor;
+        bc.a = alpha;
+        GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, true, 0, bc, 0, 0);
+
+        if (!selected || Selection.gameObjects.Length > 1)
         {
-            Rect rect = new Rect();
-            rect.size = strSize;
-            rect.center = scPos - new Vector2(0, strSize.y / 2);
-
-            Color bc = selected ? Style.backgroundColorSelected : Style.backgroundColor;
-            bc.a = alpha;
-            GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, true, 0, bc, 0, 0);
-
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, alpha);
             GUI.Label(rect, text, GStyle);
             GUI.color = Color.white;
         }
+
         Handles.EndGUI();
     }
 
@@ -101,25 +107,9 @@ public class MyCoolLabel : MonoBehaviour
     {
         DrawLabel(false);
     }
-
     private void OnDrawGizmosSelected()
     {
         DrawLabel(true);
-    }
-
-    [MenuItem("自制工具/给选中的游戏物体添加标签 %L")]
-    static void AddToActiveGameObject()
-    {
-        GameObject[] g = Selection.gameObjects;
-        if (g == null || g.Length == 0)
-        {
-            Debug.LogAssertion("没有选中游戏物体");
-            return;
-        }
-        foreach (GameObject gg in g)
-        {
-            gg.AddComponent<MyCoolLabel>();
-        }
     }
 }
 #endif

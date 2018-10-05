@@ -166,6 +166,7 @@ namespace GameSystem
         [ContextMenu("Save All Data")]
         public void SaveAll()
         {
+            if (dataToSave == null || dataToSave.Length == 0) return;
             foreach (SavableObject so in dataToSave)
             {
                 if (so.saved) continue;
@@ -187,8 +188,8 @@ namespace GameSystem
             PlayerPrefs.DeleteAll();
             Debug.Log("All saved data deleted!");
         }
-        
-        
+
+
         //游戏启动----------------------------
         private void Awake()
         {
