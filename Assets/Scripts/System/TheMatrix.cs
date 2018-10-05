@@ -14,12 +14,26 @@ namespace GameSystem
         //流程--------------------------------
         private IEnumerator start()
         {
-            //这里写游戏流程控制代码
-            throw new System.NotImplementedException();
+            yield return _Logo();
         }
 
+        //场景名字记为_name
+        public string _logo;
+        /// <summary>
+        /// 开始的Logo场景
+        /// </summary>
+        private IEnumerator _Logo()
+        {
+            while (true)
+            {
+                if (GetGameMessage(GameMessage.Start) || GetGameMessage(GameMessage.Exit))
+                {
+                    SceneSystem.PopAndPushScene(_startMenu);
+                }
+            }
+        }
 
-
+        public string _startMenu;
 
 
 
@@ -215,8 +229,6 @@ namespace GameSystem
     public enum GameMessage
     {
         Start,
-        Win,
-        Lose,
         Exit
     }
 }
