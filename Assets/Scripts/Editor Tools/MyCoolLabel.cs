@@ -28,7 +28,7 @@ public class MyCoolLabel : MonoBehaviour
         }
         foreach (GameObject gg in g)
         {
-            gg.AddComponent<MyCoolLabel>();
+            Undo.AddComponent<MyCoolLabel>(gg);
         }
     }
 
