@@ -41,4 +41,15 @@ public class MyCoolLabelEditor : Editor
         label.size = EditorGUILayout.Slider(label.size, 0.1f, 2f);
     }
 
+
+    [DrawGizmo(GizmoType.InSelectionHierarchy)]
+    static void GizmoParentSelected(MyCoolLabel label, GizmoType type)
+    {
+        label.DrawLabel((type & GizmoType.Selected) != 0, true);
+    }
+    [DrawGizmo(GizmoType.NotInSelectionHierarchy)]
+    static void GizmoNonSelected(MyCoolLabel label, GizmoType type)
+    {
+        label.DrawLabel(false);
+    }
 }

@@ -14,8 +14,9 @@ MonoBehaviour:
   enlargeFactor: 4
   maxDistanceRange: 15
   edges: {x: 18, y: -3}
-  backgroundColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
+  backgroundColor: {r: 0.5660378, g: 0.52732295, b: 0.4886081, a: 0}
   backgroundColorSelected: {r: 1, g: 0.49803922, b: 0, a: 0}
+  backgroundColorParentSelected: {r: 0.33468318, g: 0.4449651, b: 0.6509434, a: 0}
   style:
     m_Name: AA
     m_Normal:
@@ -70,12 +71,12 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 12800000, guid: cfbf9a83b64123c48a7f4dfda4b1d766, type: 3}
-    m_FontSize: 12
+    m_Font: {fileID: 12800000, guid: 576d027d1a80cc54a9ef159c81be6728, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_Alignment: 7
     m_WordWrap: 1
-    m_RichText: 1
+    m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}

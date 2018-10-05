@@ -10,6 +10,7 @@ public class MyCoolLabelGUIStyle : ScriptableObject {
     public Vector2 edges;
     public Color backgroundColor;
     public Color backgroundColorSelected;
+    public Color backgroundColorParentSelected;
     public GUIStyle style;
 
     public static System.Action updateStyle;

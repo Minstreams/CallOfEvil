@@ -55,7 +55,7 @@ public class MyCoolLabel : MonoBehaviour
     {
         gStyle = new GUIStyle(Style.style);
     }
-    public void DrawLabel(bool selected)
+    public void DrawLabel(bool selected, bool parentSelected = false)
     {
         if (text == "") return;
         Vector3 point = transform.position;
@@ -89,7 +89,7 @@ public class MyCoolLabel : MonoBehaviour
         rect.size = strSize;
         rect.center = scPos - new Vector2(0, strSize.y / 2);
 
-        Color bc = selected ? Style.backgroundColorSelected : Style.backgroundColor;
+        Color bc = selected ? Style.backgroundColorSelected : (parentSelected ? Style.backgroundColorParentSelected : Style.backgroundColor);
         bc.a = alpha;
         GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture, ScaleMode.StretchToFill, true, 0, bc, 0, 0);
 
@@ -101,15 +101,6 @@ public class MyCoolLabel : MonoBehaviour
         }
 
         Handles.EndGUI();
-    }
-
-    private void OnDrawGizmos()
-    {
-        DrawLabel(false);
-    }
-    private void OnDrawGizmosSelected()
-    {
-        DrawLabel(true);
     }
 }
 #endif
