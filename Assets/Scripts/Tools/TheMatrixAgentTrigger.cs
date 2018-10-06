@@ -10,7 +10,7 @@ using GameSystem;
 public class TheMatrixAgentTrigger : MonoBehaviour
 {
     [Header("母体代理触发器，使用键盘输入给The Matrix发送控制信息")]
-    public KeyCode keyCode;
+    public KeyCode keyCode = KeyCode.F;
     public GameMessage messageToSend;
 
     private void Update()
