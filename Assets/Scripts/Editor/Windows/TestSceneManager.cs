@@ -82,15 +82,32 @@ public class TestSceneManager : EditorWindow
 
     private void OnDestroy() { EditorSystem.EditorMatrix.Save(this); }
 
-
-
-    public void SetTestSceneSingle()
+    private bool CheckSceneAsset(SceneAsset asset)
+    {
+        return AssetDatabase.GetAssetPath(asset).Contains("Scenes");
+    }
+    private bool CheckProperties()
     {
         if (!(_system || _logo || _startMenu || _lobby || _inGame))
         {
             LogError("有场景未指定！无法加载测试环境！");
-            return;
+            return false;
         }
+        if (!(CheckSceneAsset(_system) &&
+            CheckSceneAsset(_loading) &&
+            CheckSceneAsset(_logo) &&
+            CheckSceneAsset(_startMenu) &&
+            CheckSceneAsset(_lobby) &&
+            CheckSceneAsset(_inGame)))
+        {
+            LogError("场景有问题！请重新指定场景！");
+            return false;
+        }
+        return true;
+    }
+    public void SetTestSceneSingle()
+    {
+        if (!CheckProperties()) return;
         //保存场景
         EditorSceneManager.SaveOpenScenes();
 
@@ -120,11 +137,7 @@ public class TestSceneManager : EditorWindow
     }
     public void SetTestScene()
     {
-        if (!(_system || _logo || _startMenu || _lobby || _inGame))
-        {
-            LogError("有场景未指定！无法加载测试环境！");
-            return;
-        }
+        if (!CheckProperties()) return;
         //保存场景
         EditorSceneManager.SaveOpenScenes();
 

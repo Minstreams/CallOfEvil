@@ -17,5 +17,6 @@ public class TheMatrixAgent : MonoBehaviour
     public void SendGameMessage()
     {
         TheMatrix.SendGameMessage(messageToSend);
+        print(messageToSend + " sended!");
     }
 }

@@ -18,6 +18,7 @@ public class TheMatrixAgentTrigger : MonoBehaviour
         if (Input.GetKeyDown(keyCode))
         {
             TheMatrix.SendGameMessage(messageToSend);
+            print(messageToSend + " trigged!");
         }
     }
 }
