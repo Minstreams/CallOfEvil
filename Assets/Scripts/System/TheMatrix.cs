@@ -12,7 +12,7 @@ namespace GameSystem
     public class TheMatrix : MonoBehaviour
     {
         //流程--------------------------------
-        private IEnumerator start()
+        private IEnumerator _Start()
         {
             yield return _Logo();
         }
@@ -24,16 +24,86 @@ namespace GameSystem
         /// </summary>
         private IEnumerator _Logo()
         {
+            SceneSystem.PushScene(_logo);
+            //在进入每个状态前重置控制信息
+            ResetGameMessage();
             while (true)
             {
-                if (GetGameMessage(GameMessage.Start) || GetGameMessage(GameMessage.Exit))
+                //提前return，延迟一帧开始检测
+                yield return 0;
+                if (GetGameMessage(GameMessage.Skip))
                 {
-                    SceneSystem.PopAndPushScene(_startMenu);
+                    //不直接用嵌套，防止嵌套层数过深（是否有自动优化？没查到）
+                    StartCoroutine(_StartMenu());
+                    //结束
+                    yield break;
                 }
             }
         }
 
         public string _startMenu;
+        private IEnumerator _StartMenu()
+        {
+            yield return new WaitForSeconds(SceneSystem.PopAndPushScene(_startMenu));
+            ResetGameMessage();
+            while (true)
+            {
+                yield return 0;
+                if (GetGameMessage(GameMessage.Start))
+                {
+                    StartCoroutine(_Lobby());
+                    yield break;
+                }
+                if (GetGameMessage(GameMessage.Exit))
+                {
+                    Application.Quit();
+                    yield break;
+                }
+            }
+        }
+
+        public string _lobby;
+        private IEnumerator _Lobby()
+        {
+            yield return new WaitForSeconds(SceneSystem.PopAndPushScene(_lobby));
+            ResetGameMessage();
+            while (true)
+            {
+                yield return 0;
+                if (GetGameMessage(GameMessage.Start))
+                {
+                    StartCoroutine(_InGame());
+                    yield break;
+                }
+                if (GetGameMessage(GameMessage.Return))
+                {
+                    StartCoroutine(_StartMenu());
+                    yield break;
+                }
+            }
+
+        }
+
+        public string _inGame;
+        private IEnumerator _InGame()
+        {
+            yield return new WaitForSeconds(SceneSystem.PopAndPushScene(_inGame));
+            ResetGameMessage();
+            while (true)
+            {
+                yield return 0;
+                if (GetGameMessage(GameMessage.Return))
+                {
+                    StartCoroutine(_StartMenu());
+                    yield break;
+                }
+                if (GetGameMessage(GameMessage.Exit))
+                {
+                    Application.Quit();
+                    yield break;
+                }
+            }
+        }
 
 
 
@@ -214,7 +284,7 @@ namespace GameSystem
 #if UNITY_EDITOR
             if (test)
 #endif
-                StartCoroutine(start());
+                StartCoroutine(_Start());
             LoadAll();
         }
         private void OnDestroy()
@@ -229,6 +299,8 @@ namespace GameSystem
     public enum GameMessage
     {
         Start,
+        Skip,
+        Return,
         Exit
     }
 }
