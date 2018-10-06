@@ -15,18 +15,18 @@ namespace EditorSystem
         {
             string stream = JsonUtility.ToJson(data);
             EditorPrefs.SetString(data.GetType().ToString(), stream);
-            Debug.Log(data.name + " \teditor saved!");
+            Debug.Log(data + " \teditor saved!");
         }
         public static void Load(Object data)
         {
             if (!EditorPrefs.HasKey(data.GetType().ToString()))
             {
-                Debug.Log("No editor data found for " + data.name);
+                Debug.Log("No editor data found for " + data);
                 return;
             }
             string stream = EditorPrefs.GetString(data.GetType().ToString());
             JsonUtility.FromJsonOverwrite(stream, data);
-            Debug.Log(data.name + " \teditor loaded!");
+            Debug.Log(data + " \teditor loaded!");
         }
         [ContextMenu("Delete All editor Data")]
         public static void DeleteAll()

@@ -23,30 +23,49 @@ public class TestSceneManager : EditorWindow
     public SceneAsset _inGame;
 
 
+    ReadmeGUIStyles Styles
+    {
+        get
+        {
+            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)AssetDatabase.LoadMainAssetAtPath("Assets/Editor Default Resources/Styles/Default.asset");
+            return m_Styles;
+        }
+    }
+    ReadmeGUIStyles m_Styles = null;
+
     AnimBool fade0 = new AnimBool(false);
     string console;
     bool quickStart;
     private void OnGUI()
     {
+        GUILayout.BeginHorizontal(Styles.header);
+        GUILayout.Label("岷溪的场景测试器", Styles.title, GUILayout.ExpandHeight(false));
+        GUILayout.EndHorizontal();
+
         fade0.target = EditorGUILayout.Toggle("场景配置", fade0.target);
         bool show = EditorGUILayout.BeginFadeGroup(fade0.faded);
         if (show)
         {
+            GUILayout.BeginVertical(Styles.section);
             _system = EditorGUILayout.ObjectField("System", _system, typeof(SceneAsset), false) as SceneAsset;
             _loading = EditorGUILayout.ObjectField("_loading", _loading, typeof(SceneAsset), false) as SceneAsset;
             _logo = EditorGUILayout.ObjectField("_logo", _logo, typeof(SceneAsset), false) as SceneAsset;
             _startMenu = EditorGUILayout.ObjectField("_startMenu", _startMenu, typeof(SceneAsset), false) as SceneAsset;
             _lobby = EditorGUILayout.ObjectField("_lobby", _lobby, typeof(SceneAsset), false) as SceneAsset;
             _inGame = EditorGUILayout.ObjectField("_inGame", _inGame, typeof(SceneAsset), false) as SceneAsset;
+            GUILayout.EndVertical();
         }
         EditorGUILayout.EndFadeGroup();
 
         quickStart = EditorGUILayout.Toggle("自动开始", quickStart);
 
-        if (GUILayout.Button("完整测试")) SetTestScene();
-        if (GUILayout.Button("单独测试")) SetTestSceneSingle();
 
-        EditorGUILayout.LabelField(console);
+        GUILayout.BeginHorizontal(Styles.header, GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true));
+        if (GUILayout.Button("完整测试", Styles.button)) SetTestScene();
+        if (GUILayout.Button("单独测试", Styles.button)) SetTestSceneSingle();
+        GUILayout.EndHorizontal();
+
+        GUILayout.Label(console, Styles.text);
     }
 
     [MenuItem("自制工具/场景测试器 _F5")]
@@ -64,17 +83,6 @@ public class TestSceneManager : EditorWindow
     private void OnDestroy() { EditorSystem.EditorMatrix.Save(this); }
 
 
-    private void Log(string text)
-    {
-        Debug.Log(text);
-        console = text;
-    }
-
-    private void LogError(string text)
-    {
-        Debug.LogError(text);
-        console = text;
-    }
 
     public void SetTestSceneSingle()
     {
@@ -106,9 +114,10 @@ public class TestSceneManager : EditorWindow
 
         EditorSceneManager.SaveScene(systemScene);
 
+        Log("单独测试环境准备完毕！");
+
         if (quickStart) EditorApplication.isPlaying = true;
     }
-
     public void SetTestScene()
     {
         if (!(_system || _logo || _startMenu || _lobby || _inGame))
@@ -146,5 +155,16 @@ public class TestSceneManager : EditorWindow
         Log("测试环境准备完毕！");
 
         if (quickStart) EditorApplication.isPlaying = true;
+    }
+
+    private void Log(string text)
+    {
+        Debug.Log(text);
+        console = text;
+    }
+    private void LogError(string text)
+    {
+        Debug.LogError(text);
+        console = text;
     }
 }
