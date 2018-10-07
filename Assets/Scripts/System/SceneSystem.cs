@@ -99,7 +99,7 @@ namespace GameSystem
         public static void PushScene(string sceneName, bool loadLoadingScene = false)
         {
             Debug.Log("Push场景 " + sceneName);
-            TheMatrix.StartCoroutine(YieldPushScene(sceneName, loadLoadingScene), typeof(SceneManager));
+            TheMatrix.StartCoroutine(YieldPushScene(sceneName, loadLoadingScene), typeof(SceneSystem));
         }
         /// <summary>
         /// 场景出栈,返回延迟秒数
@@ -112,7 +112,7 @@ namespace GameSystem
                 return 0;
             }
             float delay = GetMaxReturn(OnUnLoaded);
-            TheMatrix.StartCoroutine(YieldPopScene(delay), typeof(SceneManager));
+            TheMatrix.StartCoroutine(YieldPopScene(delay), typeof(SceneSystem));
             return delay;
         }
         /// <summary>
@@ -128,7 +128,7 @@ namespace GameSystem
                 return 0;
             }
             float delay = GetMaxReturn(OnUnLoaded);
-            TheMatrix.StartCoroutine(YieldPopAndPushScene(delay, sceneName, loadLoadingScene), typeof(SceneManager));
+            TheMatrix.StartCoroutine(YieldPopAndPushScene(delay, sceneName, loadLoadingScene), typeof(SceneSystem));
             return delay;
         }
 
