@@ -38,7 +38,31 @@ public class CircleLoopManager : MonoBehaviour
     //Unit控制-------------------------------------------------------------------
     public LinkedList<CLUnit> unitList = new LinkedList<CLUnit>();
 
-    private LinkedListNode<CLUnit> unitLooperNode;
+    /// <summary>
+    /// 最小值边界节点（范围外）
+    /// </summary>
+    private LinkedListNode<CLUnit> minBorderNode;
+    /// <summary>
+    /// 最大值边界节点（范围外）
+    /// </summary>
+    private LinkedListNode<CLUnit> maxBorderNode;
+
+    /// <summary>
+    /// 环向搜索的下一个
+    /// </summary>
+    private LinkedListNode<CLUnit> GetNext(LinkedListNode<CLUnit> unit)
+    {
+        if (unit.Next != null) return unit.Next;
+        else return unit.List.First;
+    }
+    /// <summary>
+    /// 环向搜索的上一个
+    /// </summary>
+    private LinkedListNode<CLUnit> GetPrevious(LinkedListNode<CLUnit> unit)
+    {
+        if (unit.Previous != null) return unit.Previous;
+        else return unit.List.Last;
+    }
 
     public void AddUnit(CLUnit unit)
     {
@@ -47,11 +71,15 @@ public class CircleLoopManager : MonoBehaviour
 
         if (unitList.Count == 0)
         {
-            unitLooperNode = unitList.AddFirst(unit);
+            minBorderNode = maxBorderNode = unitList.AddFirst(unit);
         }
         else
         {
-
+            //简单插入排序
+            LinkedListNode<CLUnit> u = unitList.First;
+            while (u != null && u.Value.angle < angle) u = u.Next;
+            if (u == null) unitList.AddLast(unit);
+            else unitList.AddBefore(u, unit);
         }
     }
 
