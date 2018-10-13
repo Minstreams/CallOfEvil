@@ -5,6 +5,7 @@
 [Bb]uilds/
 [Rr]elease/
 Assets/AssetStoreTools*
+Assets/临时
 
 # Visual Studio cache directory
 .vs/
