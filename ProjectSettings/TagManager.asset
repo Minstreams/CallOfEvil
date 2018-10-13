@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - LobbyManager
+  - ServerList
   layers:
   - Default
   - TransparentFX

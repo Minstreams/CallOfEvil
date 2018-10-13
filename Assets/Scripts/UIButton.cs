@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 支持双击/长按的按钮类
+/// 抄代码就完事了
 /// </summary>
 public class UIButton : Button
 {

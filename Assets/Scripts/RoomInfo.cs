@@ -11,8 +11,6 @@ public class RoomInfo : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         GetComponent<UIButton>().OnDoubleClick.AddListener(Clicked);
-        ServerAddress = "";
-        RoomName = "";
         Manager = GameObject.FindGameObjectWithTag("LobbyManager");
 	}
 	
