@@ -28,7 +28,7 @@ public class CircleLoopManagerEditor : Editor
     /// <summary>
     /// 排序插入当前选中的游戏物体
     /// </summary>
-    [MenuItem("测试工具/AddUnit _T")]
+    [MenuItem("测试工具/AddUnit %T")]
     public static void AddUnitSorted()
     {
         CircleLoopManager manager = CircleLoopManager.Instance;
@@ -45,7 +45,7 @@ public class CircleLoopManagerEditor : Editor
         }
     }
 
-    [MenuItem("测试工具/DeleteUnit _Y")]
+    [MenuItem("测试工具/DeleteUnit %Y")]
     public static void DeleteUnit()
     {
         CircleLoopManager manager = CircleLoopManager.Instance;
