@@ -26,7 +26,7 @@ public class LobbyMainPanelController : MonoBehaviour {
         Discovery.broadcastData = "DefaultRoom";
         Discovery.Initialize();
         Discovery.StartAsServer();
-        //LobbyManager.StartServer();
+        LobbyManager.StartHost();
     }
 
     void ClientStart()

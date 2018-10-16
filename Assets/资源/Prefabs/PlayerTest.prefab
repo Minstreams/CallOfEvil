@@ -9,47 +9,46 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1777591585302354}
+  m_RootGameObject: {fileID: 1744301289366496}
   m_IsPrefabAsset: 1
---- !u!1 &1777591585302354
+--- !u!1 &1744301289366496
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4669501084528928}
-  - component: {fileID: 33011479170184132}
-  - component: {fileID: 23213600150291686}
-  - component: {fileID: 136170532170146320}
-  - component: {fileID: 114775870302162570}
-  - component: {fileID: 114948013718894456}
+  - component: {fileID: 4000850226598270}
+  - component: {fileID: 33738906901843288}
+  - component: {fileID: 23104929476491436}
+  - component: {fileID: 136259951376773310}
+  - component: {fileID: 114675062331934620}
   m_Layer: 0
-  m_Name: LobbyPlayerTest
+  m_Name: PlayerTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4669501084528928
+--- !u!4 &4000850226598270
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
+  m_GameObject: {fileID: 1744301289366496}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 250.5, y: 129.1, z: 251}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalPosition: {x: 619.4231, y: 197.42493, z: 113.764}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23213600150291686
+--- !u!23 &23104929476491436
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
+  m_GameObject: {fileID: 1744301289366496}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -79,19 +78,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33011479170184132
+--- !u!33 &33738906901843288
 MeshFilter:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
+  m_GameObject: {fileID: 1744301289366496}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114775870302162570
+--- !u!114 &114675062331934620
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
+  m_GameObject: {fileID: 1744301289366496}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -100,42 +99,30 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 47
-    i1: 226
-    i2: 63
-    i3: 67
-    i4: 173
-    i5: 73
-    i6: 108
-    i7: 212
-    i8: 137
-    i9: 33
-    i10: 253
-    i11: 59
-    i12: 90
-    i13: 191
-    i14: 214
-    i15: 105
+    i0: 151
+    i1: 92
+    i2: 218
+    i3: 188
+    i4: 4
+    i5: 52
+    i6: 61
+    i7: 68
+    i8: 91
+    i9: 84
+    i10: 246
+    i11: 131
+    i12: 105
+    i13: 192
+    i14: 119
+    i15: 95
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114948013718894456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 246975512, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLobbyGUI: 0
---- !u!136 &136170532170146320
+--- !u!136 &136259951376773310
 CapsuleCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777591585302354}
+  m_GameObject: {fileID: 1744301289366496}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
