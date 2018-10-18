@@ -98,6 +98,159 @@ ModelImporter:
     100184: Tops
     100186: up
     100188: up_end
+    100190: Armature.001
+    100192: cheek 1
+    100194: cheek_end 1
+    100196: cheek_end_end
+    100198: cheek_end_end 1
+    100200: down 1
+    100202: down_end 1
+    100204: down_end_end
+    100206: down_end_end 1
+    100208: lid
+    100210: lid 1
+    100212: lid.001
+    100214: lid.001_end
+    100216: lid_end
+    100218: lid_end 1
+    100220: mixamorig:Head 1
+    100222: mixamorig:HeadTop_End 1
+    100224: mixamorig:HeadTop_End_end 1
+    100226: mixamorig:HeadTop_End_end_end
+    100228: mixamorig:HeadTop_End_end_end 1
+    100230: mixamorig:Hips 1
+    100232: mixamorig:LeftArm 1
+    100234: mixamorig:LeftEye 1
+    100236: mixamorig:LeftEye_end 1
+    100238: mixamorig:LeftEye_end_end
+    100240: mixamorig:LeftEye_end_end 1
+    100242: mixamorig:LeftFoot 1
+    100244: mixamorig:LeftForeArm 1
+    100246: mixamorig:LeftHand 1
+    100248: mixamorig:LeftHandIndex1 1
+    100250: mixamorig:LeftHandIndex2 1
+    100252: mixamorig:LeftHandIndex3 1
+    100254: mixamorig:LeftHandIndex4 1
+    100256: mixamorig:LeftHandIndex4_end 1
+    100258: mixamorig:LeftHandIndex4_end_end
+    100260: mixamorig:LeftHandIndex4_end_end 1
+    100262: mixamorig:LeftHandMiddle1 1
+    100264: mixamorig:LeftHandMiddle2 1
+    100266: mixamorig:LeftHandMiddle3 1
+    100268: mixamorig:LeftHandMiddle4 1
+    100270: mixamorig:LeftHandMiddle4_end 1
+    100272: mixamorig:LeftHandMiddle4_end_end
+    100274: mixamorig:LeftHandMiddle4_end_end 1
+    100276: mixamorig:LeftHandPinky1 1
+    100278: mixamorig:LeftHandPinky2 1
+    100280: mixamorig:LeftHandPinky3 1
+    100282: mixamorig:LeftHandPinky4 1
+    100284: mixamorig:LeftHandPinky4_end 1
+    100286: mixamorig:LeftHandPinky4_end_end
+    100288: mixamorig:LeftHandPinky4_end_end 1
+    100290: mixamorig:LeftHandRing1 1
+    100292: mixamorig:LeftHandRing2 1
+    100294: mixamorig:LeftHandRing3 1
+    100296: mixamorig:LeftHandRing4 1
+    100298: mixamorig:LeftHandRing4_end 1
+    100300: mixamorig:LeftHandRing4_end_end
+    100302: mixamorig:LeftHandRing4_end_end 1
+    100304: mixamorig:LeftHandThumb1 1
+    100306: mixamorig:LeftHandThumb2 1
+    100308: mixamorig:LeftHandThumb3 1
+    100310: mixamorig:LeftHandThumb4 1
+    100312: mixamorig:LeftHandThumb4_end 1
+    100314: mixamorig:LeftHandThumb4_end_end
+    100316: mixamorig:LeftHandThumb4_end_end 1
+    100318: mixamorig:LeftLeg 1
+    100320: mixamorig:LeftShoulder 1
+    100322: mixamorig:LeftToe_End 1
+    100324: mixamorig:LeftToe_End_end 1
+    100326: mixamorig:LeftToe_End_end_end
+    100328: mixamorig:LeftToe_End_end_end 1
+    100330: mixamorig:LeftToeBase 1
+    100332: mixamorig:LeftUpLeg 1
+    100334: mixamorig:Neck 1
+    100336: mixamorig:RightArm 1
+    100338: mixamorig:RightEye 1
+    100340: mixamorig:RightEye_end 1
+    100342: mixamorig:RightEye_end_end
+    100344: mixamorig:RightEye_end_end 1
+    100346: mixamorig:RightFoot 1
+    100348: mixamorig:RightForeArm 1
+    100350: mixamorig:RightHand 1
+    100352: mixamorig:RightHandIndex1 1
+    100354: mixamorig:RightHandIndex2 1
+    100356: mixamorig:RightHandIndex3 1
+    100358: mixamorig:RightHandIndex4 1
+    100360: mixamorig:RightHandIndex4_end 1
+    100362: mixamorig:RightHandIndex4_end_end
+    100364: mixamorig:RightHandIndex4_end_end 1
+    100366: mixamorig:RightHandMiddle1 1
+    100368: mixamorig:RightHandMiddle2 1
+    100370: mixamorig:RightHandMiddle3 1
+    100372: mixamorig:RightHandMiddle4 1
+    100374: mixamorig:RightHandMiddle4_end 1
+    100376: mixamorig:RightHandMiddle4_end_end
+    100378: mixamorig:RightHandMiddle4_end_end 1
+    100380: mixamorig:RightHandPinky1 1
+    100382: mixamorig:RightHandPinky2 1
+    100384: mixamorig:RightHandPinky3 1
+    100386: mixamorig:RightHandPinky4 1
+    100388: mixamorig:RightHandPinky4_end 1
+    100390: mixamorig:RightHandPinky4_end_end
+    100392: mixamorig:RightHandPinky4_end_end 1
+    100394: mixamorig:RightHandRing1 1
+    100396: mixamorig:RightHandRing2 1
+    100398: mixamorig:RightHandRing3 1
+    100400: mixamorig:RightHandRing4 1
+    100402: mixamorig:RightHandRing4_end 1
+    100404: mixamorig:RightHandRing4_end_end
+    100406: mixamorig:RightHandRing4_end_end 1
+    100408: mixamorig:RightHandThumb1 1
+    100410: mixamorig:RightHandThumb2 1
+    100412: mixamorig:RightHandThumb3 1
+    100414: mixamorig:RightHandThumb4 1
+    100416: mixamorig:RightHandThumb4_end 1
+    100418: mixamorig:RightHandThumb4_end_end
+    100420: mixamorig:RightHandThumb4_end_end 1
+    100422: mixamorig:RightLeg 1
+    100424: mixamorig:RightShoulder 1
+    100426: mixamorig:RightToe_End 1
+    100428: mixamorig:RightToe_End_end 1
+    100430: mixamorig:RightToe_End_end_end
+    100432: mixamorig:RightToe_End_end_end 1
+    100434: mixamorig:RightToeBase 1
+    100436: mixamorig:RightUpLeg 1
+    100438: mixamorig:Spine 1
+    100440: mixamorig:Spine1 1
+    100442: mixamorig:Spine2 1
+    100444: up 1
+    100446: up_end 1
+    100448: up_end_end
+    100450: up_end_end 1
+    100452: Camera
+    100454: cheek_end_end_end
+    100456: down_end_end_end
+    100458: Lamp
+    100460: lid.001_end_end
+    100462: lid_end_end
+    100464: mixamorig:HeadTop_End_end_end_end
+    100466: mixamorig:LeftEye_end_end_end
+    100468: mixamorig:LeftHandIndex4_end_end_end
+    100470: mixamorig:LeftHandMiddle4_end_end_end
+    100472: mixamorig:LeftHandPinky4_end_end_end
+    100474: mixamorig:LeftHandRing4_end_end_end
+    100476: mixamorig:LeftHandThumb4_end_end_end
+    100478: mixamorig:LeftToe_End_end_end_end
+    100480: mixamorig:RightEye_end_end_end
+    100482: mixamorig:RightHandIndex4_end_end_end
+    100484: mixamorig:RightHandMiddle4_end_end_end
+    100486: mixamorig:RightHandPinky4_end_end_end
+    100488: mixamorig:RightHandRing4_end_end_end
+    100490: mixamorig:RightHandThumb4_end_end_end
+    100492: mixamorig:RightToe_End_end_end_end
+    100494: up_end_end_end
     400000: Armature
     400002: Body
     400004: cheek
@@ -193,10 +346,168 @@ ModelImporter:
     400184: Tops
     400186: up
     400188: up_end
+    400190: Armature.001
+    400192: cheek 1
+    400194: cheek_end 1
+    400196: cheek_end_end
+    400198: cheek_end_end 1
+    400200: down 1
+    400202: down_end 1
+    400204: down_end_end
+    400206: down_end_end 1
+    400208: lid
+    400210: lid 1
+    400212: lid.001
+    400214: lid.001_end
+    400216: lid_end
+    400218: lid_end 1
+    400220: mixamorig:Head 1
+    400222: mixamorig:HeadTop_End 1
+    400224: mixamorig:HeadTop_End_end 1
+    400226: mixamorig:HeadTop_End_end_end
+    400228: mixamorig:HeadTop_End_end_end 1
+    400230: mixamorig:Hips 1
+    400232: mixamorig:LeftArm 1
+    400234: mixamorig:LeftEye 1
+    400236: mixamorig:LeftEye_end 1
+    400238: mixamorig:LeftEye_end_end
+    400240: mixamorig:LeftEye_end_end 1
+    400242: mixamorig:LeftFoot 1
+    400244: mixamorig:LeftForeArm 1
+    400246: mixamorig:LeftHand 1
+    400248: mixamorig:LeftHandIndex1 1
+    400250: mixamorig:LeftHandIndex2 1
+    400252: mixamorig:LeftHandIndex3 1
+    400254: mixamorig:LeftHandIndex4 1
+    400256: mixamorig:LeftHandIndex4_end 1
+    400258: mixamorig:LeftHandIndex4_end_end
+    400260: mixamorig:LeftHandIndex4_end_end 1
+    400262: mixamorig:LeftHandMiddle1 1
+    400264: mixamorig:LeftHandMiddle2 1
+    400266: mixamorig:LeftHandMiddle3 1
+    400268: mixamorig:LeftHandMiddle4 1
+    400270: mixamorig:LeftHandMiddle4_end 1
+    400272: mixamorig:LeftHandMiddle4_end_end
+    400274: mixamorig:LeftHandMiddle4_end_end 1
+    400276: mixamorig:LeftHandPinky1 1
+    400278: mixamorig:LeftHandPinky2 1
+    400280: mixamorig:LeftHandPinky3 1
+    400282: mixamorig:LeftHandPinky4 1
+    400284: mixamorig:LeftHandPinky4_end 1
+    400286: mixamorig:LeftHandPinky4_end_end
+    400288: mixamorig:LeftHandPinky4_end_end 1
+    400290: mixamorig:LeftHandRing1 1
+    400292: mixamorig:LeftHandRing2 1
+    400294: mixamorig:LeftHandRing3 1
+    400296: mixamorig:LeftHandRing4 1
+    400298: mixamorig:LeftHandRing4_end 1
+    400300: mixamorig:LeftHandRing4_end_end
+    400302: mixamorig:LeftHandRing4_end_end 1
+    400304: mixamorig:LeftHandThumb1 1
+    400306: mixamorig:LeftHandThumb2 1
+    400308: mixamorig:LeftHandThumb3 1
+    400310: mixamorig:LeftHandThumb4 1
+    400312: mixamorig:LeftHandThumb4_end 1
+    400314: mixamorig:LeftHandThumb4_end_end
+    400316: mixamorig:LeftHandThumb4_end_end 1
+    400318: mixamorig:LeftLeg 1
+    400320: mixamorig:LeftShoulder 1
+    400322: mixamorig:LeftToe_End 1
+    400324: mixamorig:LeftToe_End_end 1
+    400326: mixamorig:LeftToe_End_end_end
+    400328: mixamorig:LeftToe_End_end_end 1
+    400330: mixamorig:LeftToeBase 1
+    400332: mixamorig:LeftUpLeg 1
+    400334: mixamorig:Neck 1
+    400336: mixamorig:RightArm 1
+    400338: mixamorig:RightEye 1
+    400340: mixamorig:RightEye_end 1
+    400342: mixamorig:RightEye_end_end
+    400344: mixamorig:RightEye_end_end 1
+    400346: mixamorig:RightFoot 1
+    400348: mixamorig:RightForeArm 1
+    400350: mixamorig:RightHand 1
+    400352: mixamorig:RightHandIndex1 1
+    400354: mixamorig:RightHandIndex2 1
+    400356: mixamorig:RightHandIndex3 1
+    400358: mixamorig:RightHandIndex4 1
+    400360: mixamorig:RightHandIndex4_end 1
+    400362: mixamorig:RightHandIndex4_end_end
+    400364: mixamorig:RightHandIndex4_end_end 1
+    400366: mixamorig:RightHandMiddle1 1
+    400368: mixamorig:RightHandMiddle2 1
+    400370: mixamorig:RightHandMiddle3 1
+    400372: mixamorig:RightHandMiddle4 1
+    400374: mixamorig:RightHandMiddle4_end 1
+    400376: mixamorig:RightHandMiddle4_end_end
+    400378: mixamorig:RightHandMiddle4_end_end 1
+    400380: mixamorig:RightHandPinky1 1
+    400382: mixamorig:RightHandPinky2 1
+    400384: mixamorig:RightHandPinky3 1
+    400386: mixamorig:RightHandPinky4 1
+    400388: mixamorig:RightHandPinky4_end 1
+    400390: mixamorig:RightHandPinky4_end_end
+    400392: mixamorig:RightHandPinky4_end_end 1
+    400394: mixamorig:RightHandRing1 1
+    400396: mixamorig:RightHandRing2 1
+    400398: mixamorig:RightHandRing3 1
+    400400: mixamorig:RightHandRing4 1
+    400402: mixamorig:RightHandRing4_end 1
+    400404: mixamorig:RightHandRing4_end_end
+    400406: mixamorig:RightHandRing4_end_end 1
+    400408: mixamorig:RightHandThumb1 1
+    400410: mixamorig:RightHandThumb2 1
+    400412: mixamorig:RightHandThumb3 1
+    400414: mixamorig:RightHandThumb4 1
+    400416: mixamorig:RightHandThumb4_end 1
+    400418: mixamorig:RightHandThumb4_end_end
+    400420: mixamorig:RightHandThumb4_end_end 1
+    400422: mixamorig:RightLeg 1
+    400424: mixamorig:RightShoulder 1
+    400426: mixamorig:RightToe_End 1
+    400428: mixamorig:RightToe_End_end 1
+    400430: mixamorig:RightToe_End_end_end
+    400432: mixamorig:RightToe_End_end_end 1
+    400434: mixamorig:RightToeBase 1
+    400436: mixamorig:RightUpLeg 1
+    400438: mixamorig:Spine 1
+    400440: mixamorig:Spine1 1
+    400442: mixamorig:Spine2 1
+    400444: up 1
+    400446: up_end 1
+    400448: up_end_end
+    400450: up_end_end 1
+    400452: Camera
+    400454: cheek_end_end_end
+    400456: down_end_end_end
+    400458: Lamp
+    400460: lid.001_end_end
+    400462: lid_end_end
+    400464: mixamorig:HeadTop_End_end_end_end
+    400466: mixamorig:LeftEye_end_end_end
+    400468: mixamorig:LeftHandIndex4_end_end_end
+    400470: mixamorig:LeftHandMiddle4_end_end_end
+    400472: mixamorig:LeftHandPinky4_end_end_end
+    400474: mixamorig:LeftHandRing4_end_end_end
+    400476: mixamorig:LeftHandThumb4_end_end_end
+    400478: mixamorig:LeftToe_End_end_end_end
+    400480: mixamorig:RightEye_end_end_end
+    400482: mixamorig:RightHandIndex4_end_end_end
+    400484: mixamorig:RightHandMiddle4_end_end_end
+    400486: mixamorig:RightHandPinky4_end_end_end
+    400488: mixamorig:RightHandRing4_end_end_end
+    400490: mixamorig:RightHandThumb4_end_end_end
+    400492: mixamorig:RightToe_End_end_end_end
+    400494: up_end_end_end
+    2000000: Camera
     2100000: Bodymat
     2100002: Bodymat.001
     2100004: Hairmat
     2100006: Topmat
+    2100008: Bodymat.003
+    2100010: Hairmat.001
+    2100012: Bodymat.002
+    2100014: Topmat.001
     4300000: default
     4300002: Eyelashes
     4300004: Body
@@ -204,11 +515,13 @@ ModelImporter:
     4300008: Tops
     7400000: Armature|Armature|mixamo.com|Layer0
     9500000: //RootNode
+    10800000: Lamp
     13700000: Body
     13700002: default
     13700004: Eyelashes
     13700006: Hair
     13700008: Tops
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
