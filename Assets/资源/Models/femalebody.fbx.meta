@@ -206,6 +206,7 @@ ModelImporter:
     13700000: Body
     13700002: default
     13700004: Eyelashes
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -219,9 +220,16 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: 
+    rigImportWarnings: "Avatar Rig Configuration mis-match. Inbetween bone rotation
+      in configuration does not match rotation in animation file:\n\t'mixamorig:LeftToeBase'
+      : rotation error = 2.744205 deg\n\t'mixamorig:RightToeBase' : rotation error
+      = 0.642540 deg\n"
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Armature|Armature|mixamo.com|Layer0' has import
+      animation warnings that might lower retargeting quality:\nNote: Activate translation
+      DOF on avatar to improve retargeting quality.\n\t'mixamorig:LeftToeBase' is
+      inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'mixamorig:RightToeBase'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -421,7 +429,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: mixamorig:LeftToeBase
+    - boneName: mixamorig:LeftToe_End
       humanName: LeftToes
       limit:
         min: {x: 0, y: 0, z: 0}
@@ -429,7 +437,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: mixamorig:RightToeBase
+    - boneName: mixamorig:RightToe_End
       humanName: RightToes
       limit:
         min: {x: 0, y: 0, z: 0}
