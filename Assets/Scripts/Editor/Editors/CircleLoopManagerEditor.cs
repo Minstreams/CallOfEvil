@@ -53,7 +53,7 @@ public class CircleLoopManagerEditor : Editor
         style.fontSize = 30;
         style.alignment = TextAnchor.LowerCenter;
 
-        Handles.Label(Vector3.up * 0.5f, manager.CurrentCircle.ToString(), style);\
+        Handles.Label(Vector3.up * 0.5f, manager.CurrentCircle.ToString(), style);
 
     }
 
