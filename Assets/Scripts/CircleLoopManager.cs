@@ -28,17 +28,25 @@ public class CircleLoopManager : MonoBehaviour
             return instance;
         }
     }
+    private void Awake()
+    {
+        instance = this;
+    }
 
     /// <summary>
     /// 当前圈数(0~n-1)
     /// </summary>
-    public static int CurrentCircle { get { return Instance.currentCircle; } }
-    public int currentCircle;
+    public int CurrentCircle { get { return currentGroupIndex / groupNumPerCircle; } }
 
     /// <summary>
     /// 最大圈数(n)
     /// </summary>
-    public int maxCircleCount;
+    public int maxCircleCount = 5;
+
+    private const int groupNumPerCircle = 3; //每圈组数
+    private const float anglePerGroup = 360 / groupNumPerCircle; //每组角度
+
+    private int currentGroupIndex;
 
     /// <summary>
     /// 当前角度
@@ -66,28 +74,34 @@ public class CircleLoopManager : MonoBehaviour
 
 
     //Angle计算------------------------------------------------------------------
-    private static float MaxAngle { get { return Instance.maxCircleCount * 360; } }
+    private float MaxAngle { get { return maxCircleCount * 360; } }
+    private float HalfMaxAngle { get { return MaxAngle / 2; } }
 
     /// <summary>
     /// 根据位置获取Unit角度，用于排序
     /// </summary>
     /// <param name="unitPos">位置</param>
     /// <returns>角度</returns>
-    public static float GetAngle(Vector3 unitPos)
+    public float GetAngle(Vector3 unitPos)
     {
         Vector2 pos = new Vector2(unitPos.x, unitPos.z);
+        float angle = Rotate(CurrentCircle * 360, Vector2.SignedAngle(Vector2.right, pos));
+
+        if (SubSigned(angle, Sub(currentGroupIndex * anglePerGroup, anglePerGroup)) < 0)
+        {
+            angle = Add(angle, 360);
+        }
         //边界值可能会有问题，如果出问题可以考虑用Group位置信息辅助计算
-        return CurrentCircle * 360 + Vector2.Angle(Vector2.right, pos);
+        return angle;
     }
     /// <summary>
     /// 角度相减，返回差值
     /// </summary>
-    private static float SubSigned(float angle1, float angle2)
+    private float SubSigned(float angle1, float angle2)
     {
         float result = angle1 - angle2;
-        float mHalf = MaxAngle / 2;
-        if (result > mHalf) return result - MaxAngle;
-        if (result < -mHalf) return result + MaxAngle;
+        if (result > HalfMaxAngle) return result - MaxAngle;
+        if (result < -HalfMaxAngle) return result + MaxAngle;
         return result;
     }
     /// <summary>
@@ -95,7 +109,7 @@ public class CircleLoopManager : MonoBehaviour
     /// </summary>
     /// <param name="angle">角度</param>
     /// <param name="increment">增量(-360~360)</param>
-    private static float Rotate(float angle, float increment)
+    private float Rotate(float angle, float increment)
     {
         if (increment > 0) return Add(angle, increment);
         else return Sub(angle, -increment);
@@ -103,7 +117,7 @@ public class CircleLoopManager : MonoBehaviour
     /// <summary>
     /// 角度相减，返回角度
     /// </summary>
-    private static float Sub(float angle1, float angle2)
+    private float Sub(float angle1, float angle2)
     {
         float result = angle1 - angle2;
         if (result < 0) return result + MaxAngle;
@@ -112,7 +126,7 @@ public class CircleLoopManager : MonoBehaviour
     /// <summary>
     /// 角度相加，返回角度
     /// </summary>
-    private static float Add(float angle1, float angle2)
+    private float Add(float angle1, float angle2)
     {
         float result = angle1 + angle2;
         float m = MaxAngle;
@@ -154,6 +168,7 @@ public class CircleLoopManager : MonoBehaviour
 
     public void SetCurrentAngle(float angle)
     {
+        currentGroupIndex = (int)(angle / anglePerGroup);
         if (unitList.Count == 0)
         {
             currentAngle = angle;
@@ -278,11 +293,14 @@ public class CircleLoopManager : MonoBehaviour
             int ptr = unitList[minBorderPtr].angle < angle ? minBorderPtr : 0;
 
             while (ptr != unitList.Count && unitList[ptr].angle < angle) ptr++;
-            unitList.Insert(ptr, unit);
 
             //ptr重定向
-            if (minBorderPtr >= ptr) minBorderPtr++;
-            if (maxBorderPtr > ptr) maxBorderPtr++;
+            if (Sub(Add(currentAngle, AngleRadius), unitList[minBorderPtr].angle) < 2 * AngleRadius && SubSigned(angle, unitList[minBorderPtr].angle) > 0) minBorderPtr = ptr;
+            else if (minBorderPtr >= ptr) minBorderPtr++;
+            if (Sub(unitList[maxBorderPtr].angle, Sub(currentAngle, AngleRadius)) < 2 * AngleRadius && SubSigned(angle, unitList[maxBorderPtr].angle) < 0) maxBorderPtr = ptr;
+            else if (maxBorderPtr >= ptr) maxBorderPtr++;
+
+            unitList.Insert(ptr, unit);
         }
     }
 
@@ -294,8 +312,16 @@ public class CircleLoopManager : MonoBehaviour
         int index = unitList.IndexOf(unit);
         unitList.RemoveAt(index);
 
-        if (minBorderPtr >= index) minBorderPtr = GetPrevious(minBorderPtr);
-        if (maxBorderPtr > index) maxBorderPtr = GetPrevious(maxBorderPtr);
+        if (minBorderPtr == index && minBorderPtr == 0)
+        {
+            minBorderPtr = unitList.Count - 1;
+        }
+        else if (minBorderPtr >= index) minBorderPtr--;
+        if (maxBorderPtr == index && index == unitList.Count)
+        {
+            maxBorderPtr = 0;
+        }
+        else if (maxBorderPtr > index) maxBorderPtr--;
 
         DestroyImmediate(unit);
     }
