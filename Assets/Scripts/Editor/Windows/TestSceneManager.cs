@@ -22,6 +22,33 @@ public class TestSceneManager : EditorWindow
     public SceneAsset _lobby;
     public SceneAsset _inGame;
 
+    public class SceneAssetPaths
+    {
+        public string _system;
+        public string _loading;
+        public string _logo;
+        public string _startMenu;
+        public string _lobby;
+        public string _inGame;
+
+        public SceneAssetPaths(string _0, string _1, string _2, string _3, string _4, string _5)
+        {
+            _system = _0;
+            _loading = _1;
+            _logo = _2;
+            _startMenu = _3;
+            _lobby = _4;
+            _inGame = _5;
+        }
+    }
+
+    SceneAssetPaths paths = new SceneAssetPaths(
+        "Assets/Scenes/System.unity",
+        "Assets/Scenes/Loading.unity", 
+        "Assets/Scenes/Logo.unity", 
+        "Assets/Scenes/StartMenu.unity", 
+        "Assets/Scenes/Lobby.unity", 
+        "Assets/Scenes/In Game.unity");  //存储场景路径
 
     ReadmeGUIStyles Styles
     {
@@ -77,10 +104,34 @@ public class TestSceneManager : EditorWindow
     private void Awake()
     {
         EditorSystem.EditorMatrix.Load(this);
+        LoadPaths();
         fade0.valueChanged.AddListener(() => Repaint());
     }
+    private void OnDestroy()
+    {
+        SavePaths();
+        EditorSystem.EditorMatrix.Save(this);
+    }
 
-    private void OnDestroy() { EditorSystem.EditorMatrix.Save(this); }
+    private void SavePaths()
+    {
+        paths._system = AssetDatabase.GetAssetPath(_system);
+        Log(paths._system);
+        paths._loading = AssetDatabase.GetAssetPath(_loading);
+        paths._logo = AssetDatabase.GetAssetPath(_logo);
+        paths._startMenu = AssetDatabase.GetAssetPath(_startMenu);
+        paths._lobby = AssetDatabase.GetAssetPath(_lobby);
+        paths._inGame = AssetDatabase.GetAssetPath(_inGame);
+    }
+    private void LoadPaths()
+    {
+        _system = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._system);
+        _loading = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._loading);
+        _logo = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._logo);
+        _startMenu = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._startMenu);
+        _lobby = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._lobby);
+        _inGame = AssetDatabase.LoadAssetAtPath<SceneAsset>(paths._inGame);
+    }
 
     private bool CheckSceneAsset(SceneAsset asset)
     {

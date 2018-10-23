@@ -38,7 +38,7 @@ public class CLUnit : MonoBehaviour
     private void OnDestroy()
     {
         //gameObject.SetActive(true);
-        //CircleLoopManager.DeleteUnit(this);
+        CircleLoopManager.DeleteUnit(this);
     }
 
 #endif

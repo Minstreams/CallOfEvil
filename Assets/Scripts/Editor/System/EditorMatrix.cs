@@ -10,9 +10,11 @@ namespace EditorSystem
     /// </summary>
     public static class EditorMatrix
     {
-
+        static List<string> keys = new List<string>();
         public static void Save(Object data)
         {
+            keys.Add(data.GetType().ToString());
+
             string stream = JsonUtility.ToJson(data);
             EditorPrefs.SetString(data.GetType().ToString(), stream);
             Debug.Log(data + " \teditor saved!");
@@ -24,14 +26,21 @@ namespace EditorSystem
                 Debug.Log("No editor data found for " + data);
                 return;
             }
+            keys.Add(data.GetType().ToString());
+
             string stream = EditorPrefs.GetString(data.GetType().ToString());
             JsonUtility.FromJsonOverwrite(stream, data);
             Debug.Log(data + " \teditor loaded!");
         }
-        [ContextMenu("Delete All editor Data")]
+        [MenuItem("开发者工具/Delete All editor Data")]
         public static void DeleteAll()
         {
-            EditorPrefs.DeleteAll();
+            //EditorPrefs.DeleteAll();
+            foreach(string k in keys)
+            {
+                EditorPrefs.DeleteKey(k);
+            }
+            keys.Clear();
             Debug.Log("All saved editor data deleted!");
         }
     }
