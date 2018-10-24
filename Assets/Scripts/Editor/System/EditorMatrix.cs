@@ -11,9 +11,33 @@ namespace EditorSystem
     public static class EditorMatrix
     {
         static List<string> keys = new List<string>();
+        private static void SaveKeys()
+        {
+            string stream = JsonUtility.ToJson(keys);
+            EditorPrefs.SetString("keys", stream);
+        }
+        private static void SaveKeys(string key)
+        {
+            if (!keys.Contains(key))
+            {
+                keys.Add(key);
+                SaveKeys();
+            }
+        }
+        [InitializeOnLoadMethod]
+        private static void LoadKeys()
+        {
+            if (!EditorPrefs.HasKey("keys"))
+                return;
+
+            string stream = EditorPrefs.GetString("keys");
+            JsonUtility.FromJsonOverwrite(stream, keys);
+        }
+
+
         public static void Save(Object data)
         {
-            keys.Add(data.GetType().ToString());
+            SaveKeys(data.GetType().ToString());
 
             string stream = JsonUtility.ToJson(data);
             EditorPrefs.SetString(data.GetType().ToString(), stream);
@@ -26,7 +50,7 @@ namespace EditorSystem
                 Debug.Log("No editor data found for " + data);
                 return;
             }
-            keys.Add(data.GetType().ToString());
+            SaveKeys(data.GetType().ToString());
 
             string stream = EditorPrefs.GetString(data.GetType().ToString());
             JsonUtility.FromJsonOverwrite(stream, data);
@@ -35,12 +59,14 @@ namespace EditorSystem
         [MenuItem("开发者工具/Delete All editor Data")]
         public static void DeleteAll()
         {
-            //EditorPrefs.DeleteAll();
-            foreach(string k in keys)
+            //EditorPrefs.DeleteAll();  //直接deleteAll会把系统设置也Delete掉
+            foreach (string k in keys)
             {
                 EditorPrefs.DeleteKey(k);
             }
             keys.Clear();
+            SaveKeys();
+
             Debug.Log("All saved editor data deleted!");
         }
     }
