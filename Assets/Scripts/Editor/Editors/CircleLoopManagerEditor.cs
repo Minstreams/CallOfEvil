@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Events;
 
 [CustomEditor(typeof(CircleLoopManager))]
 public class CircleLoopManagerEditor : Editor
@@ -21,9 +22,11 @@ public class CircleLoopManagerEditor : Editor
     {
         CircleLoopManager manager = target as CircleLoopManager;
         Handles.BeginGUI();
-        GUILayout.Label(manager.currentAngle.ToString(), "label");
         Handles.EndGUI();
     }
+
+
+
 
     [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
     static void OnGizmo(CircleLoopManager manager, GizmoType type)
@@ -41,12 +44,10 @@ public class CircleLoopManagerEditor : Editor
         manager.SetCurrentAngle(manager.GetAngle(hitPos));
         //Handles.SphereHandleCap(0, hitPos, Quaternion.identity, 0.5f, EventType.Repaint);
 
-
         //绘制可见范围
         Handles.color = Color.black;
         Handles.DrawSolidArc(Vector3.zero, Vector3.up, Quaternion.Euler(-Vector3.up * (manager.currentAngle - manager.AngleRadius)) * Vector3.right, 360 - 2 * manager.AngleRadius, 20);
         Handles.color = Color.white;
-
 
         //绘制中央信息
         GUIStyle style = new GUIStyle("label");
@@ -55,7 +56,15 @@ public class CircleLoopManagerEditor : Editor
 
         Handles.Label(Vector3.up * 0.5f, manager.CurrentCircle.ToString(), style);
 
+        style.fontSize = 10;
+        Handles.Label(Vector3.up * 1.5f,manager.currentAngle.ToString(), style);
+
     }
+
+
+
+
+
 
     /// <summary>
     /// 排序插入当前选中的游戏物体
@@ -74,7 +83,6 @@ public class CircleLoopManagerEditor : Editor
                 unit = g.AddComponent<CLUnit>();
                 unit.SetActive(true);
             }
-            manager.AddUnitSorted(unit);
         }
     }
 
@@ -90,7 +98,7 @@ public class CircleLoopManagerEditor : Editor
             if (unit != null)
             {
                 g.SetActive(true);
-                manager._DeleteUnit(unit);
+                Undo.DestroyObjectImmediate(unit);
             }
         }
     }
