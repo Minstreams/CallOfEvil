@@ -7,31 +7,7 @@ using UnityEngine;
 /// </summary>
 public class CircleLoopManager : MonoBehaviour
 {
-    private static CircleLoopManager instance;
-    public static CircleLoopManager Instance
-    {
-        get
-        {
-#if UNITY_EDITOR
-            if (instance == null)
-            {
-                GameObject g = GameObject.Find("CircleLoopManager");
-                if (g != null)
-                    instance = g.GetComponent<CircleLoopManager>();
-                if (g == null || instance == null)
-                {
-                    Debug.LogError("No Circle Loop Manager Found!");
-                    Debug.Break();
-                }
-            }
-#endif
-            return instance;
-        }
-    }
-    private void Awake()
-    {
-        instance = this;
-    }
+
 
     /// <summary>
     /// 当前圈数(0~n-1)
@@ -86,7 +62,6 @@ public class CircleLoopManager : MonoBehaviour
     {
         Vector2 pos = new Vector2(unitPos.x, unitPos.z);
         float angle = Rotate(CurrentCircle * 360, Vector2.SignedAngle(Vector2.right, pos));
-
         if (SubSigned(angle, Sub(currentGroupIndex * anglePerGroup, anglePerGroup)) < 0)
         {
             angle = Add(angle, 360);
@@ -274,11 +249,39 @@ public class CircleLoopManager : MonoBehaviour
 
 #if UNITY_EDITOR
     //编辑器控制-----------------------------------------------------------------
+    private static CircleLoopManager instance;
+    public static CircleLoopManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                GameObject g = GameObject.Find("CircleLoopManager");
+                if (g != null)
+                    instance = g.GetComponent<CircleLoopManager>();
+                if (g == null || instance == null)
+                {
+                    Debug.LogError("No Circle Loop Manager Found!");
+                    Debug.Break();
+                }
+            }
+            return instance;
+        }
+    }
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
+
     /// <summary>
     /// 排序插入
     /// </summary>
-    public void AddUnitSorted(CLUnit unit)
+    public void _AddUnitSorted(CLUnit unit)
     {
+        if (unitList.Contains(unit)) return;
+
         //计算Angle
         float angle = unit.angle = GetAngle(unit.transform.position);
 
@@ -303,12 +306,18 @@ public class CircleLoopManager : MonoBehaviour
             unitList.Insert(ptr, unit);
         }
     }
+    public static void AddUnitSorted(CLUnit unit)
+    {
+        Instance._AddUnitSorted(unit);
+    }
 
     /// <summary>
     /// 删除
     /// </summary>
     public void _DeleteUnit(CLUnit unit)
     {
+        if (!unitList.Contains(unit)) return;
+
         int index = unitList.IndexOf(unit);
         unitList.RemoveAt(index);
 
@@ -322,8 +331,6 @@ public class CircleLoopManager : MonoBehaviour
             maxBorderPtr = 0;
         }
         else if (maxBorderPtr > index) maxBorderPtr--;
-
-        DestroyImmediate(unit);
     }
     public static void DeleteUnit(CLUnit unit)
     {

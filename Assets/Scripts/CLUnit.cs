@@ -6,6 +6,7 @@ using UnityEngine;
 /// 地图物体单位
 /// </summary>
 [DisallowMultipleComponent]
+[ExecuteInEditMode]
 public class CLUnit : MonoBehaviour
 {
     /// <summary>
@@ -35,9 +36,13 @@ public class CLUnit : MonoBehaviour
 
 
 #if UNITY_EDITOR
+    private void Awake()
+    {
+        CircleLoopManager.AddUnitSorted(this);
+    }
+
     private void OnDestroy()
     {
-        //gameObject.SetActive(true);
         CircleLoopManager.DeleteUnit(this);
     }
 
