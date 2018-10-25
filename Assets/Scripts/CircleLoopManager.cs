@@ -7,8 +7,6 @@ using UnityEngine;
 /// </summary>
 public class CircleLoopManager : MonoBehaviour
 {
-
-
     /// <summary>
     /// 当前圈数(0~n-1)
     /// </summary>
@@ -19,22 +17,36 @@ public class CircleLoopManager : MonoBehaviour
     /// </summary>
     public int maxCircleCount = 5;
 
-    private const int groupNumPerCircle = 3; //每圈组数
-    private const float anglePerGroup = 360 / groupNumPerCircle; //每组角度
+    /// <summary>
+    /// 每圈组数
+    /// </summary>
+    public const int groupNumPerCircle = 3;
+    /// <summary>
+    /// 每组角度
+    /// </summary>
+    public const float anglePerGroup = 360 / groupNumPerCircle; 
 
-    private int currentGroupIndex;
+    /// <summary>
+    /// 当前组序号
+    /// </summary>
+    public int currentGroupIndex;
 
     /// <summary>
     /// 当前角度
     /// </summary>
     public float currentAngle;
 
-    public float angleRadius = 90;//角度动态半径
+    [SerializeField]
+    private float angleRadius = 90;//角度动态半径
 
 #if UNITY_EDITOR
-    public float editorAngleRadius = 150;
+    [SerializeField]
+    private float editorAngleRadius = 150;
 #endif
 
+    /// <summary>
+    /// 可视角度动态半径
+    /// </summary>
     public float AngleRadius
     {
         get
@@ -50,7 +62,7 @@ public class CircleLoopManager : MonoBehaviour
 
 
     //Angle计算------------------------------------------------------------------
-    private float MaxAngle { get { return maxCircleCount * 360; } }
+    public float MaxAngle { get { return maxCircleCount * 360; } }
     private float HalfMaxAngle { get { return MaxAngle / 2; } }
 
     /// <summary>
@@ -141,6 +153,9 @@ public class CircleLoopManager : MonoBehaviour
         else return ptr - 1;
     }
 
+    /// <summary>
+    /// 记录当前所在角度
+    /// </summary>
     public void SetCurrentAngle(float angle)
     {
         currentGroupIndex = (int)(angle / anglePerGroup);
