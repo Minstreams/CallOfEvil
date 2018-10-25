@@ -187,9 +187,12 @@ public class CircleLoopManagerEditor : Editor
 
 
         //绘制小人
+
+        float rr2 = Style.r0 * Mathf.Lerp(1, Style.r2, Mathf.Abs(beta) * 2f / CircleLoopManager.anglePerGroup);
+
         Handles.color = Style.arrowColor;
-        Handles.ArrowHandleCap(0, new Vector3(Mathf.Cos(manager.currentAngle * angleToPiRate), 0, Mathf.Sin(manager.currentAngle * angleToPiRate)) * Style.r0 * Mathf.Lerp(1, Style.r2, Mathf.Abs(beta) * 2f / CircleLoopManager.anglePerGroup), Quaternion.Euler(-90, 0, 0), Style.arrowSize, EventType.Repaint);
-        Handles.SphereHandleCap(0, new Vector3(Mathf.Cos(manager.currentAngle * angleToPiRate), Style.headHeight * Style.arrowSize, Mathf.Sin(manager.currentAngle * angleToPiRate)) * Style.r0 * Mathf.Lerp(1, Style.r2, Mathf.Abs(beta) * 2f / CircleLoopManager.anglePerGroup), Quaternion.identity, Style.headSize * Style.arrowSize, EventType.Repaint);
+        Handles.ArrowHandleCap(0, new Vector3(Mathf.Cos(manager.currentAngle * angleToPiRate), 0, Mathf.Sin(manager.currentAngle * angleToPiRate)) * rr2, Quaternion.Euler(-90, 0, 0), Style.arrowSize, EventType.Repaint);
+        Handles.SphereHandleCap(0, new Vector3(Mathf.Cos(manager.currentAngle * angleToPiRate) * rr2, Style.headHeight * Style.arrowSize, Mathf.Sin(manager.currentAngle * angleToPiRate) * rr2), Quaternion.identity, Style.headSize * Style.arrowSize, EventType.Repaint);
         Handles.color = Color.white;
     }
 
