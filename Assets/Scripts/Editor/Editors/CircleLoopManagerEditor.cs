@@ -32,12 +32,19 @@ public class CircleLoopManagerEditor : Editor
     private static readonly float bezierAngle = Mathf.Atan(bezierFactor);  //贝塞尔角
     private const float angleToPiRate = Mathf.PI / 180f;
 
+    private static AnimFloat outline0 = new AnimFloat(0);
+    private static AnimFloat outline1 = new AnimFloat(0);
+    private static AnimFloat outline2 = new AnimFloat(0);
+
     [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
     static void OnGizmo(CircleLoopManager manager, GizmoType type)
     {
+        float handleSize = HandleUtility.GetHandleSize(Vector3.zero);
+        Color gradient = Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle);
+
         //获取注视点并更新
         Vector3 hitPos;
-        if (focusMouse)
+        if (focusMouse && !EditorApplication.isPlaying)
         {
             Ray mouseRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
             float ty = mouseRay.origin.y / mouseRay.direction.y;
@@ -72,9 +79,9 @@ public class CircleLoopManagerEditor : Editor
             pit = new Vector3(Mathf.Cos(pAnglei + bezierAngle) * Style.r0 * bezierRadius, pi.y + Style.circleVerticalCurve.Evaluate(phi) * Style.circleVerticleRate * bezierAngle, Mathf.Sin(pAnglei + bezierAngle) * Style.r0 * bezierRadius);
 
 
-            Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-            Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-            Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+            Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+            Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+            Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
 
             alphai += CircleLoopManager.anglePerGroup;
             phi += CircleLoopManager.anglePerGroup;
@@ -94,8 +101,8 @@ public class CircleLoopManagerEditor : Editor
         pi = new Vector3(Mathf.Cos(pAnglei) * Style.r0, ppi.y - Style.circleVerticalCurve.Evaluate(phi) * Style.circleVerticleRate * newAngle * angleToPiRate, Mathf.Sin(pAnglei) * Style.r0);
         pit = new Vector3(Mathf.Cos(pAnglei + newBezierAngle) * Style.r0 * newBezierRadius, pi.y + Style.circleVerticalCurve.Evaluate(phi) * Style.circleVerticleRate * newBezierAngle, Mathf.Sin(pAnglei + newBezierAngle) * Style.r0 * newBezierRadius);
 
-        Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-        Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+        Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+        Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
         Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
 
 
@@ -104,7 +111,7 @@ public class CircleLoopManagerEditor : Editor
 
         //绘制可见范围
         Handles.color = Style.arcColor;
-        Handles.DrawSolidArc(Vector3.zero, Vector3.up, Quaternion.Euler(-Vector3.up * (manager.currentAngle - manager.AngleRadius)) * Vector3.right, 360 - 2 * manager.AngleRadius, Style.arcRadius * HandleUtility.GetHandleSize(Vector3.zero));
+        Handles.DrawSolidArc(Vector3.zero, Vector3.up, Quaternion.Euler(-Vector3.up * (manager.currentAngle - manager.AngleRadius)) * Vector3.right, 360 - 2 * manager.AngleRadius, Style.arcRadius * handleSize);
         Handles.color = Color.white;
 
 
@@ -123,9 +130,9 @@ public class CircleLoopManagerEditor : Editor
             pi = new Vector3(Mathf.Cos(pAnglei) * Style.r0, ppi.y + Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * CircleLoopManager.anglePerGroup * angleToPiRate, Mathf.Sin(pAnglei) * Style.r0);
             pit = new Vector3(Mathf.Cos(pAnglei - bezierAngle) * Style.r0 * bezierRadius, pi.y - Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * bezierAngle, Mathf.Sin(pAnglei - bezierAngle) * Style.r0 * bezierRadius);
 
-            Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-            Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-            Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+            Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(Mathf.Abs(phi))), null, Style.circleWidth);
+            Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(Mathf.Abs(phi))), null, Style.circleWidth);
+            Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(Mathf.Abs(phi))), null, Style.circleWidth);
 
             alphai += CircleLoopManager.anglePerGroup;
             phi += CircleLoopManager.anglePerGroup;
@@ -145,9 +152,32 @@ public class CircleLoopManagerEditor : Editor
         pi = new Vector3(Mathf.Cos(pAnglei) * Style.r0, ppi.y + Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * newAngle * angleToPiRate, Mathf.Sin(pAnglei) * Style.r0);
         pit = new Vector3(Mathf.Cos(pAnglei - newBezierAngle) * Style.r0 * newBezierRadius, pi.y - Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * newBezierAngle, Mathf.Sin(pAnglei - newBezierAngle) * Style.r0 * newBezierRadius);
 
-        Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-        Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
-        Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(Style.circleGradient.Evaluate(manager.currentAngle / manager.MaxAngle), Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+        Handles.DrawBezier(ppi, pi, ppit, pit, Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+        Handles.DrawBezier(ppi * Style.r2, pi * Style.r2, ppit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r2, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+        Handles.DrawBezier(ppi * Style.r3, pi * Style.r3, ppit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), pit * Mathf.Lerp(Style.r3, 1, newAngle / CircleLoopManager.anglePerGroup), Color.Lerp(gradient, Style.backColor, Style.circleColorCurve.Evaluate(phi)), null, Style.circleWidth);
+
+
+        //绘制组边线(只对应每层三组的情况)
+        int t = manager.currentGroupIndex % 3;
+        outline0.target = t != 1 ? 1 : 0;
+        outline1.target = t != 2 ? 1 : 0;
+        outline2.target = t != 0 ? 1 : 0;
+
+        Quaternion yRot = Quaternion.Euler(0, -120, 0);
+        Vector3 axis = Vector3.right;
+
+        Handles.color = Color.Lerp(Color.clear, gradient, outline0.value);
+        Handles.DrawAAPolyLine(Style.outlineWidth, axis * Style.r0 * Style.r3 * Style.outlineBegin, axis * Style.r0 * Style.r3 * Style.outlineEnd * handleSize);
+
+        axis = yRot * axis;
+        Handles.color = Color.Lerp(Color.clear, gradient, outline1.value);
+        Handles.DrawAAPolyLine(Style.outlineWidth, axis * Style.r0 * Style.r3 * Style.outlineBegin, axis * Style.r0 * Style.r3 * Style.outlineEnd * handleSize);
+
+        axis = yRot * axis;
+        Handles.color = Color.Lerp(Color.clear, gradient, outline2.value);
+        Handles.DrawAAPolyLine(Style.outlineWidth, axis * Style.r0 * Style.r3 * Style.outlineBegin, axis * Style.r0 * Style.r3 * Style.outlineEnd * handleSize);
+
+        Handles.color = Color.white;
 
 
         //绘制中央信息

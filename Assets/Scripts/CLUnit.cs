@@ -20,13 +20,17 @@ public class CLUnit : MonoBehaviour
     /// <summary>
     /// unit激活状态
     /// </summary>
-    public bool Active { get; private set; }
+    [HideInInspector]
+    public bool Active;
 
     public void SetActive(bool b)
     {
         //if (Active == b) return;
         Active = b;
         gameObject.SetActive(b);
+#if UNITY_EDITOR
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+#endif
     }
 
     //TODO：
@@ -38,7 +42,8 @@ public class CLUnit : MonoBehaviour
 #if UNITY_EDITOR
     private void Awake()
     {
-        CircleLoopManager.AddUnitSorted(this);
+        if (!UnityEditor.EditorApplication.isPlaying)
+            CircleLoopManager.AddUnitSorted(this);
     }
 
     private void OnDestroy()

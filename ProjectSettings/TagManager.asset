@@ -6,6 +6,7 @@ TagManager:
   tags:
   - LobbyManager
   - ServerList
+  - CircleLoopManager
   layers:
   - Default
   - TransparentFX

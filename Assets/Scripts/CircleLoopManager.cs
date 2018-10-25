@@ -24,7 +24,7 @@ public class CircleLoopManager : MonoBehaviour
     /// <summary>
     /// 每组角度
     /// </summary>
-    public const float anglePerGroup = 360 / groupNumPerCircle; 
+    public const float anglePerGroup = 360 / groupNumPerCircle;
 
     /// <summary>
     /// 当前组序号
@@ -130,10 +130,12 @@ public class CircleLoopManager : MonoBehaviour
     /// <summary>
     /// 最小值边界节点（范围外）
     /// </summary>
+    [SerializeField, HideInInspector]
     private int minBorderPtr;
     /// <summary>
     /// 最大值边界节点（范围外）
     /// </summary>
+    [SerializeField, HideInInspector]
     private int maxBorderPtr;
 
     /// <summary>
@@ -271,7 +273,7 @@ public class CircleLoopManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject g = GameObject.Find("CircleLoopManager");
+                GameObject g = GameObject.FindGameObjectWithTag("CircleLoopManager");
                 if (g != null)
                     instance = g.GetComponent<CircleLoopManager>();
                 if (g == null || instance == null)
@@ -286,6 +288,7 @@ public class CircleLoopManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        print("inss");
     }
 
 
@@ -349,6 +352,7 @@ public class CircleLoopManager : MonoBehaviour
     }
     public static void DeleteUnit(CLUnit unit)
     {
+        if (instance == null) return;
         Instance._DeleteUnit(unit);
     }
 

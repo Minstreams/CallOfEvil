@@ -27,4 +27,8 @@ public class CircleLoopManagerStyle : ScriptableObject
 
     public float headHeight;
     public float headSize;
+
+    public float outlineWidth = 4;
+    public float outlineBegin = 1.1f;
+    public float outlineEnd = 10f;
 }
