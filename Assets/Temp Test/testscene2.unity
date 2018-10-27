@@ -1161,7 +1161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   additions:
-  - uniform
+  - uniform_
   - Oxfords_Shoes
   - short_skirt
   - long_curly_hair
