@@ -4,12 +4,15 @@ using UnityEngine.Networking;
 
 public class RoomInfo : MonoBehaviour {
     public GameObject Manager;
+    public GameObject ServerList;
+    public NetworkDiscoveryManager discovery;
     public string ServerAddress;
     public string RoomName;
     public Text Address;
     public Text Name;
 	// Use this for initialization
 	void Start () {
+        ServerList = GameObject.FindGameObjectWithTag("ServerList");
         GetComponent<UIButton>().OnDoubleClick.AddListener(Clicked);
         Manager = GameObject.FindGameObjectWithTag("LobbyManager");
 	}
@@ -22,8 +25,12 @@ public class RoomInfo : MonoBehaviour {
 
     void Clicked()
     {
-        NetworkLobbyManager lobby = Manager.GetComponent<NetworkLobbyManager>();
+        
+        discovery = GameObject.FindGameObjectWithTag("discovery").GetComponent<NetworkDiscoveryManager>();
+        discovery.StopBroadcast();
+        NetworkLobby lobby = Manager.GetComponent<NetworkLobby>();
         lobby.networkAddress = ServerAddress;
         lobby.StartClient();
+        ServerList.SetActive(false);
     }
 }

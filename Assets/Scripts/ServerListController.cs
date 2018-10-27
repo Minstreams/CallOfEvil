@@ -27,7 +27,8 @@ public class ServerListController : MonoBehaviour {
             Infos.Add(address, name);
             GameObject info = GameObject.Instantiate(ServerInfo, Content.transform);
             ServerInfos.Add(info);
-            info.GetComponent<RoomInfo>().ServerAddress = address;
+            address = address.Substring(7);
+            info.GetComponent<RoomInfo>().ServerAddress = "127.0.0.1";
             info.GetComponent<RoomInfo>().RoomName = name;
         }
 

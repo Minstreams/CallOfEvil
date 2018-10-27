@@ -314,7 +314,7 @@ GameObject:
   - component: {fileID: 243169969}
   m_Layer: 0
   m_Name: NetworkDiscover
-  m_TagString: Untagged
+  m_TagString: discovery
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24085f146df2ce40833a1eea4a9a744, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BroadcastPort: 47777
+  m_BroadcastPort: 38099
   m_BroadcastKey: 2222
   m_BroadcastVersion: 1
   m_BroadcastSubVersion: 1
@@ -1902,7 +1902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fef8c8ff08c1e548af217fdb7166bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NetworkPort: 26848
+  m_NetworkPort: 7777
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
@@ -1974,7 +1974,7 @@ MonoBehaviour:
   matchMaker: {fileID: 0}
   m_ShowLobbyGUI: 0
   m_MaxPlayers: 6
-  m_MaxPlayersPerConnection: 1
+  m_MaxPlayersPerConnection: 2
   m_MinPlayers: 6
   m_LobbyPlayerPrefab: {fileID: 114948013718894456, guid: 2fe23f43ad496cd48921fd3b5abfd669,
     type: 2}
@@ -1983,6 +1983,14 @@ MonoBehaviour:
   m_LobbyScene: Lobby
   m_PlayScene: In Game
   lobbySlots: []
+  SpawnPoints:
+  - {fileID: 266191696}
+  - {fileID: 1523635666}
+  - {fileID: 1370857027}
+  - {fileID: 1545997597}
+  - {fileID: 1408288001}
+  - {fileID: 412254091}
+  ServerList: {fileID: 0}
 --- !u!4 &1958345425
 Transform:
   m_ObjectHideFlags: 0
