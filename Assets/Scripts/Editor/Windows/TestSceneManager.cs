@@ -62,6 +62,7 @@ public class TestSceneManager : EditorWindow
 
     AnimBool fade0 = new AnimBool(false);
     string console;
+    [SerializeField]
     bool quickStart;
     private void OnGUI()
     {
