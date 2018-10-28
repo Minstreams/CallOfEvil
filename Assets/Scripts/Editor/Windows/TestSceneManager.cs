@@ -44,10 +44,10 @@ public class TestSceneManager : EditorWindow
 
     SceneAssetPaths paths = new SceneAssetPaths(
         "Assets/Scenes/System.unity",
-        "Assets/Scenes/Loading.unity", 
-        "Assets/Scenes/Logo.unity", 
-        "Assets/Scenes/StartMenu.unity", 
-        "Assets/Scenes/Lobby.unity", 
+        "Assets/Scenes/Loading.unity",
+        "Assets/Scenes/Logo.unity",
+        "Assets/Scenes/StartMenu.unity",
+        "Assets/Scenes/Lobby.unity",
         "Assets/Scenes/In Game.unity");  //存储场景路径
 
     ReadmeGUIStyles Styles
@@ -98,7 +98,7 @@ public class TestSceneManager : EditorWindow
     [MenuItem("自制工具/场景测试器 _F5")]
     static void OpenWindow()
     {
-        TestSceneManager window = EditorWindow.GetWindow<TestSceneManager>("【Tester】");
+        EditorWindow.GetWindow<TestSceneManager>("【Tester】");
     }
 
     private void Awake()
@@ -116,7 +116,6 @@ public class TestSceneManager : EditorWindow
     private void SavePaths()
     {
         paths._system = AssetDatabase.GetAssetPath(_system);
-        Log(paths._system);
         paths._loading = AssetDatabase.GetAssetPath(_loading);
         paths._logo = AssetDatabase.GetAssetPath(_logo);
         paths._startMenu = AssetDatabase.GetAssetPath(_startMenu);
@@ -168,6 +167,11 @@ public class TestSceneManager : EditorWindow
 
         //删除多余场景
         Scene activeScene = EditorSceneManager.GetActiveScene();
+        if (activeScene.name == _system.name)
+        {
+            LogError("请选中除了System以外的任一场景（中的物体）");
+            return;
+        }
         for (int i = EditorSceneManager.sceneCount - 1; i >= 0; i--)
         {
             Scene s = EditorSceneManager.GetSceneAt(i);
@@ -180,6 +184,7 @@ public class TestSceneManager : EditorWindow
         EditorSceneManager.OpenScene(AssetDatabase.GetAssetPath(_system), OpenSceneMode.Additive);
         systemScene.GetRootGameObjects()[0].GetComponent<TheMatrix>().test = false;
 
+        EditorSceneManager.SetActiveScene(activeScene);
         EditorSceneManager.SaveScene(systemScene);
 
         Log("单独测试环境准备完毕！");
@@ -188,6 +193,11 @@ public class TestSceneManager : EditorWindow
     }
     public void SetTestScene()
     {
+        if (EditorApplication.isPlaying)
+        {
+            LogError("请先退出播放模式！");
+            return;
+        }
         if (!CheckProperties()) return;
         //保存场景
         EditorSceneManager.SaveOpenScenes();

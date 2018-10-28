@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 namespace GameSystem
@@ -174,17 +175,17 @@ namespace GameSystem
         //协程控制----------------------------
         private static Dictionary<System.Type, LinkedList<Coroutine>> routineDictionaty = new Dictionary<System.Type, LinkedList<Coroutine>>();
 
-        public static LinkedListNode<Coroutine> StartCoroutine(IEnumerator routine, System.Type type)
+        public static LinkedListNode<Coroutine> StartCoroutine(IEnumerator routine, System.Type key)
         {
             LinkedList<Coroutine> linkedList;
-            if (routineDictionaty.ContainsKey(type))
+            if (routineDictionaty.ContainsKey(key))
             {
-                linkedList = routineDictionaty[type];
+                linkedList = routineDictionaty[key];
             }
             else
             {
                 linkedList = new LinkedList<Coroutine>();
-                routineDictionaty.Add(type, linkedList);
+                routineDictionaty.Add(key, linkedList);
             }
             LinkedListNode<Coroutine> node = new LinkedListNode<Coroutine>(null);
             node.Value = Instance.StartCoroutine(SubCoroutine(routine, node));
@@ -192,10 +193,10 @@ namespace GameSystem
 
             return node;
         }
-        public static void StopAllCoroutines(System.Type type)
+        public static void StopAllCoroutines(System.Type key)
         {
-            if (!routineDictionaty.ContainsKey(type)) return;
-            LinkedList<Coroutine> linkedList = routineDictionaty[type];
+            if (!routineDictionaty.ContainsKey(key)) return;
+            LinkedList<Coroutine> linkedList = routineDictionaty[key];
 
             foreach (Coroutine c in linkedList)
             {
@@ -281,10 +282,16 @@ namespace GameSystem
         }
         private void Start()
         {
+            DontDestroyOnLoad(gameObject);
 #if UNITY_EDITOR
             if (test)
 #endif
                 StartCoroutine(_Start());
+
+#if UNITY_EDITOR
+            else
+                SceneManager.UnloadSceneAsync("System");
+#endif
             LoadAll();
         }
         private void OnDestroy()

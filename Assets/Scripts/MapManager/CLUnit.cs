@@ -42,6 +42,8 @@ public class CLUnit : MonoBehaviour
 #if UNITY_EDITOR
     private void Awake()
     {
+        print("unitAwake");
+        if (CircleLoopManager.Instance == null) return;
         if (!UnityEditor.EditorApplication.isPlaying)
             CircleLoopManager.AddUnitSorted(this);
     }

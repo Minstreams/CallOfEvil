@@ -19,6 +19,7 @@ namespace GameSystem
         /// 场景加载进度事件，用于在加载场景中播放进度加载效果
         /// </summary>
         public static event System.Action<float> InLoadingProgress;
+        private static AsyncOperation progress;
         /// <summary>
         /// 场景加载结束事件，用于退出加载效果并延迟一段时间，返回延迟秒数
         /// </summary>
@@ -49,46 +50,39 @@ namespace GameSystem
         }
         private static IEnumerator YieldPushScene(string sceneName, bool loadLoadingScene)
         {
+            //加载新场景
+            progress = SceneManager.LoadSceneAsync(sceneName, sceneStack.Count == 0 ? LoadSceneMode.Single : LoadSceneMode.Additive);
+
             if (loadLoadingScene)
-            {
                 //加载Loading场景
                 SceneManager.LoadScene(Setting.loadingScene, LoadSceneMode.Additive);
-                //加载新场景
-                AsyncOperation progress = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
-                if (InLoadingProgress != null)
-                    //加载进度效果
-                    while (!progress.isDone)
-                    {
-                        InLoadingProgress(progress.progress);
-                        yield return 0;
-                    }
-
-                //加载后延迟
-                yield return new WaitForSeconds(GetMaxReturn(OnLoaded));
-
-                //卸载Loading场景
-                SceneManager.UnloadSceneAsync("LoadingScene");
-            }
-            else
+            //加载进度效果
+            while (!progress.isDone)
             {
-                //直接加载新场景
-                SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                if (InLoadingProgress != null) InLoadingProgress(progress.progress);
+                yield return 0;
             }
-            sceneStack.Push(sceneName);
 
-            yield return 0;
+            //加载后延迟
+            yield return new WaitForSeconds(GetMaxReturn(OnLoaded));
+
+            if (loadLoadingScene)
+                //卸载Loading场景
+                SceneManager.UnloadSceneAsync(Setting.loadingScene);
+
+            sceneStack.Push(sceneName);
         }
         private static IEnumerator YieldPopScene(float delay)
         {
             yield return new WaitForSeconds(delay);
-            SceneManager.UnloadSceneAsync(sceneStack.Pop());
-            yield return 0;
+            string toPop = sceneStack.Pop();
+            if (sceneStack.Count > 0)
+                SceneManager.UnloadSceneAsync(toPop);
         }
         private static IEnumerator YieldPopAndPushScene(float delay, string sceneName, bool loadLoadingScene)
         {
-            yield return new WaitForSeconds(delay);
-            SceneManager.UnloadSceneAsync(sceneStack.Pop());
+            yield return YieldPopScene(delay);
             yield return YieldPushScene(sceneName, loadLoadingScene);
         }
         /// <summary>
@@ -99,7 +93,8 @@ namespace GameSystem
         public static void PushScene(string sceneName, bool loadLoadingScene = false)
         {
             Debug.Log("Push场景 " + sceneName);
-            TheMatrix.StartCoroutine(YieldPushScene(sceneName, loadLoadingScene), typeof(SceneSystem));
+
+            StartCoroutine(YieldPushScene(sceneName, loadLoadingScene));
         }
         /// <summary>
         /// 场景出栈,返回延迟秒数
@@ -112,7 +107,7 @@ namespace GameSystem
                 return 0;
             }
             float delay = GetMaxReturn(OnUnLoaded);
-            TheMatrix.StartCoroutine(YieldPopScene(delay), typeof(SceneSystem));
+            StartCoroutine(YieldPopScene(delay));
             return delay;
         }
         /// <summary>
@@ -128,7 +123,7 @@ namespace GameSystem
                 return 0;
             }
             float delay = GetMaxReturn(OnUnLoaded);
-            TheMatrix.StartCoroutine(YieldPopAndPushScene(delay, sceneName, loadLoadingScene), typeof(SceneSystem));
+            StartCoroutine(YieldPopAndPushScene(delay, sceneName, loadLoadingScene));
             return delay;
         }
 

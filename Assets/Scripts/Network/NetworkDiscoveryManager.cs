@@ -19,4 +19,5 @@ public class NetworkDiscoveryManager : NetworkDiscovery {
         list.AddServerInfo(fromAddress, data);
         base.OnReceivedBroadcast(fromAddress, data);
     }
+
 }

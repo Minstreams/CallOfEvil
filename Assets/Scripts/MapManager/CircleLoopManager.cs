@@ -288,7 +288,6 @@ public class CircleLoopManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        print("inss");
     }
 
 

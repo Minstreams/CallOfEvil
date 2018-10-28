@@ -8,7 +8,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 629a9bc732e42d7429fdbf2307559952, type: 3}
   m_Name: Circle Loop Style
   m_EditorClassIdentifier: Assembly-CSharp-Editor::CircleLoopManagerStyle
   arcColor: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 0.9098039}

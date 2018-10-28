@@ -1443,6 +1443,20 @@ MonoBehaviour:
   dirtIntensity:
     overrideState: 0
     value: 10
+--- !u!114 &114607395342324784
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ad050bd1ba81749b4f554ef1651917, type: 3}
+  m_Name: SEGI_NKLI
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass:UnityEngine.Rendering.PostProcessing:SEGI_NKLI
+  angle: 0
+  index: 0
+  Active: 0
 --- !u!114 &114981667653416594
 MonoBehaviour:
   m_ObjectHideFlags: 3
