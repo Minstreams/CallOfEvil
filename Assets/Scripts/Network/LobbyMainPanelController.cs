@@ -11,20 +11,8 @@ public class LobbyMainPanelController : MonoBehaviour
     public GameObject ServerList;
     public NetworkLobbyManager LobbyManager;
     public NetworkDiscoveryManager Discovery;
-    // Use this for initialization
-    void Start()
-    {
-        StartAsClient.onClick.AddListener(ClientStart);
-        StartAsServer.onClick.AddListener(ServerStart);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void ServerStart()
+    public void ServerStart()
     {
         Discovery.broadcastData = "DefaultRoom";
         Discovery.Initialize();
@@ -32,7 +20,7 @@ public class LobbyMainPanelController : MonoBehaviour
         NetworkManager.singleton.StartHost();
     }
 
-    void ClientStart()
+    public void ClientStart()
     {
         Discovery.Initialize();
         Discovery.StartAsClient();
