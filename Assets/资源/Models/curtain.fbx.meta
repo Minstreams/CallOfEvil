@@ -1,0 +1,181 @@
+fileFormatVersion: 2
+guid: c3c34ca3b159e3240a47315cfda04b15
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: 1
+    100002: 10
+    100004: 10_end
+    100006: 1_end
+    100008: 2
+    100010: 2_end
+    100012: 3
+    100014: 3_end
+    100016: 4
+    100018: 4_end
+    100020: 5
+    100022: 5_end
+    100024: 6
+    100026: 6_end
+    100028: 7
+    100030: 7_end
+    100032: 8
+    100034: 8_end
+    100036: 9
+    100038: 9_end
+    100040: Armature
+    100042: //RootNode
+    100044: main
+    100046: Plane.001
+    100048: Torus
+    100050: Torus.001
+    100052: Torus.002
+    100054: Torus.003
+    100056: Torus.004
+    100058: Torus.005
+    100060: Torus.006
+    100062: Torus.007
+    100064: Torus.008
+    100066: Torus.009
+    400000: 1
+    400002: 10
+    400004: 10_end
+    400006: 1_end
+    400008: 2
+    400010: 2_end
+    400012: 3
+    400014: 3_end
+    400016: 4
+    400018: 4_end
+    400020: 5
+    400022: 5_end
+    400024: 6
+    400026: 6_end
+    400028: 7
+    400030: 7_end
+    400032: 8
+    400034: 8_end
+    400036: 9
+    400038: 9_end
+    400040: Armature
+    400042: //RootNode
+    400044: main
+    400046: Plane.001
+    400048: Torus
+    400050: Torus.001
+    400052: Torus.002
+    400054: Torus.003
+    400056: Torus.004
+    400058: Torus.005
+    400060: Torus.006
+    400062: Torus.007
+    400064: Torus.008
+    400066: Torus.009
+    2100000: Material
+    2100002: No Name
+    4300000: Plane.001
+    4300002: Torus.009
+    4300004: Torus.008
+    4300006: Torus.007
+    4300008: Torus.006
+    4300010: Torus.005
+    4300012: Torus.004
+    4300014: Torus.003
+    4300016: Torus.002
+    4300018: Torus
+    4300020: Torus.001
+    9500000: //RootNode
+    13700000: Plane.001
+    13700002: Torus
+    13700004: Torus.001
+    13700006: Torus.002
+    13700008: Torus.003
+    13700010: Torus.004
+    13700012: Torus.005
+    13700014: Torus.006
+    13700016: Torus.007
+    13700018: Torus.008
+    13700020: Torus.009
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
