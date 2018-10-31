@@ -6,8 +6,8 @@ TagManager:
   tags:
   - LobbyManager
   - ServerList
-  - CircleLoopManager
   - discovery
+  - MapSystem
   layers:
   - Default
   - TransparentFX

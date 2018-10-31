@@ -205,7 +205,7 @@ namespace GameSystem
         /// <summary>
         /// 当前角度
         /// </summary>
-        public static float currentAngle;
+        public static float currentAngle { get; private set; }
         /// <summary>
         /// 当前圈数(0~n-1)
         /// </summary>
@@ -223,7 +223,7 @@ namespace GameSystem
         public static float GetAngle(Vector3 unitPos)
         {
             Vector2 pos = new Vector2(unitPos.x, unitPos.z);
-            float angle = Rotate(CurrentCircle * 360, Vector2.SignedAngle(pos, Vector2.right));
+            float angle = Rotate(CurrentCircle * 360, Vector2.SignedAngle(Vector2.right, pos));
             //用Group位置信息辅助计算
             if (SubSigned(angle, Sub(currentGroupIndex * AnglePerGroup, AnglePerGroup)) < 0)
             {
@@ -246,7 +246,7 @@ namespace GameSystem
         /// </summary>
         /// <param name="angle">角度</param>
         /// <param name="increment">增量(-360~360)</param>
-        private static float Rotate(float angle, float increment)
+        public static float Rotate(float angle, float increment)
         {
             if (increment > 0) return Add(angle, increment);
             else return Sub(angle, -increment);
@@ -296,13 +296,23 @@ namespace GameSystem
         /// </summary>
         public static void SetCurrentAngle(float angle)
         {
-            if (!Active) return;
+#if UNITY_EDITOR
+            if (!Active)
+            {
+                Debug.LogError("系统未激活！");
+                return;
+            }
+#endif
 
             int newGroupIndex = (int)(angle / AnglePerGroup);
             currentAngle = angle;
 
             //用一种没有可读性的方式，实现了Group的动态刷新
             int distance = newGroupIndex - currentGroupIndex;
+            int groupHalfCount = GroupCount / 2;
+            if (distance < -groupHalfCount) distance += GroupCount;
+            if (distance > groupHalfCount) distance -= GroupCount;
+
             if (distance > 0) for (int i = 0, oldLeft = GetPrevious(currentGroupIndex), newLeft = GetPrevious(newGroupIndex), newRight = GetNext(newGroupIndex); i < 3 && oldLeft != newLeft; i++, oldLeft = GetNext(oldLeft), newRight = GetPrevious(newRight))
                 {
                     groupList[oldLeft].Active = false;

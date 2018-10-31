@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+
 [CreateAssetMenu(fileName = "Map Manager Style", menuName = "系统配置文件/Map Manager Style")]
 public class MapManagerStyle : ScriptableObject
 {
+    [Header("场景GizmoStyle")]
     public Color arcColor;
     public GUIStyle circleIndexStyle;
     public GUIStyle angleStyle;
@@ -31,4 +33,9 @@ public class MapManagerStyle : ScriptableObject
     public float outlineWidth = 4;
     public float outlineBegin = 1.1f;
     public float outlineEnd = 10f;
+
+    [Header("编辑器Style")]
+    public float elementRadius = 8;
+    public float minScale = 0.001f;
+    public float maxScale = 0.1f;
 }

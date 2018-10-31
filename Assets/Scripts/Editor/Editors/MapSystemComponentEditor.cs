@@ -63,7 +63,7 @@ public class MapSystemComponentEditor : Editor
         float pAnglei = pAngle0 - MapSystem.AnglePerGroup * angleToPiRate;
         Vector3 ppi = p0, ppit;
         Vector3 pi, pit;
-        while (alphai < 180)
+        while (alphai <= 180)
         {
             ppit = new Vector3(Mathf.Cos(pAngleii - bezierAngle) * Style.r0 * bezierRadius, ppi.y - Style.circleVerticalCurve.Evaluate(phi) * Style.circleVerticleRate * bezierAngle, Mathf.Sin(pAngleii - bezierAngle) * Style.r0 * bezierRadius);
             pi = new Vector3(Mathf.Cos(pAnglei) * Style.r0, ppi.y - Style.circleVerticalCurve.Evaluate(phi) * Style.circleVerticleRate * MapSystem.AnglePerGroup * angleToPiRate, Mathf.Sin(pAnglei) * Style.r0);
@@ -115,7 +115,7 @@ public class MapSystemComponentEditor : Editor
         pAnglei = pAngle0 + MapSystem.AnglePerGroup * angleToPiRate;
 
         ppi = p0;
-        while (alphai < 180)
+        while (alphai <= 180)
         {
             ppit = new Vector3(Mathf.Cos(pAngleii + bezierAngle) * Style.r0 * bezierRadius, ppi.y + Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * bezierAngle, Mathf.Sin(pAngleii + bezierAngle) * Style.r0 * bezierRadius);
             pi = new Vector3(Mathf.Cos(pAnglei) * Style.r0, ppi.y + Style.circleVerticalCurve.Evaluate(Mathf.Abs(phi)) * Style.circleVerticleRate * MapSystem.AnglePerGroup * angleToPiRate, Mathf.Sin(pAnglei) * Style.r0);

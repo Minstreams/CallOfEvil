@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 37115787}
   m_Layer: 0
   m_Name: GameObject (13)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 119996046}
   m_Layer: 8
   m_Name: Post-process Volume
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 269221597}
   m_Layer: 0
   m_Name: GameObject (4)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -297,6 +297,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 0.99999994
       objectReference: {fileID: 0}
+    - target: {fileID: 1713324737955960, guid: f68d4acc5edee5e40add0e1d8735012b, type: 2}
+      propertyPath: m_TagString
+      value: MapSystem
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f68d4acc5edee5e40add0e1d8735012b, type: 2}
   m_IsPrefabAsset: 0
@@ -311,7 +315,7 @@ GameObject:
   - component: {fileID: 371829987}
   m_Layer: 0
   m_Name: GameObject (7)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -355,7 +359,7 @@ GameObject:
   - component: {fileID: 397161759}
   m_Layer: 0
   m_Name: GameObject (6)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -484,7 +488,7 @@ GameObject:
   - component: {fileID: 459225147}
   m_Layer: 0
   m_Name: GameObject (8)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -613,7 +617,7 @@ GameObject:
   - component: {fileID: 586027787}
   m_Layer: 0
   m_Name: CircleLoopManager
-  m_TagString: CircleLoopManager
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -940,7 +944,7 @@ GameObject:
   - component: {fileID: 931793915}
   m_Layer: 0
   m_Name: Agent
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -982,11 +986,11 @@ GameObject:
   - component: {fileID: 1012232047}
   m_Layer: 0
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1012232047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1001,7 +1005,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 0
   unitList: []
-  active: 0
+  active: 1
 --- !u!4 &1012232048
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,7 +1030,7 @@ GameObject:
   - component: {fileID: 1030542892}
   m_Layer: 0
   m_Name: GameObject (2)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1070,11 +1074,11 @@ GameObject:
   - component: {fileID: 1096385616}
   m_Layer: 0
   m_Name: GameObject (11)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1096385616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1089,7 +1093,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 11
   unitList: []
-  active: 1
+  active: 0
 --- !u!4 &1096385617
 Transform:
   m_ObjectHideFlags: 0
@@ -1115,7 +1119,7 @@ GameObject:
   - component: {fileID: 1219484495}
   m_Layer: 0
   m_Name: Directional Light
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1183,7 +1187,7 @@ GameObject:
   - component: {fileID: 1268653700}
   m_Layer: 0
   m_Name: GameObject (3)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1315,7 +1319,7 @@ GameObject:
   - component: {fileID: 1372368171}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1573,11 +1577,11 @@ GameObject:
   - component: {fileID: 1548169013}
   m_Layer: 0
   m_Name: GameObject (9)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1548169013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1592,7 +1596,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 9
   unitList: []
-  active: 1
+  active: 0
 --- !u!4 &1548169014
 Transform:
   m_ObjectHideFlags: 0
@@ -1702,7 +1706,7 @@ GameObject:
   - component: {fileID: 1753606982}
   m_Layer: 0
   m_Name: GameObject (12)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1746,11 +1750,11 @@ GameObject:
   - component: {fileID: 1820180279}
   m_Layer: 0
   m_Name: GameObject (10)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1820180279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1765,7 +1769,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 10
   unitList: []
-  active: 1
+  active: 0
 --- !u!4 &1820180280
 Transform:
   m_ObjectHideFlags: 0
@@ -1875,7 +1879,7 @@ GameObject:
   - component: {fileID: 1928828497}
   m_Layer: 0
   m_Name: GameObject (5)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1919,11 +1923,11 @@ GameObject:
   - component: {fileID: 1936167617}
   m_Layer: 0
   m_Name: GameObject (1)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1936167617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,7 +1942,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 1
   unitList: []
-  active: 0
+  active: 1
 --- !u!4 &1936167618
 Transform:
   m_ObjectHideFlags: 0
@@ -1963,11 +1967,11 @@ GameObject:
   - component: {fileID: 2052778617}
   m_Layer: 0
   m_Name: GameObject (14)
-  m_TagString: Untagged
+  m_TagString: MapSystem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2052778617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1982,7 +1986,7 @@ MonoBehaviour:
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   index: 14
   unitList: []
-  active: 0
+  active: 1
 --- !u!4 &2052778618
 Transform:
   m_ObjectHideFlags: 0

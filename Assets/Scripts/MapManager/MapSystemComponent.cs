@@ -16,7 +16,7 @@ public class MapSystemComponent : MonoBehaviour {
     /// </summary>
     public int circleCount;
 
-    private void Awake()
+    private void Update()
     {
         GameSystem.MapSystem.mapSystemComponent = this;
     }
