@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CreateAssetMenu(fileName = "Circle Loop Style", menuName = "系统配置文件/Circle Loop Style")]
-public class CircleLoopManagerStyle : ScriptableObject
+[CreateAssetMenu(fileName = "Map Manager Style", menuName = "系统配置文件/Map Manager Style")]
+public class MapManagerStyle : ScriptableObject
 {
     public Color arcColor;
     public GUIStyle circleIndexStyle;

@@ -35,6 +35,9 @@ namespace EditorSystem
         }
 
 
+        /// <summary>
+        /// 保存编辑器数据，数据按类型区分
+        /// </summary>
         public static void Save(Object data)
         {
             SaveKeys(data.GetType().ToString());
@@ -43,11 +46,14 @@ namespace EditorSystem
             EditorPrefs.SetString(data.GetType().ToString(), stream);
             Debug.Log(data + " \teditor saved!");
         }
+        /// <summary>
+        /// 载入编辑器数据，数据按类型区分
+        /// </summary>
         public static void Load(Object data)
         {
             if (!EditorPrefs.HasKey(data.GetType().ToString()))
             {
-                Debug.Log("No editor data found for " + data);
+                Debug.Log("No editor data found for " + data.GetType().ToString());
                 return;
             }
             SaveKeys(data.GetType().ToString());
@@ -70,4 +76,11 @@ namespace EditorSystem
             Debug.Log("All saved editor data deleted!");
         }
     }
+
+    public class SavablePref : Object
+    {
+        public void Load() { EditorMatrix.Load(this); }
+        public void Save() { EditorMatrix.Save(this); }
+    }
+
 }
