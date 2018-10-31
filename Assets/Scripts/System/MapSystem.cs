@@ -234,7 +234,7 @@ namespace GameSystem
         /// <summary>
         /// 角度相减，返回差值
         /// </summary>
-        private static float SubSigned(float angle1, float angle2)
+        public static float SubSigned(float angle1, float angle2)
         {
             float result = angle1 - angle2;
             if (result > HalfMaxAngle) return result - MaxAngle;

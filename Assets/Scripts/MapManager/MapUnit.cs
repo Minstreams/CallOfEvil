@@ -14,13 +14,17 @@ public class MapUnit : MonoBehaviour
     /// </summary>
     public float angle;
     /// <summary>
+    /// 所在的Group
+    /// </summary>
+    public MapGroup group;
+    /// <summary>
     /// 在MapGroup注册的index，用于网络同步
     /// </summary>
     public int index;
 
 
     //TODO：
-    //合并打包（所有无功能静态Unit打包到一块）
     //依据恐慌值变形
+    //其他功能
 
 }

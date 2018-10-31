@@ -51,11 +51,17 @@ namespace EditorSystem
         [MenuItem("自制工具/地图编辑器 _F6")]
         static void OpenWindow()
         {
-            EditorWindow.GetWindow<MapManager>("地图编辑器");
+            MapManager window = EditorWindow.GetWindow<MapManager>("地图编辑器");
+            window.autoRepaintOnSceneChange = true;
         }
 
         private void OnGUI()
         {
+            Handles.DrawSolidArc(Event.current.mousePosition, Vector3.forward, Vector3.down, 60, 250);
+            Handles.Label(Event.current.mousePosition, "TestHandle");
+
+
+            GUILayout.Label("Test");
         }
 
 
@@ -66,6 +72,9 @@ namespace EditorSystem
 
         //地图生成控制的编辑器方法-------------------------------------------------------
 
+        /// <summary>
+        /// 存储Group
+        /// </summary>
         public static void SaveGroup(MapGroup group)
         {
             if (MapSystem.MapGroupAssets.ContainsKey(group.groupName))
@@ -81,7 +90,6 @@ namespace EditorSystem
                 MapSystem.MapGroupAssets.Add(group.groupName, MapGroupAssetEditor.CreateGroupAsset(group));
             }
         }
-
         /// <summary>
         /// 尝试卸载Group，并决定卸载前是否，若取消卸载返回false
         /// </summary>
@@ -106,13 +114,17 @@ namespace EditorSystem
                 return true;
             }
         }
-
+        /// <summary>
+        /// 加载一个Group到指定位置
+        /// </summary>
         public static void LoadGroup(MapGroupAsset asset, int index)
         {
             if (groupList[index] != null && !UnLoadGroup(groupList[index])) return;
             MapSystem.LoadGroup(asset, index);
         }
-
+        /// <summary>
+        /// 在指定位置创建空的Group
+        /// </summary>
         public static void NewEmptyGroup(int index)
         {
             if (groupList[index] != null && !UnLoadGroup(groupList[index])) return;
@@ -132,6 +144,101 @@ namespace EditorSystem
 
 
 
+
         //场景编辑方法-------------------------------------------------------------------
+        /// <summary>
+        /// 将GameObject设为对应Group的子物体
+        /// </summary>
+        public static void SetMapObject(GameObject g)
+        {
+            MapGroup group = g.GetComponentInParent<MapGroup>();
+            float gAngle = MapSystem.GetAngle(g.transform.position);
+            int gIndex = (int)(gAngle / MapSystem.AnglePerGroup);
+            MapUnit[] units = g.GetComponentsInChildren<MapUnit>();
+
+            if (group == null)
+            {
+                //新添加
+                group = groupList[gIndex];
+
+                g.transform.SetParent(group.transform, true);
+
+                foreach (MapUnit unit in units)
+                {
+                    AddUnit(unit, group);
+                }
+            }
+            else if (gIndex != group.index)
+            {
+                //换组
+                MapGroup newGroup = groupList[gIndex];
+                g.transform.SetParent(newGroup.transform, true);
+
+                foreach (MapUnit unit in units)
+                {
+                    DeleteUnit(unit);
+                    AddUnit(unit, newGroup);
+                }
+            }
+            else
+            {
+                //调整
+                foreach (MapUnit unit in units)
+                {
+                    AdjustUnit(unit);
+                }
+            }
+        }
+
+        public static void AddUnit(MapUnit unit, MapGroup group)
+        {
+            unit.angle = MapSystem.GetAngle(unit.transform.position);
+            unit.group = group;
+            List<MapUnit> list = group.unitList;
+
+            int i = 0;
+            while (i < list.Count && list[i].angle < unit.angle) i++;
+
+            list.Insert(i, unit);
+            unit.index = i;
+
+            for (int j = i + 1; j < list.Count; j++)
+            {
+                list[j].index = j;
+            }
+        }
+
+        public static void DeleteUnit(MapUnit unit)
+        {
+            MapGroup group = unit.group;
+
+            group.unitList.RemoveAt(unit.index);
+            unit.group = null;
+
+            for (int j = unit.index; j < group.unitList.Count; j++)
+            {
+                group.unitList[j].index = j;
+            }
+        }
+
+        public static void AdjustUnit(MapUnit unit)
+        {
+            float angle = MapSystem.GetAngle(unit.transform.position);
+            MapGroup group = unit.group;
+            List<MapUnit> list = group.unitList;
+
+            if (MapSystem.SubSigned(angle, unit.angle) > 0)
+                for (int i = unit.index + 1; i < list.Count && list[i].angle < angle; i++)
+                {
+                    list[i - 1] = list[i];
+                    list[i] = unit;
+                }
+            else
+                for (int i = unit.index - 1; i >= 0 && list[i].angle > angle; i--)
+                {
+                    list[i + 1] = list[i];
+                    list[i] = unit;
+                }
+        }
     }
 }
