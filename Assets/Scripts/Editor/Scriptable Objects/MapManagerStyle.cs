@@ -35,7 +35,10 @@ public class MapManagerStyle : ScriptableObject
     public float outlineEnd = 10f;
 
     [Header("编辑器Style")]
+    public AnimationCurve arcAlphaCurve = new AnimationCurve(new Keyframe(0f, 0f, 0f, 0f), new Keyframe(180f, 1f, 0f, 0f));
     public float elementRadius = 8;
     public float minScale = 0.001f;
     public float maxScale = 0.1f;
+    public Color elementBackColor = Color.clear;
+    public float elementAlpha = 0.5f;
 }

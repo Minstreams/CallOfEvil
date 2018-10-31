@@ -55,17 +55,26 @@ namespace EditorSystem
             EditorWindow.GetWindow<MapManager>("地图编辑器", true);
         }
 
-        private void Awake()
+        private void OnEnable()
         {
             wantsMouseMove = true;
             autoRepaintOnSceneChange = true;
             targetQuaternion.valueChanged.AddListener(() => Repaint());
             Selection.selectionChanged += OnSelectionChanged;
+            SceneView.onSceneGUIDelegate += OnSceneFunc;
+            EditorApplication.hierarchyChanged += OnSelectionChanged;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             Selection.selectionChanged -= OnSelectionChanged;
+            SceneView.onSceneGUIDelegate -= OnSceneFunc;
+            EditorApplication.hierarchyChanged -= OnSelectionChanged;
+        }
+
+        private void OnSceneFunc(SceneView sceneView)
+        {
+            Repaint();
         }
 
         private GameObject lastActive = null;
@@ -74,67 +83,70 @@ namespace EditorSystem
             if (MapSystem.Active && lastActive != null)
             {
                 SetMapObject(lastActive);
+                if (lastActive == Selection.activeGameObject)
+                {
+                    lastActive = null;
+                    Selection.activeGameObject = null;
+                    return;
+                }
             }
             lastActive = Selection.activeGameObject;
         }
 
         private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.identity);
         private float viewScale = 20;
+        private Quaternion cameraRotation;
+        float edge = 20;
+        float radius;
+        Vector2 center;
+
+        Quaternion rot = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup);
 
         private void OnGUI()
         {
-            float edge = 20;
-            float radius = EditorGUIUtility.currentViewWidth / 2 - 20;
-            Vector2 center = Vector2.one * (radius + edge);
-            int index = MapSystem.currentGroupIndex;
+            radius = EditorGUIUtility.currentViewWidth / 2 - 20;
+            center = Vector2.one * (radius + edge);
 
-            Vector2 start = Vector2.right;
+            Vector3 cameraDir = SceneView.lastActiveSceneView.camera.transform.position;
+            Vector2 start = Vector3.right;
+            cameraRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(-cameraDir.x, -cameraDir.z, 0));
             Vector2 mid = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup / 2) * Vector2.right * radius / 2;
-            Quaternion rot = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup);
 
 
             switch (Event.current.type)
             {
                 case EventType.Repaint:
-                    //画底部
-                    float angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
-                    Color color = Style.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
-                    color.a = Mathf.Lerp(1, 0, Style.circleColorCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle))));
-                    Handles.color = color;
-                    Handles.DrawSolidArc(center, Vector3.back, start, 120, radius);
+                    //画底部圆盘
 
-                    start = rot * start;
-                    mid = rot * mid;
-                    angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
-                    color = Style.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
-                    color.a = Mathf.Lerp(1, 0, Style.circleColorCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle))));
-                    Handles.color = color;
-                    Handles.DrawSolidArc(center, Vector3.back, start, 120, radius);
-
-                    start = rot * start;
-                    mid = rot * mid;
-                    angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
-                    color = Style.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
-                    color.a = Mathf.Lerp(1, 0, Style.circleColorCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle))));
-                    Handles.color = color;
-                    Handles.DrawSolidArc(center, Vector3.back, start, 120, radius);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        float angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
+                        Color color = Style.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
+                        float alpha = 1 - Style.arcAlphaCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle)));
+                        color.a = Mathf.Lerp(0, 1, alpha);
+                        Handles.color = color;
+                        Handles.DrawSolidArc(center, Vector3.back, cameraRotation * start, 120, radius);
+                        Handles.Label((Vector3)center + cameraRotation * mid, ((int)(angle / MapSystem.AnglePerGroup)).ToString());
+                        start = rot * start;
+                        mid = rot * mid;
+                    }
 
                     Handles.color = Color.white;
 
 
                     //画元素
-                    for (int i = 0; i < groupList[index].transform.childCount; i++)
-                    {
-                        Transform child = groupList[index].transform.GetChild(i);
-                        Vector3 worldPos = child.position;
-                        Vector2 guiDir = new Vector2(worldPos.x, -worldPos.z) * viewScale * radius;
-                        Handles.color = GetColor(child.gameObject);
-                        Handles.DrawSolidDisc(center + guiDir, Vector3.back, Style.elementRadius);
-                    }
-                    Handles.color = Color.white;
+                    MapGroup group = groupList[MapSystem.currentGroupIndex];
+                    DrawElement(group, 1);
+
+                    group = groupList[MapSystem.GetPrevious(MapSystem.currentGroupIndex)];
+                    DrawElement(group, Style.elementAlpha);
+
+                    group = groupList[MapSystem.GetNext(MapSystem.currentGroupIndex)];
+                    DrawElement(group, Style.elementAlpha);
+
                     break;
                 case EventType.MouseDown:
-                    Vector2 mouseMinusCenter = Event.current.mousePosition - center;
+                    Vector2 mouseMinusCenter = Quaternion.Inverse(cameraRotation) * (Event.current.mousePosition - center);
                     Vector3 mouseMinusCenterOnGround = new Vector3(mouseMinusCenter.x, 0, -mouseMinusCenter.y);
                     float targetAngle = ((int)(MapSystem.GetAngle(mouseMinusCenterOnGround) / MapSystem.AnglePerGroup)) * MapSystem.AnglePerGroup + MapSystem.AnglePerGroup / 2;
 
@@ -147,6 +159,20 @@ namespace EditorSystem
             //控制
             viewScale = EditorGUILayout.Slider("Scale", viewScale, Style.minScale, Style.maxScale);
             MapSystem.SetCurrentAngle(QuaternionToAngle(targetQuaternion.value.eulerAngles.y));
+
+        }
+
+        private void DrawElement(MapGroup group, float alpha)
+        {
+            for (int i = 0; i < group.transform.childCount; i++)
+            {
+                Transform child = group.transform.GetChild(i);
+                Vector3 worldPos = child.position;
+                Vector2 guiDir = new Vector2(worldPos.x, -worldPos.z) * viewScale * radius;
+                Handles.color = Color.Lerp(Style.backColor, GetColor(child.gameObject), alpha);
+                Handles.DrawSolidDisc((Vector3)center + cameraRotation * guiDir, Vector3.back, Style.elementRadius);
+            }
+            Handles.color = Color.white;
 
         }
 
@@ -263,7 +289,6 @@ namespace EditorSystem
             MapGroup group = g.GetComponentInParent<MapGroup>();
             float gAngle = MapSystem.GetAngle(g.transform.position);
             int gIndex = (int)(gAngle / MapSystem.AnglePerGroup);
-            Debug.Log(gAngle + "+" + gIndex);
             MapUnit[] units = g.GetComponentsInChildren<MapUnit>();
 
             if (group == null)

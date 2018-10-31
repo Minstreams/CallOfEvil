@@ -277,7 +277,7 @@ namespace GameSystem
         /// <summary>
         /// 环向搜索的下一个位置
         /// </summary>
-        private static int GetNext(int ptr)
+        public static int GetNext(int ptr)
         {
             if (ptr == GroupCount - 1) return 0;
             else return ptr + 1;
@@ -285,7 +285,7 @@ namespace GameSystem
         /// <summary>
         /// 环向搜索的上一个
         /// </summary>
-        private static int GetPrevious(int ptr)
+        public static int GetPrevious(int ptr)
         {
             if (ptr == 0) return GroupCount - 1;
             else return ptr - 1;

@@ -184,7 +184,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.39583334
     - serializedVersion: 3
-      time: 42.874786
+      time: 42.124786
       value: 0.06977247
       inSlope: 0.0047272523
       outSlope: 0.0047272523
@@ -192,6 +192,15 @@ MonoBehaviour:
       weightedMode: 0
       inWeight: 0.7900864
       outWeight: 0.27803212
+    - serializedVersion: 3
+      time: 121.39041
+      value: 0.77583903
+      inSlope: 0.008929463
+      outSlope: 0.008929463
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.30139688
+      outWeight: 0.41277418
     - serializedVersion: 3
       time: 180
       value: 1
@@ -246,6 +255,32 @@ MonoBehaviour:
   outlineWidth: 4
   outlineBegin: 1.1
   outlineEnd: 2.5
+  arcAlphaCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 180
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   elementRadius: 8
   minScale: 0.001
   maxScale: 0.1
+  elementBackColor: {r: 0, g: 0, b: 0, a: 0}
+  elementAlpha: 0.1

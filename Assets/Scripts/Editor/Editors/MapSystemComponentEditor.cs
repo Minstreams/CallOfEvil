@@ -154,7 +154,7 @@ public class MapSystemComponentEditor : Editor
         outline1.target = t != 2 ? 1 : 0;
         outline2.target = t != 0 ? 1 : 0;
 
-        Quaternion yRot = Quaternion.Euler(0, 120, 0);
+        Quaternion yRot = Quaternion.Euler(0,-120, 0);
         Vector3 axis = Vector3.right;
 
         Handles.color = Color.Lerp(Color.clear, gradient, outline0.value);
