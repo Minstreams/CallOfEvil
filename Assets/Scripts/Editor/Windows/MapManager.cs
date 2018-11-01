@@ -21,7 +21,26 @@ namespace EditorSystem
         /// 组记录表
         /// </summary>
         public static List<MapGroup> groupList { get { return MapSystem.groupList; } }
-
+        /// <summary>
+        /// 地图组预设
+        /// </summary>
+        public static List<MapGroupAsset> MapGroupAssets { get { return Style.mapGroupAssets; } }
+        public static bool ContainsAsset(string name)
+        {
+            foreach (MapGroupAsset asset in MapGroupAssets)
+            {
+                if (asset.groupName == name) return true;
+            }
+            return false;
+        }
+        public static MapGroupAsset GetGroupAssetByName(string name)
+        {
+            foreach (MapGroupAsset asset in MapGroupAssets)
+            {
+                if (asset.groupName == name) return asset;
+            }
+            return null;
+        }
 
 
 
@@ -80,13 +99,13 @@ namespace EditorSystem
         private GameObject lastActive = null;
         private void OnSelectionChanged()
         {
-            if (MapSystem.Active && lastActive != null)
+            if (MapSystem.Active && lastActive != null && PrefabUtility.GetPrefabType(lastActive) == PrefabType.PrefabInstance)
             {
                 SetMapObject(lastActive);
                 if (lastActive == Selection.activeGameObject)
                 {
                     lastActive = null;
-                    Selection.activeGameObject = null;
+                    //Selection.activeGameObject = null;
                     return;
                 }
             }
@@ -107,9 +126,9 @@ namespace EditorSystem
             radius = EditorGUIUtility.currentViewWidth / 2 - 20;
             center = Vector2.one * (radius + edge);
 
-            Vector3 cameraDir = SceneView.lastActiveSceneView.camera.transform.position;
+            Vector3 cameraDir = SceneView.lastActiveSceneView == null ? Vector3.back : SceneView.lastActiveSceneView.camera.transform.forward;
             Vector2 start = Vector3.right;
-            cameraRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(-cameraDir.x, -cameraDir.z, 0));
+            cameraRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(cameraDir.x, cameraDir.z, 0));
             Vector2 mid = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup / 2) * Vector2.right * radius / 2;
 
 
@@ -210,17 +229,17 @@ namespace EditorSystem
         /// </summary>
         public static void SaveGroup(MapGroup group)
         {
-            if (MapSystem.MapGroupAssets.ContainsKey(group.groupName))
+            if (ContainsAsset(group.groupName))
             {
                 if (EditorUtility.DisplayDialog("温馨小提示", "场景组已存在，是否覆盖？", "覆盖", "取消"))
                 {
-                    MapGroupAssetEditor.SaveToAsset(group, MapSystem.MapGroupAssets[group.groupName]);
+                    MapGroupAssetEditor.SaveToAsset(group, GetGroupAssetByName(group.groupName));
                     pref.dirtyMark[group.index] = false;
                 }
             }
             else
             {
-                MapSystem.MapGroupAssets.Add(group.groupName, MapGroupAssetEditor.CreateGroupAsset(group));
+                MapGroupAssets.Add(MapGroupAssetEditor.CreateGroupAsset(group));
             }
         }
         /// <summary>

@@ -58,8 +58,7 @@ namespace GameSystem
             //随机数可以考虑利用seed自定义算法
             return Setting.mapGernerationPlans[GameLevelSystem.MaxPlayerCount - CircleCount];
         }
-        public static Dictionary<string, MapGroupAsset> MapGroupAssets { get { return Setting.mapGroupAssets; } }
-
+        
         /// <summary>
         /// 使用一个seed生成地图，调用后会自动用seed初始化随机数生成器
         /// </summary>

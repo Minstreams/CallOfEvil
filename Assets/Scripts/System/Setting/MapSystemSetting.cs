@@ -36,10 +36,7 @@ namespace GameSystem
             /// </summary>
             public List<MapGernerationPlan> mapGernerationPlans;
 
-            /// <summary>
-            /// 所有地图组预设
-            /// </summary>
-            public Dictionary<string, MapGroupAsset> mapGroupAssets = new Dictionary<string, MapGroupAsset>();
+
         }
     }
 }

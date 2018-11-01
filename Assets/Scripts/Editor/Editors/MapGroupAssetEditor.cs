@@ -100,7 +100,7 @@ public class MapGroupAssetEditor : Editor
         }
 
         //取消注册
-        MapSystem.MapGroupAssets.Remove(groupAsset.groupName);
+        EditorSystem.MapManager.MapGroupAssets.Remove(groupAsset);
 
         //删除文件夹
         AssetDatabase.DeleteAsset(AssetPath + groupAsset.groupName);

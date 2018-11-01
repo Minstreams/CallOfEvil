@@ -41,4 +41,16 @@ public class MapManagerStyle : ScriptableObject
     public float maxScale = 0.1f;
     public Color elementBackColor = Color.clear;
     public float elementAlpha = 0.5f;
+
+
+    [Header("属性面板Style")]
+    public GUIStyle debugMessageStyle;
+
+
+    [Header("重要数据存储")]
+    /// <summary>
+    /// 所有地图组预设
+    /// </summary>
+    public List<MapGroupAsset> mapGroupAssets = new List<MapGroupAsset>();
+
 }
