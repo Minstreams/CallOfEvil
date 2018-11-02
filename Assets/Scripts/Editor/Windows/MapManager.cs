@@ -16,7 +16,7 @@ namespace EditorSystem
     {
         //引用---------------------------------------------------------------------------
         private static MapManagerStyle style;
-        public static MapManagerStyle Style { get { if (style == null) { style = (MapManagerStyle)EditorGUIUtility.Load("Map Manager Style.asset"); } return style; } }
+        public static MapManagerStyle Style { get { return style; } }
         /// <summary>
         /// 组记录表
         /// </summary>
@@ -42,6 +42,10 @@ namespace EditorSystem
             return null;
         }
 
+        /// <summary>
+        /// 地图编辑器是否已经激活
+        /// </summary>
+        public static bool Active { get { return style != null && MapSystem.Active; } }
 
 
 
@@ -49,16 +53,20 @@ namespace EditorSystem
         [System.Serializable]
         private class Pref : SavablePref
         {
+            /// <summary>
+            /// 标记场上Group是否改变
+            /// </summary>
             public List<bool> dirtyMark = new List<bool>();
         }
-
         private static Pref pref = new Pref();
 
         [InitializeOnLoadMethod]
         private static void Init()
         {
             pref.Load();
+            style = (MapManagerStyle)EditorGUIUtility.Load("Map Manager Style.asset");
             EditorApplication.quitting += pref.Save;
+            Debug.Log("Map Manager Inited!");
         }
 
 
@@ -82,6 +90,7 @@ namespace EditorSystem
             Selection.selectionChanged += OnSelectionChanged;
             SceneView.onSceneGUIDelegate += OnSceneFunc;
             EditorApplication.hierarchyChanged += OnSelectionChanged;
+            Debug.Log("Map Manager Enabled!");
         }
 
         private void OnDisable()
@@ -89,6 +98,7 @@ namespace EditorSystem
             Selection.selectionChanged -= OnSelectionChanged;
             SceneView.onSceneGUIDelegate -= OnSceneFunc;
             EditorApplication.hierarchyChanged -= OnSelectionChanged;
+            Debug.Log("Map Manager Disabled!");
         }
 
         private void OnSceneFunc(SceneView sceneView)
@@ -96,20 +106,20 @@ namespace EditorSystem
             Repaint();
         }
 
-        private GameObject lastActive = null;
+        private GameObject lastActiveGameObject = null;
         private void OnSelectionChanged()
         {
-            if (MapSystem.Active && lastActive != null && PrefabUtility.GetPrefabType(lastActive) == PrefabType.PrefabInstance)
+            if (Active && lastActiveGameObject != null && PrefabUtility.GetPrefabType(lastActiveGameObject) == PrefabType.PrefabInstance)
             {
-                SetMapObject(lastActive);
-                if (lastActive == Selection.activeGameObject)
+                SetMapObject(lastActiveGameObject);
+                if (lastActiveGameObject == Selection.activeGameObject)
                 {
-                    lastActive = null;
+                    lastActiveGameObject = null;
                     //Selection.activeGameObject = null;
                     return;
                 }
             }
-            lastActive = Selection.activeGameObject;
+            lastActiveGameObject = Selection.activeGameObject;
         }
 
         private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.identity);
@@ -123,6 +133,12 @@ namespace EditorSystem
 
         private void OnGUI()
         {
+            if (!Active)
+            {
+                GUILayout.Label("地图没打开，地图编辑器未激活！");
+                return;
+            }
+
             radius = EditorGUIUtility.currentViewWidth / 2 - 20;
             center = Vector2.one * (radius + edge);
 

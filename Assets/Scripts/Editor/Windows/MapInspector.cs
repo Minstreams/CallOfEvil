@@ -11,8 +11,8 @@ namespace EditorSystem
         private static MapManagerStyle Style { get { return MapManager.Style; } }
 
         //字段
-        private string debugMessage;
-        private bool debugGUILog;
+        private string debugMessage = "";
+        private bool debugGUILog = false;
 
         private GameObject target;
         private Editor selectedEditor;
@@ -48,13 +48,14 @@ namespace EditorSystem
             Instance,   //选中实例
             Invalid
         }
-        private SelectionCheckResult result = SelectionCheckResult.None;
+        private SelectionCheckResult result = SelectionCheckResult.Invalid;
 
         /// <summary>
         /// 检查选择项
         /// </summary>
         private SelectionCheckResult SelectionCheck()
         {
+            Debug.Log("Selection Checking!");
             if (Selection.gameObjects.Length > 1)
             {
                 target = null;
@@ -68,6 +69,7 @@ namespace EditorSystem
                 return SelectionCheckResult.None;
             }
 
+            Debug.Log("Editor Creating!");
             selectedEditor = Editor.CreateEditor(target);
             switch (PrefabUtility.GetPrefabType(target))
             {
@@ -87,8 +89,15 @@ namespace EditorSystem
             Repaint();
         }
 
+
         private void OnGUI()
         {
+            if (!MapManager.Active)
+            {
+                GUILayout.Label("地图没打开，地图编辑器未激活！");
+                return;
+            }
+
             debugGUILog = EditorGUILayout.Toggle("Debug GUI Log", debugGUILog);
             if (debugGUILog) Debug.Log("OnGUI():EventType - " + Event.current.type);
 
@@ -114,6 +123,7 @@ namespace EditorSystem
                     break;
 
             }
+
             DebugMessageUpdate();
             GUILayout.Label(debugMessage, Style.debugMessageStyle);
         }

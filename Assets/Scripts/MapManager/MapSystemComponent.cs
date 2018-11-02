@@ -6,7 +6,8 @@ using UnityEngine;
 /// 地图系统的组件，用于记录Group数据
 /// </summary>
 [ExecuteInEditMode]
-public class MapSystemComponent : MonoBehaviour {
+public class MapSystemComponent : MonoBehaviour
+{
     /// <summary>
     /// 组记录表
     /// </summary>
@@ -16,9 +17,9 @@ public class MapSystemComponent : MonoBehaviour {
     /// </summary>
     public int circleCount;
 
-    private void Update()
+    private void OnEnable()
     {
         GameSystem.MapSystem.mapSystemComponent = this;
-    }
 
+    }
 }
