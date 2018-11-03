@@ -74,7 +74,7 @@ namespace EditorSystem
 
 
 
-        //编辑器UI-----------------------------------------------------------------------
+        //UI基础-----------------------------------------------------------------------
         [MenuItem("自制工具/地图编辑器 _F6")]
         static void OpenWindow()
         {
@@ -122,24 +122,31 @@ namespace EditorSystem
             lastActiveGameObject = Selection.activeGameObject;
         }
 
-        private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.identity);
-        private float viewScale = 20;
-        private Quaternion cameraRotation;
-        float edge = 20;
-        float radius;
-        Vector2 center;
+
+
+        //UI交互------------------------------------------------------------------------
+        private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.identity);  //用于记录CurrentAngle
+        private float viewScale = 0.066f;   //预览视图缩放量
+        private Quaternion cameraRotation;  //场景相机旋转偏移量
+        float edge = 20;    //边框宽度
+        float radius;       //圆盘半径
+        Vector2 center;     //圆盘中心
 
         Quaternion rot = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup);
 
+
+
         private void OnGUI()
         {
+            //激活检测
             if (!Active)
             {
                 GUILayout.Label("地图没打开，地图编辑器未激活！");
                 return;
             }
 
-            radius = EditorGUIUtility.currentViewWidth / 2 - 20;
+            //场景参数计算
+            radius = EditorGUIUtility.currentViewWidth / 2 - edge;
             center = Vector2.one * (radius + edge);
 
             Vector3 cameraDir = SceneView.lastActiveSceneView == null ? Vector3.back : SceneView.lastActiveSceneView.camera.transform.forward;
@@ -148,11 +155,12 @@ namespace EditorSystem
             Vector2 mid = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup / 2) * Vector2.right * radius / 2;
 
 
+            //事件交互
             switch (Event.current.type)
             {
+                case EventType.Layout:
                 case EventType.Repaint:
                     //画底部圆盘
-
                     for (int i = 0; i < 3; i++)
                     {
                         float angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
@@ -190,6 +198,8 @@ namespace EditorSystem
 
 
                     break;
+                case EventType.MouseDrag:
+                    break;
             }
             //控制
             viewScale = EditorGUILayout.Slider("Scale", viewScale, Style.minScale, Style.maxScale);
@@ -197,6 +207,24 @@ namespace EditorSystem
 
         }
 
+        /// <summary>
+        /// 鼠标区域位置
+        /// </summary>
+        private enum MouseArea
+        {
+            Invalid,
+            DragArea,
+            GroupArea,
+            UnitArea
+        }
+        private void SetMouseArea()
+        {
+
+        }
+
+        /// <summary>
+        /// 画指定地图组上的元素
+        /// </summary>
         private void DrawElement(MapGroup group, float alpha)
         {
             for (int i = 0; i < group.transform.childCount; i++)
@@ -204,11 +232,17 @@ namespace EditorSystem
                 Transform child = group.transform.GetChild(i);
                 Vector3 worldPos = child.position;
                 Vector2 guiDir = new Vector2(worldPos.x, -worldPos.z) * viewScale * radius;
-                Handles.color = Color.Lerp(Style.backColor, GetColor(child.gameObject), alpha);
+                Handles.color = Color.Lerp(Style.backColor, GetElementColor(child.gameObject), alpha);
                 Handles.DrawSolidDisc((Vector3)center + cameraRotation * guiDir, Vector3.back, Style.elementRadius);
             }
             Handles.color = Color.white;
 
+        }
+        private Color GetElementColor(GameObject go)
+        {
+            MapUnit unit = go.GetComponent<MapUnit>();
+            if (unit == null) return Color.black;
+            else return Color.green;
         }
 
         private float QuaternionToAngle(float y)
@@ -225,15 +259,6 @@ namespace EditorSystem
             }
             return MapSystem.CurrentCircle * 360 + y;
         }
-
-        private Color GetColor(GameObject go)
-        {
-            MapUnit unit = go.GetComponent<MapUnit>();
-            if (unit == null) return Color.black;
-            else return Color.green;
-        }
-
-
 
 
 
