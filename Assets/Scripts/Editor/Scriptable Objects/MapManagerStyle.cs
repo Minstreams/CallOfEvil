@@ -57,13 +57,29 @@ public class MapManagerStyle : ScriptableObject
     public Color elementBackColor = Color.clear;
     public Color elementOutLineColor = Color.white;
     public float elementAlpha = 0.5f;
-    public float doubleClickTime = 0.1f;
-
+    public GUIStyle elementNameStyle;
+    public float sideWidth = 40;
+    public float sideMarkWidth = 6;
+    public GUIStyle sideMarkStyle;
+    public Color sideColor = Color.white;
+    public float sideXOffset = 0;
+    public int sideMarkNum = 4;
+    public float sideLineWidth = 4;
+    [Range(0, 1)]
+    public float sideLineLengthRate = 1;
+    public float sideArrowAngle = 0;
+    public float sideArrowSize = 60;
+    public bool sideFlip = false;
+    public float doubleClickMarkRadius = 20;
 
     [Header("属性面板Style")]
     public GUIStyle debugMessageStyle;
     public GUIStyle nameStyle;
     public GUIStyle informationStyle;
+
+    [Header("资源面板Style")]
+    public GUIStyle toolbarStyle;
+
 
 
 

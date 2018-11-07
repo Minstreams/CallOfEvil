@@ -5,6 +5,9 @@ using UnityEditor;
 
 namespace EditorSystem
 {
+    /// <summary>
+    /// 用于代替Inspector的窗口
+    /// </summary>
     public class MapInspector : EditorWindow
     {
         //引用
