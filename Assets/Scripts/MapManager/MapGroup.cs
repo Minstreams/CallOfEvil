@@ -19,6 +19,7 @@ public class MapGroup : MonoBehaviour
     /// 按angle排序的有序表
     /// </summary>
     public List<MapUnit> unitList = new List<MapUnit>();
+    public GameObject ground = null;
 
     public MapUnit this[int i] { get { return unitList[i]; } }
 

@@ -86,10 +86,11 @@ namespace EditorSystem
         {
             wantsMouseMove = true;
             autoRepaintOnSceneChange = true;
-            targetQuaternion.valueChanged.AddListener(() => Repaint());
+            //targetQuaternion.valueChanged.AddListener(() => Repaint());
+            Selection.SetActiveObjectWithContext(null, null);
             Selection.selectionChanged += OnSelectionChanged;
             SceneView.onSceneGUIDelegate += OnSceneFunc;
-            EditorApplication.hierarchyChanged += OnSelectionChanged;
+            MapSystem.InitGroupActiveState();
             Debug.Log("Map Manager Enabled!");
         }
 
@@ -97,7 +98,6 @@ namespace EditorSystem
         {
             Selection.selectionChanged -= OnSelectionChanged;
             SceneView.onSceneGUIDelegate -= OnSceneFunc;
-            EditorApplication.hierarchyChanged -= OnSelectionChanged;
             Debug.Log("Map Manager Disabled!");
         }
 
@@ -111,13 +111,8 @@ namespace EditorSystem
         {
             if (Active && lastActiveGameObject != null && PrefabUtility.GetPrefabType(lastActiveGameObject) == PrefabType.PrefabInstance)
             {
+                Debug.Log("SetMapObject(" + lastActiveGameObject + ");");
                 SetMapObject(lastActiveGameObject);
-                if (lastActiveGameObject == Selection.activeGameObject)
-                {
-                    lastActiveGameObject = null;
-                    //Selection.activeGameObject = null;
-                    return;
-                }
             }
             lastActiveGameObject = Selection.activeGameObject;
         }
@@ -125,16 +120,20 @@ namespace EditorSystem
 
 
         //UI交互------------------------------------------------------------------------
-        private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.identity);  //用于记录CurrentAngle
-        private float viewScale = 0.066f;   //预览视图缩放量
+        private AnimQuaternion targetQuaternion = new AnimQuaternion(Quaternion.Euler(0, MapSystem.currentAngle, 0));  //用于记录CurrentAngle
+        private AnimFloat viewScale = new AnimFloat(0.066f);   //预览视图缩放量
         private Quaternion cameraRotation;  //场景相机旋转偏移量
-        float edge = 20;    //边框宽度
-        float radius;       //圆盘半径
-        Vector2 center;     //圆盘中心
+        private float radius;       //圆盘半径
+        private Vector2 center;     //圆盘中心
 
-        Quaternion rot = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup);
+        private Quaternion rot = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup);
 
+        private MouseArea mouseArea;    //记录鼠标所处区域
+        private int areaIndex;  //记录选中物体的Index，或其他辅助信息
 
+        private AnimFloat mouseDragAngle = new AnimFloat(0);
+
+        float lastClickTime = 0;
 
         private void OnGUI()
         {
@@ -146,14 +145,13 @@ namespace EditorSystem
             }
 
             //场景参数计算
-            radius = EditorGUIUtility.currentViewWidth / 2 - edge;
-            center = Vector2.one * (radius + edge);
+            radius = EditorGUIUtility.currentViewWidth / 2 - Style.edge;
+            center = Vector2.one * (radius + Style.edge);
 
             Vector3 cameraDir = SceneView.lastActiveSceneView == null ? Vector3.back : SceneView.lastActiveSceneView.camera.transform.forward;
             Vector2 start = Vector3.right;
             cameraRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(cameraDir.x, cameraDir.z, 0));
             Vector2 mid = Quaternion.Euler(0, 0, -MapSystem.AnglePerGroup / 2) * Vector2.right * radius / 2;
-
 
             //事件交互
             switch (Event.current.type)
@@ -168,8 +166,8 @@ namespace EditorSystem
                         float alpha = 1 - Style.arcAlphaCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle)));
                         color.a = Mathf.Lerp(0, 1, alpha);
                         Handles.color = color;
-                        Handles.DrawSolidArc(center, Vector3.back, cameraRotation * start, 120, radius);
-                        Handles.Label((Vector3)center + cameraRotation * mid, ((int)(angle / MapSystem.AnglePerGroup)).ToString());
+                        Handles.DrawSolidArc((Vector3)center + cameraRotation * mid * Mathf.Lerp(Style.arcCenterOffsetRateMin, Style.arcCenterOffsetRateMax, alpha), Vector3.back, cameraRotation * start, 120, radius * Mathf.Lerp(Style.arcMinRadiusRate, 1, alpha));
+                        Handles.Label((Vector3)center + cameraRotation * mid * Mathf.Lerp(1, Style.groupNumDistance, alpha), ((int)(angle / MapSystem.AnglePerGroup)).ToString(), Style.groupNumStyle);
                         start = rot * start;
                         mid = rot * mid;
                     }
@@ -178,6 +176,17 @@ namespace EditorSystem
 
 
                     //画元素
+                    Handles.color = Style.elementOutLineColor;
+                    foreach (GameObject g in Selection.gameObjects)
+                    {
+                        PrefabType prefabType = PrefabUtility.GetPrefabType(g);
+                        if (prefabType != PrefabType.Prefab)
+                        {
+                            Handles.DrawSolidDisc(GetElementGUIPos(g.transform.position), Vector3.back, Style.elementRadius + Style.elementOutlineWidth);
+                        }
+                    }
+                    Handles.color = Color.white;
+
                     MapGroup group = groupList[MapSystem.currentGroupIndex];
                     DrawElement(group, 1);
 
@@ -187,23 +196,80 @@ namespace EditorSystem
                     group = groupList[MapSystem.GetNext(MapSystem.currentGroupIndex)];
                     DrawElement(group, Style.elementAlpha);
 
+
+                    //中心圆盘
+                    Handles.color = Style.centerDiscColor;
+                    Handles.DrawSolidDisc(center, Vector3.back, Style.centerDiscRadius);
+                    Handles.color = Color.white;
+                    Handles.Label(center - Style.centerDiscStyle.CalcSize(new GUIContent(MapSystem.CurrentCircle.ToString())) / 2f, MapSystem.CurrentCircle.ToString(), Style.centerDiscStyle);
+
+                    //控制
+                    MapSystem.SetCurrentAngle(QuaternionToAngle(targetQuaternion.value.eulerAngles.y));
+
+                    //视图旋转
+                    if (mouseDragAngle.value != 0)
+                    {
+                        Quaternion deltaRot = Quaternion.Euler(0, mouseDragAngle.value, 0);
+                        SceneView.lastActiveSceneView.pivot = deltaRot * SceneView.lastActiveSceneView.pivot;
+                        SceneView.lastActiveSceneView.rotation = deltaRot * SceneView.lastActiveSceneView.rotation;
+                    }
                     break;
                 case EventType.MouseDown:
-                    Vector2 mouseMinusCenter = Quaternion.Inverse(cameraRotation) * (Event.current.mousePosition - center);
-                    Vector3 mouseMinusCenterOnGround = new Vector3(mouseMinusCenter.x, 0, -mouseMinusCenter.y);
-                    float targetAngle = ((int)(MapSystem.GetAngle(mouseMinusCenterOnGround) / MapSystem.AnglePerGroup)) * MapSystem.AnglePerGroup + MapSystem.AnglePerGroup / 2;
+                    float clickTime = Time.realtimeSinceStartup;
 
-                    targetQuaternion.target = Quaternion.Euler(0, targetAngle, 0);
+                    SetMouseArea();
+                    switch (mouseArea)
+                    {
+                        case MouseArea.GroupArea:
+                            //双击
+                            if (clickTime - lastClickTime < Style.doubleClickTime)
+                            {
+                                Debug.Log("doubleClicked!");
+                                SceneView.lastActiveSceneView.LookAt(GetElementWorldPos(Event.current.mousePosition, 0));
+                            }
 
+                            //选中组
+                            Selection.activeGameObject = null;
+                            float targetAngle = areaIndex * MapSystem.AnglePerGroup + MapSystem.AnglePerGroup / 2;
+                            targetQuaternion.target = Quaternion.Euler(0, targetAngle, 0);
+                            break;
+                        case MouseArea.ObjectArea:
+                            //双击
+                            if (clickTime - lastClickTime < Style.doubleClickTime)
+                            {
+                                SceneView.lastActiveSceneView.LookAt(Selection.activeGameObject.transform.position);
+                            }
 
+                            Selection.activeGameObject = groupList[MapSystem.currentGroupIndex].transform.GetChild(areaIndex).gameObject;
+                            break;
+                    }
 
+                    lastClickTime = clickTime;
                     break;
                 case EventType.MouseDrag:
+
+                    switch (mouseArea)
+                    {
+                        case MouseArea.GroupArea:
+                        case MouseArea.DragArea:
+                            Vector3 mouseDir = Event.current.mousePosition - center;
+                            float mouseDirSqrLength = mouseDir.sqrMagnitude;
+                            mouseDragAngle.value = -Vector3.Cross(mouseDir, Event.current.delta).z / mouseDirSqrLength * 180 / Mathf.PI * Style.dragSensitivity;
+                            mouseDragAngle.target = 0;
+                            break;
+                        case MouseArea.ObjectArea:
+                            Selection.activeGameObject.transform.position = GetElementWorldPos(Event.current.mousePosition, Selection.activeGameObject.transform.position.y);
+                            break;
+                    }
+
+                    break;
+
+                case EventType.ScrollWheel:
+                    viewScale.target = Mathf.Clamp(viewScale.target - Event.current.delta.y * Style.scaleSensitivity, Style.minScale, Style.maxScale);
                     break;
             }
-            //控制
-            viewScale = EditorGUILayout.Slider("Scale", viewScale, Style.minScale, Style.maxScale);
-            MapSystem.SetCurrentAngle(QuaternionToAngle(targetQuaternion.value.eulerAngles.y));
+
+
 
         }
 
@@ -215,10 +281,38 @@ namespace EditorSystem
             Invalid,
             DragArea,
             GroupArea,
-            UnitArea
+            ObjectArea
         }
+        /// <summary>
+        /// 判定鼠标所处区域
+        /// </summary>
         private void SetMouseArea()
         {
+            Debug.Log("SetArea");
+            Vector2 mousePos = Event.current.mousePosition;
+
+            //判定选中物体
+            MapGroup group = groupList[MapSystem.currentGroupIndex];
+            for (int i = 0; i < group.transform.childCount; i++)
+            {
+                Vector2 guiPos = GetElementGUIPos(group.transform.GetChild(i).position);
+
+                if (Vector2.Distance(mousePos, guiPos) < Style.elementRadius)
+                {
+                    areaIndex = i;
+                    mouseArea = MouseArea.ObjectArea;
+                    return;
+                }
+            }
+
+            if (Vector2.Distance(mousePos, center) < radius)
+            {
+                areaIndex = (int)(MapSystem.GetAngle(GetElementWorldPos(Event.current.mousePosition, 0)) / MapSystem.AnglePerGroup);
+                mouseArea = MouseArea.GroupArea;
+                return;
+            }
+
+            mouseArea = MouseArea.DragArea;
 
         }
 
@@ -230,21 +324,33 @@ namespace EditorSystem
             for (int i = 0; i < group.transform.childCount; i++)
             {
                 Transform child = group.transform.GetChild(i);
-                Vector3 worldPos = child.position;
-                Vector2 guiDir = new Vector2(worldPos.x, -worldPos.z) * viewScale * radius;
                 Handles.color = Color.Lerp(Style.backColor, GetElementColor(child.gameObject), alpha);
-                Handles.DrawSolidDisc((Vector3)center + cameraRotation * guiDir, Vector3.back, Style.elementRadius);
+                Handles.DrawSolidDisc(GetElementGUIPos(child.position), Vector3.back, Style.elementRadius);
             }
             Handles.color = Color.white;
 
         }
+        /// <summary>
+        /// 获取物体应该显示的颜色
+        /// </summary>
         private Color GetElementColor(GameObject go)
         {
             MapUnit unit = go.GetComponent<MapUnit>();
             if (unit == null) return Color.black;
             else return Color.green;
         }
-
+        /// <summary>
+        /// 获取物体应该显示的GUI位置
+        /// </summary>
+        private Vector2 GetElementGUIPos(Vector3 worldPos)
+        {
+            return center + (Vector2)(cameraRotation * new Vector2(worldPos.x, -worldPos.z) * viewScale.value * radius);
+        }
+        private Vector3 GetElementWorldPos(Vector2 guiPos, float height)
+        {
+            Vector3 temp = Quaternion.Inverse(cameraRotation) * (guiPos - center) / viewScale.value / radius;
+            return new Vector3(temp.x, height, -temp.y);
+        }
         private float QuaternionToAngle(float y)
         {
             //四元数和角度的转换

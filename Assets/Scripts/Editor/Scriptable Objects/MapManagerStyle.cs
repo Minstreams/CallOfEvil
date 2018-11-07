@@ -36,15 +36,35 @@ public class MapManagerStyle : ScriptableObject
 
     [Header("编辑器Style")]
     public AnimationCurve arcAlphaCurve = new AnimationCurve(new Keyframe(0f, 0f, 0f, 0f), new Keyframe(180f, 1f, 0f, 0f));
+    [Range(0.5f, 1)]
+    public float arcMinRadiusRate = 0.85f;
+    [Range(-0.5f, 0.5f)]
+    public float arcCenterOffsetRateMin = 0.1f;
+    [Range(0, 0.6f)]
+    public float arcCenterOffsetRateMax = 0.2f;
+    public float edge = 20;
+    public GUIStyle centerDiscStyle;
+    public Color centerDiscColor = Color.black;
+    public float centerDiscRadius = 40;
+    public GUIStyle groupNumStyle;
+    public float groupNumDistance;
     public float elementRadius = 8;
+    public float elementOutlineWidth = 8;
     public float minScale = 0.001f;
     public float maxScale = 0.1f;
+    public float scaleSensitivity = 0.01f;
+    public float dragSensitivity = 0.6f;
     public Color elementBackColor = Color.clear;
+    public Color elementOutLineColor = Color.white;
     public float elementAlpha = 0.5f;
+    public float doubleClickTime = 0.1f;
 
 
     [Header("属性面板Style")]
     public GUIStyle debugMessageStyle;
+    public GUIStyle nameStyle;
+    public GUIStyle informationStyle;
+
 
 
     [Header("重要数据存储")]
@@ -53,4 +73,22 @@ public class MapManagerStyle : ScriptableObject
     /// </summary>
     public List<MapGroupAsset> mapGroupAssets = new List<MapGroupAsset>();
 
+    [System.Serializable]
+    public class PrefabDictionary : SerializableDictionary<GameObject, string> { }
+
+    /// <summary>
+    /// 地图物体信息表
+    /// </summary>
+    [ContextMenuItem("Clear", "ClearDictionary")]
+    [ContextMenuItem("Clear Nullptr", "ClearDictionaryNullptr")]
+    public PrefabDictionary prefabDictionary = new PrefabDictionary();
+
+    public void ClearDictionary()
+    {
+        prefabDictionary.Clear();
+    }
+    public void ClearDictionaryNullptr()
+    {
+        prefabDictionary.ClearNullptr();
+    }
 }

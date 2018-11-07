@@ -33,22 +33,6 @@ public class MapSystemComponentEditor : Editor
         float handleSize = HandleUtility.GetHandleSize(Vector3.zero);
         Color gradient = Style.circleGradient.Evaluate(MapSystem.currentAngle / MapSystem.MaxAngle);
 
-        ////获取注视点并更新
-        //Vector3 hitPos;
-        //if (focusMouse && !EditorApplication.isPlaying)
-        //{
-        //    Ray mouseRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-        //    float ty = mouseRay.origin.y / mouseRay.direction.y;
-        //    hitPos = new Vector3(mouseRay.origin.x - mouseRay.direction.x * ty, 0, mouseRay.origin.z - mouseRay.direction.z * ty);
-        //}
-        //else hitPos = Camera.current.transform.position;
-
-        ////if (hitPos.magnitude > Style.r0)
-        //MapSystem.SetCurrentAngle(MapSystem.GetAngle(hitPos));
-        ////Handles.SphereHandleCap(0, hitPos, Quaternion.identity, 0.5f, EventType.Repaint);
-
-
-
 
         //绘制低半部分指示圆环
         float alpha = MapSystem.currentAngle % MapSystem.AnglePerGroup;
