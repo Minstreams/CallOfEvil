@@ -89,8 +89,7 @@ public class MapManagerStyle : ScriptableObject
     /// </summary>
     public List<MapGroupAsset> mapGroupAssets = new List<MapGroupAsset>();
 
-    [System.Serializable]
-    public class PrefabDictionary : SerializableDictionary<GameObject, string> { }
+    
 
     /// <summary>
     /// 地图物体信息表

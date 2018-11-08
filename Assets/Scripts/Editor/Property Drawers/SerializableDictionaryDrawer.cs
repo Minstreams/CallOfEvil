@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(MapManagerStyle.PrefabDictionary))]
-public class SerializableDictionaryDrawer : PropertyDrawer
+public abstract class SerializableDictionaryDrawer : PropertyDrawer
 {
     private bool enabled;
 
@@ -33,24 +32,31 @@ public class SerializableDictionaryDrawer : PropertyDrawer
             for (int i = 0; i < count; i++)
             {
                 position.y += EditorGUIUtility.singleLineHeight;
-                Object prefab = keyListProperty.GetArrayElementAtIndex(i).objectReferenceValue;
-                string prefabName = prefab == null ? "missing" : prefab.name;
-                var valuePosition = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(prefabName));
-                EditorGUI.LabelField(valuePosition, valueListProperty.GetArrayElementAtIndex(i).stringValue);
+                var valuePosition = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(GetKeyString(keyListProperty.GetArrayElementAtIndex(i))));
+                EditorGUI.LabelField(valuePosition, GetValueString(valueListProperty.GetArrayElementAtIndex(i)));
             }
         }
 
-        // Calculate rects
-        //var amountRect = new Rect(position.x, position.y, 30, position.height);
-        //var unitRect = new Rect(position.x + 35, position.y, 50, position.height);
-        //var nameRect = new Rect(position.x + 90, position.y, position.width - 90, position.height);
-
-        // Draw fields - passs GUIContent.none to each so they are drawn without labels
-        //EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("keyList"), GUIContent.none);
-        //EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("valueList"), GUIContent.none);
-
-
-
         EditorGUI.EndProperty();
+    }
+
+    //针对不同Type，类似ToString，返回想显示在面板上的内容
+    public abstract string GetKeyString(SerializedProperty property);
+    public abstract string GetValueString(SerializedProperty property);
+}
+
+
+[CustomPropertyDrawer(typeof(PrefabDictionary))]
+public class PrefabDictionaryDrawer : SerializableDictionaryDrawer
+{
+    public override string GetKeyString(SerializedProperty property)
+    {
+        Object prefab = property.objectReferenceValue;
+        return prefab == null ? "missing" : prefab.name;
+    }
+
+    public override string GetValueString(SerializedProperty property)
+    {
+        return property.stringValue;
     }
 }

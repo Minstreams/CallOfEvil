@@ -96,3 +96,9 @@ public class SerializableDictionary<Key, Value>
         }
     }
 }
+
+[System.Serializable]
+public class PrefabDictionary : SerializableDictionary<GameObject, string> { }
+
+//[System.Serializable]
+//public class SceneInformationDictionary

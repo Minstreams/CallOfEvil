@@ -10,7 +10,7 @@ using GameSystem;
 namespace EditorSystem
 {
     /// <summary>
-    /// 代替Hierarchy的地图编辑器窗口
+    /// 代替Hierarchy的地图编辑器窗口，也是编辑器编辑主要功能
     /// </summary>
     public class MapManager : EditorWindow
     {
