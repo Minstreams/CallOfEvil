@@ -40,10 +40,11 @@ namespace GameSystem
 
 
         //地图生成控制---------------------------------------------------
+        private static int circleCount = 5;
         /// <summary>
         /// 当前最大圈数,游戏流程推进的时候，更改这个值并重新生成地图
         /// </summary>
-        public static int CircleCount { get { if (Active) return mapSystemComponent.circleCount; else return 1; } set { if (Active) mapSystemComponent.circleCount = value; } }
+        public static int CircleCount { get { return circleCount; } set { throw new System.NotImplementedException(); } }
 
 #if UNITY_EDITOR
         //显示在Setting编辑器上的说明，放在这个位置好改
@@ -56,9 +57,9 @@ namespace GameSystem
         public static MapSystemSetting.MapGernerationPlan ChooseMapGenerationInfo(int seed)
         {
             //随机数可以考虑利用seed自定义算法
-            return Setting.mapGernerationPlans[GameLevelSystem.MaxPlayerCount - CircleCount];
+            return Setting.mapGernerationPlans[Mathf.Min(Setting.mapGernerationPlans.Count - 1, GameLevelSystem.MaxPlayerCount - CircleCount)];
         }
-        
+
         /// <summary>
         /// 使用一个seed生成地图，调用后会自动用seed初始化随机数生成器
         /// </summary>
@@ -145,14 +146,6 @@ namespace GameSystem
         /// </summary>
         public static void UnLoadGroup(MapGroup group)
         {
-#if UNITY_EDITOR
-            if (group == null)
-            {
-                Debug.LogError("不能卸载空组！");
-                return;
-            }
-#endif
-
             int index = group.index;
 
             //卸载多余场景
@@ -167,7 +160,14 @@ namespace GameSystem
             }
             else
             {
-                GameObject.Destroy(group.gameObject);
+#if UNITY_EDITOR
+                if (!UnityEditor.EditorApplication.isPlaying)
+                    UnityEditor.Undo.DestroyObjectImmediate(group.gameObject);
+                else
+                    GameObject.Destroy(group.gameObject);
+#else
+                    GameObject.Destroy(group.gameObject);
+#endif
             }
 
             //引用置为空
@@ -182,6 +182,7 @@ namespace GameSystem
 
 
         //现有地图管理---------------------------------------------------
+        private static List<MapGroup> _groupList = new List<MapGroup>();
         /// <summary>
         /// 组记录表
         /// </summary>
@@ -189,18 +190,27 @@ namespace GameSystem
         {
             get
             {
-                if (Active) return mapSystemComponent.groupList;
-                else
-                {
-                    Debug.LogError("地图系统未激活！");
-                    return null;
-                }
+                //while (_groupList.Count < CircleCount * 3)
+                //{
+                //    _groupList.Add(null);
+                //}
+                //while (_groupList.Count > CircleCount * 3)
+                //{
+                //    if (_groupList[_groupList.Count - 1] != null)
+                //        MapSystem.UnLoadGroup(_groupList[_groupList.Count - 1]);
+                //    _groupList.RemoveAt(_groupList.Count - 1);
+                //}
+                return Setting.groupList;
             }
         }
+
+        public static int _currentGroupIndex;
         /// <summary>
         /// 当前组序号
         /// </summary>
-        public static int currentGroupIndex;
+        public static int currentGroupIndex { get { return _currentGroupIndex; } set { if (_currentGroupIndex != value) { if (OnIndexChanged != null) OnIndexChanged(); _currentGroupIndex = value; } } }
+        public static event System.Action OnIndexChanged;
+
         /// <summary>
         /// 当前角度
         /// </summary>
@@ -314,13 +324,13 @@ namespace GameSystem
 
             if (distance > 0) for (int i = 0, oldLeft = GetPrevious(currentGroupIndex), newLeft = GetPrevious(newGroupIndex), newRight = GetNext(newGroupIndex); i < 3 && oldLeft != newLeft; i++, oldLeft = GetNext(oldLeft), newRight = GetPrevious(newRight))
                 {
-                    groupList[oldLeft].Active = false;
-                    groupList[newRight].Active = true;
+                    if (groupList[oldLeft] != null) groupList[oldLeft].Active = false;
+                    if (groupList[newRight] != null) groupList[newRight].Active = true;
                 }
             else if (distance < 0) for (int i = 0, oldRight = GetNext(currentGroupIndex), newLeft = GetPrevious(newGroupIndex), newRight = GetNext(newGroupIndex); i < 3 && oldRight != newRight; i++, oldRight = GetPrevious(oldRight), newLeft = GetNext(newLeft))
                 {
-                    groupList[oldRight].Active = false;
-                    groupList[newLeft].Active = true;
+                    if (groupList[oldRight] != null) groupList[oldRight].Active = false;
+                    if (groupList[newLeft] != null) groupList[newLeft].Active = true;
                 }
 
             currentGroupIndex = newGroupIndex;
@@ -328,20 +338,27 @@ namespace GameSystem
 
         public static void InitGroupActiveState()
         {
+#if UNITY_EDITOR
+            if (!Active)
+            {
+                Debug.LogError("系统未激活！");
+                return;
+            }
+#endif
             currentGroupIndex = (int)(currentAngle / AnglePerGroup); ;
 
             int loopEnd = GetPrevious(currentGroupIndex);
             int ptr = GetNext(currentGroupIndex);
 
-            groupList[loopEnd].Active = true;
-            groupList[currentGroupIndex].Active = true;
-            groupList[ptr].Active = true;
+            if (groupList[loopEnd] != null) groupList[loopEnd].Active = true;
+            if (groupList[currentGroupIndex] != null) groupList[currentGroupIndex].Active = true;
+            if (groupList[ptr] != null) groupList[ptr].Active = true;
 
             ptr = GetNext(ptr);
 
             while (ptr != loopEnd)
             {
-                groupList[ptr].Active = false;
+                if (groupList[ptr] != null) groupList[ptr].Active = false;
                 ptr = GetNext(ptr);
             }
         }

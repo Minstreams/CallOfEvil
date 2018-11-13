@@ -10,6 +10,9 @@ namespace EditorSystem
     /// </summary>
     public static class EditorMatrix
     {
+        private static EditorMatrixPrefs prefs;
+        public static EditorMatrixPrefs Prefs { get { if (prefs == null) prefs = (EditorMatrixPrefs)EditorGUIUtility.Load("Editor Matrix Prefs.asset"); return prefs; } }
+
         static List<string> keys = new List<string>();
         private static void SaveKeys()
         {

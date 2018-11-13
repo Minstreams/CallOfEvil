@@ -8,11 +8,17 @@ using UnityEngine;
 public class MapGroup : MonoBehaviour
 {
     public const string defaultName = "默认场景组";
-    public string groupName = defaultName;
+    public string groupName { get { return gameObject.name; } set { if (gameObject.name != value) { dirty = true; gameObject.name = value; } } }
+
+    private void Reset()
+    {
+        groupName = defaultName;
+    }
 
     /// <summary>
     /// 在MapSystem注册的index，用于网络同步
     /// </summary>
+    [System.NonSerialized]
     public int index;
 
     /// <summary>
@@ -41,4 +47,9 @@ public class MapGroup : MonoBehaviour
 #endif
         }
     }
+
+#if UNITY_EDITOR
+    [System.NonSerialized]
+    public bool dirty = false;
+#endif
 }

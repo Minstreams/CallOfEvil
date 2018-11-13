@@ -36,7 +36,10 @@ namespace GameSystem
             /// </summary>
             public List<MapGernerationPlan> mapGernerationPlans;
 
-
+            /// <summary>
+            /// 数据存储
+            /// </summary>
+            public List<MapGroup> groupList;
         }
     }
 }

@@ -11,14 +11,14 @@ namespace EditorSystem
     public class MapAssetManager : EditorWindow
     {
         //引用
-        private static MapManagerStyle Style { get { return MapManager.Style; } }
+        private static EditorMatrixPrefs Prefs { get { return EditorMatrix.Prefs; } }
 
         private int toolbarSelected = 0;
         private readonly string[] toolbarTitle = { "物体", "地图组预设" };
 
         private void OnGUI()
         {
-            toolbarSelected = GUILayout.Toolbar(toolbarSelected, toolbarTitle, Style.toolbarStyle);
+            toolbarSelected = GUILayout.Toolbar(toolbarSelected, toolbarTitle, Prefs.toolbarStyle);
 
             if (GUILayout.Button("Test！")) Test();
         }

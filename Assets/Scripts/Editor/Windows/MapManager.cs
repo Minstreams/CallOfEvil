@@ -15,57 +15,28 @@ namespace EditorSystem
     public class MapManager : EditorWindow
     {
         //引用---------------------------------------------------------------------------
-        private static MapManagerStyle style;
-        public static MapManagerStyle Style { get { return style; } }
         /// <summary>
-        /// 组记录表
+        /// 各种参数
         /// </summary>
-        public static List<MapGroup> groupList { get { return MapSystem.groupList; } }
+        private static EditorMatrixPrefs Prefs { get { return EditorMatrix.Prefs; } }
         /// <summary>
-        /// 地图组预设
+        /// MapSystem的组记录表
         /// </summary>
-        public static List<MapGroupAsset> MapGroupAssets { get { return Style.mapGroupAssets; } }
-        public static bool ContainsAsset(string name)
-        {
-            foreach (MapGroupAsset asset in MapGroupAssets)
-            {
-                if (asset.groupName == name) return true;
-            }
-            return false;
-        }
-        public static MapGroupAsset GetGroupAssetByName(string name)
-        {
-            foreach (MapGroupAsset asset in MapGroupAssets)
-            {
-                if (asset.groupName == name) return asset;
-            }
-            return null;
-        }
+        private static List<MapGroup> groupList { get { return MapSystem.groupList; } }
+
 
         /// <summary>
         /// 地图编辑器是否已经激活
         /// </summary>
-        public static bool Active { get { return style != null && MapSystem.Active; } }
+        public static bool Active { get { return MapSystem.Active; } }
 
 
 
         //信息
-        [System.Serializable]
-        private class Pref : SavablePref
-        {
-            /// <summary>
-            /// 标记场上Group是否改变
-            /// </summary>
-            public List<bool> dirtyMark = new List<bool>();
-        }
-        private static Pref pref = new Pref();
 
         [InitializeOnLoadMethod]
         private static void Init()
         {
-            pref.Load();
-            style = (MapManagerStyle)EditorGUIUtility.Load("Map Manager Style.asset");
-            EditorApplication.quitting += pref.Save;
             Debug.Log("Map Manager Inited!");
         }
 
@@ -158,17 +129,18 @@ namespace EditorSystem
 
             //判定选中物体
             MapGroup group = groupList[MapSystem.currentGroupIndex];
-            for (int i = 0; i < group.transform.childCount; i++)
-            {
-                Vector2 guiPos = GetElementGUIPos(group.transform.GetChild(i).position);
-
-                if (Vector2.Distance(mousePos, guiPos) < Style.elementRadius)
+            if (group != null)
+                for (int i = 0; i < group.transform.childCount; i++)
                 {
-                    areaIndex = i;
-                    mouseArea = MouseArea.ObjectArea;
-                    return;
+                    Vector2 guiPos = GetElementGUIPos(group.transform.GetChild(i).position);
+
+                    if (Vector2.Distance(mousePos, guiPos) < Prefs.elementRadius)
+                    {
+                        areaIndex = i;
+                        mouseArea = MouseArea.ObjectArea;
+                        return;
+                    }
                 }
-            }
 
             if (Vector2.Distance(mousePos, center) < radius)
             {
@@ -186,12 +158,13 @@ namespace EditorSystem
         /// </summary>
         private void DrawElement(MapGroup group, float alpha)
         {
+            if (group == null) return;
             for (int i = 0; i < group.transform.childCount; i++)
             {
                 Transform child = group.transform.GetChild(i);
-                Handles.color = Color.Lerp(Style.backColor, GetElementColor(child.gameObject), alpha);
-                Handles.DrawSolidDisc(GetElementGUIPos(child.position), Vector3.back, Style.elementRadius);
-                Handles.Label(GetElementGUIPos(child.position), child.name, Style.elementNameStyle);
+                Handles.color = Color.Lerp(Prefs.backColor, GetElementColor(child.gameObject), alpha);
+                Handles.DrawSolidDisc(GetElementGUIPos(child.position), Vector3.back, Prefs.elementRadius);
+                Handles.Label(GetElementGUIPos(child.position), child.name, Prefs.elementNameStyle);
             }
             Handles.color = Color.white;
 
@@ -249,8 +222,8 @@ namespace EditorSystem
             }
 
             //场景参数计算
-            radius = Mathf.Min(EditorGUIUtility.currentViewWidth - Style.sideWidth, position.height) / 2 - Style.edge;
-            center = new Vector2(radius + Style.edge + Style.sideWidth, radius + Style.edge);
+            radius = Mathf.Min(EditorGUIUtility.currentViewWidth - Prefs.sideWidth, position.height) / 2 - Prefs.edge;
+            center = new Vector2(radius + Prefs.edge + Prefs.sideWidth, radius + Prefs.edge);
 
             Vector3 cameraDir = SceneView.lastActiveSceneView == null ? Vector3.back : SceneView.lastActiveSceneView.camera.transform.forward;
             Vector2 start = Vector3.right;
@@ -266,50 +239,56 @@ namespace EditorSystem
                     for (int i = 0; i < 3; i++)
                     {
                         float angle = MapSystem.GetAngle(new Vector3(mid.x, 0, -mid.y));
-                        Color color = Style.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
-                        float alpha = 1 - Style.arcAlphaCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle)));
+                        int index = (int)(angle / MapSystem.AnglePerGroup);
+
+                        Color color;
+                        if (groupList[index] == null) color = Color.gray;
+                        else color = Prefs.circleGradient.Evaluate(angle / MapSystem.MaxAngle);
+
+                        float alpha = 1 - Prefs.arcAlphaCurve.Evaluate(Mathf.Abs(MapSystem.SubSigned(MapSystem.currentAngle, angle)));
                         color.a = Mathf.Lerp(0, 1, alpha);
                         Handles.color = color;
-                        Handles.DrawSolidArc((Vector3)center + cameraRotation * mid * Mathf.Lerp(Style.arcCenterOffsetRateMin, Style.arcCenterOffsetRateMax, alpha), Vector3.back, cameraRotation * start, 120, radius * Mathf.Lerp(Style.arcMinRadiusRate, 1, alpha));
-                        Handles.Label((Vector3)center + cameraRotation * mid * Mathf.Lerp(1, Style.groupNumDistance, alpha), ((int)(angle / MapSystem.AnglePerGroup)).ToString(), Style.groupNumStyle);
+                        Handles.DrawSolidArc((Vector3)center + cameraRotation * mid * Mathf.Lerp(Prefs.arcCenterOffsetRateMin, Prefs.arcCenterOffsetRateMax, alpha), Vector3.back, cameraRotation * start, 120, radius * Mathf.Lerp(Prefs.arcMinRadiusRate, 1, alpha));
+                        if (groupList[index] == null) Handles.Label((Vector3)center + cameraRotation * mid * Mathf.Lerp(1, Prefs.groupNumDistance, alpha), index.ToString(), Prefs.groupNumStyle);
+                        else Handles.Label((Vector3)center + cameraRotation * mid * Mathf.Lerp(1, Prefs.groupNumDistance, alpha), index.ToString() + " " + groupList[index].groupName + (groupList[index].dirty ? "*" : ""), Prefs.groupNumStyle);
                         start = rot * start;
                         mid = rot * mid;
                     }
                     Handles.color = Color.white;
 
                     //中心圆盘
-                    Handles.color = Style.centerDiscColor;
+                    Handles.color = Prefs.centerDiscColor;
                     {
-                        Handles.DrawSolidDisc(center, Vector3.back, Style.centerDiscRadius);
-                        Handles.Label(center - Style.centerDiscStyle.CalcSize(new GUIContent(MapSystem.CurrentCircle.ToString())) / 2f, MapSystem.CurrentCircle.ToString(), Style.centerDiscStyle);
+                        Handles.DrawSolidDisc(center, Vector3.back, Prefs.centerDiscRadius);
+                        Handles.Label(center - Prefs.centerDiscStyle.CalcSize(new GUIContent(MapSystem.CurrentCircle.ToString())) / 2f, MapSystem.CurrentCircle.ToString(), Prefs.centerDiscStyle);
                     }
                     Handles.color = Color.white;
 
 
                     //画侧面刻度
-                    Handles.color = Style.sideColor;
+                    Handles.color = Prefs.sideColor;
                     {
-                        Vector2 yRange = new Vector2(Style.edge + (1 - Style.sideLineLengthRate) * radius, Style.edge + (1 + Style.sideLineLengthRate) * radius);
-                        Vector2 xRange = new Vector2(Style.sideWidth - Style.sideXOffset + (Style.sideFlip ? -Style.sideMarkWidth : Style.sideMarkWidth), Style.sideWidth - Style.sideXOffset);
+                        Vector2 yRange = new Vector2(Prefs.edge + (1 - Prefs.sideLineLengthRate) * radius, Prefs.edge + (1 + Prefs.sideLineLengthRate) * radius);
+                        Vector2 xRange = new Vector2(Prefs.sideWidth - Prefs.sideXOffset + (Prefs.sideFlip ? -Prefs.sideMarkWidth : Prefs.sideMarkWidth), Prefs.sideWidth - Prefs.sideXOffset);
                         Handles.DrawAAPolyLine(
-                            Style.sideLineWidth,
+                            Prefs.sideLineWidth,
                             new Vector2(xRange.x, yRange.x),
                             new Vector2(xRange.y, yRange.x),
                             new Vector2(xRange.y, yRange.y),
                             new Vector2(xRange.x, yRange.y)
                             );
 
-                        xRange.x = Style.sideWidth - Style.sideXOffset + (Style.sideFlip ? -Style.sideMarkWidth * Style.sideLineLengthRate : Style.sideMarkWidth * Style.sideLineLengthRate);
-                        for (int i = 1; i < Style.sideMarkNum; i++)
+                        xRange.x = Prefs.sideWidth - Prefs.sideXOffset + (Prefs.sideFlip ? -Prefs.sideMarkWidth * Prefs.sideLineLengthRate : Prefs.sideMarkWidth * Prefs.sideLineLengthRate);
+                        for (int i = 1; i < Prefs.sideMarkNum; i++)
                         {
-                            float yPos = Mathf.Lerp(yRange.x, yRange.y, (float)i / (float)Style.sideMarkNum);
+                            float yPos = Mathf.Lerp(yRange.x, yRange.y, (float)i / (float)Prefs.sideMarkNum);
                             Handles.DrawLine(new Vector2(xRange.x, yPos), new Vector2(xRange.y, yPos));
                         }
 
-                        float arrowXOffset = (Style.sideFlip ? -1 : 1) * Style.sideArrowSize * Mathf.Cos(Style.sideArrowAngle * Mathf.PI / 180f);
-                        float arrowyPos = Mathf.Lerp(yRange.y, yRange.x, (viewScale.value - Style.minScale) / (Style.maxScale - Style.minScale));
-                        Handles.ArrowHandleCap(0, new Vector2(xRange.x + arrowXOffset, arrowyPos), Quaternion.Euler(0, (Style.sideFlip ? 90 : -90) + Style.sideArrowAngle, 0), Style.sideArrowSize, EventType.Repaint);
-                        Handles.Label(new Vector2(xRange.x + arrowXOffset / 2, arrowyPos), "缩放等级", Style.sideMarkStyle);
+                        float arrowXOffset = (Prefs.sideFlip ? -1 : 1) * Prefs.sideArrowSize * Mathf.Cos(Prefs.sideArrowAngle * Mathf.PI / 180f);
+                        float arrowyPos = Mathf.Lerp(yRange.y, yRange.x, (viewScale.value - Prefs.minScale) / (Prefs.maxScale - Prefs.minScale));
+                        Handles.ArrowHandleCap(0, new Vector2(xRange.x + arrowXOffset, arrowyPos), Quaternion.Euler(0, (Prefs.sideFlip ? 90 : -90) + Prefs.sideArrowAngle, 0), Prefs.sideArrowSize, EventType.Repaint);
+                        Handles.Label(new Vector2(xRange.x + arrowXOffset / 2, arrowyPos), "缩放等级", Prefs.sideMarkStyle);
                     }
                     Handles.color = Color.white;
 
@@ -317,19 +296,19 @@ namespace EditorSystem
                     if (doubleClickMarkAlpha.value > 0)
                     {
                         Handles.color = new Color(1, 1, 1, doubleClickMarkAlpha.value);
-                        Handles.DrawSolidDisc(cameraRotation * doubleClickMarkRawPos + (Vector3)center, Vector3.back, (1 - doubleClickMarkAlpha.value) * Style.doubleClickMarkRadius);
+                        Handles.DrawSolidDisc(cameraRotation * doubleClickMarkRawPos + (Vector3)center, Vector3.back, (1 - doubleClickMarkAlpha.value) * Prefs.doubleClickMarkRadius);
                         Handles.color = Color.white;
                     }
 
                     //画元素
-                    Handles.color = Style.elementOutLineColor;
+                    Handles.color = Prefs.elementOutLineColor;
                     {
                         foreach (GameObject g in Selection.gameObjects)
                         {
                             PrefabType prefabType = PrefabUtility.GetPrefabType(g);
                             if (prefabType != PrefabType.Prefab)
                             {
-                                Handles.DrawSolidDisc(GetElementGUIPos(g.transform.position), Vector3.back, Style.elementRadius + Style.elementOutlineWidth);
+                                Handles.DrawSolidDisc(GetElementGUIPos(g.transform.position), Vector3.back, Prefs.elementRadius + Prefs.elementOutlineWidth);
                             }
                         }
 
@@ -337,10 +316,10 @@ namespace EditorSystem
                         DrawElement(group, 1);
 
                         group = groupList[MapSystem.GetPrevious(MapSystem.currentGroupIndex)];
-                        DrawElement(group, Style.elementAlpha);
+                        DrawElement(group, Prefs.elementAlpha);
 
                         group = groupList[MapSystem.GetNext(MapSystem.currentGroupIndex)];
-                        DrawElement(group, Style.elementAlpha);
+                        DrawElement(group, Prefs.elementAlpha);
                     }
                     Handles.color = Color.white;
 
@@ -370,7 +349,9 @@ namespace EditorSystem
                             }
 
                             //选中组
+                            if (groupList[areaIndex] != null) groupList[areaIndex].index = areaIndex;
                             Selection.activeGameObject = null;
+                            Selection.selectionChanged.Invoke();
                             targetQuaternion.target = Quaternion.Euler(0, areaIndex * MapSystem.AnglePerGroup + MapSystem.AnglePerGroup / 2, 0);
                             break;
                         case MouseArea.ObjectArea:
@@ -395,7 +376,7 @@ namespace EditorSystem
                         case MouseArea.DragArea:
                             Vector3 mouseDir = Event.current.mousePosition - center;
                             float mouseDirSqrLength = mouseDir.sqrMagnitude;
-                            float dragAngle = -Vector3.Cross(mouseDir, Event.current.delta).z / mouseDirSqrLength * 180 / Mathf.PI * Style.dragSensitivity;
+                            float dragAngle = -Vector3.Cross(mouseDir, Event.current.delta).z / mouseDirSqrLength * 180 / Mathf.PI * Prefs.dragSensitivity;
 
                             mouseDragAngle.value = dragAngle;
                             mouseDragAngle.target = 0;
@@ -409,7 +390,7 @@ namespace EditorSystem
                     break;
 
                 case EventType.ScrollWheel:
-                    viewScale.target = Mathf.Clamp(viewScale.target - Event.current.delta.y * Style.scaleSensitivity, Style.minScale, Style.maxScale);
+                    viewScale.target = Mathf.Clamp(viewScale.target - Event.current.delta.y * Prefs.scaleSensitivity, Prefs.minScale, Prefs.maxScale);
                     break;
             }
 
@@ -417,79 +398,6 @@ namespace EditorSystem
 
         }
 
-
-
-        //地图生成控制的编辑器方法-------------------------------------------------------
-
-        /// <summary>
-        /// 存储Group
-        /// </summary>
-        public static void SaveGroup(MapGroup group)
-        {
-            if (ContainsAsset(group.groupName))
-            {
-                if (EditorUtility.DisplayDialog("温馨小提示", "场景组已存在，是否覆盖？", "覆盖", "取消"))
-                {
-                    MapGroupAssetEditor.SaveToAsset(group, GetGroupAssetByName(group.groupName));
-                    pref.dirtyMark[group.index] = false;
-                }
-            }
-            else
-            {
-                MapGroupAssets.Add(MapGroupAssetEditor.CreateGroupAsset(group));
-            }
-        }
-        /// <summary>
-        /// 尝试卸载Group，并决定卸载前是否，若取消卸载返回false
-        /// </summary>
-        public static bool UnLoadGroup(MapGroup group)
-        {
-            if (pref.dirtyMark[group.index])
-                switch (EditorUtility.DisplayDialogComplex("温馨小提示", "当前场景组未保存，是否保存该组？", "保存", "取消", "不保存"))
-                {
-                    case 0:
-                        SaveGroup(group);
-                        MapSystem.UnLoadGroup(group);
-                        return true;
-                    case 2:
-                        MapSystem.UnLoadGroup(group);
-                        return true;
-                    default:
-                        return false;
-                }
-            else
-            {
-                MapSystem.UnLoadGroup(group);
-                return true;
-            }
-        }
-        /// <summary>
-        /// 加载一个Group到指定位置
-        /// </summary>
-        public static void LoadGroup(MapGroupAsset asset, int index)
-        {
-            if (groupList[index] != null && !UnLoadGroup(groupList[index])) return;
-            MapSystem.LoadGroup(asset, index);
-        }
-        /// <summary>
-        /// 在指定位置创建空的Group
-        /// </summary>
-        public static void NewEmptyGroup(int index)
-        {
-            if (groupList[index] != null && !UnLoadGroup(groupList[index])) return;
-
-            GameObject g = new GameObject(MapGroup.defaultName);
-            g.transform.SetParent(MapSystem.mapSystemComponent.transform, true);
-            g.transform.position = Vector3.zero;
-            g.transform.rotation = Quaternion.Euler(0, MapSystem.AnglePerGroup * (index % 3), 0);
-
-            MapGroup group = g.AddComponent<MapGroup>();
-            g.tag = "MapSystem";
-
-            group.index = index;
-
-            groupList[index] = group;
-        }
 
 
 
@@ -518,6 +426,8 @@ namespace EditorSystem
                 {
                     AddUnit(unit, group);
                 }
+
+                group.dirty = true;
             }
             else if (gIndex != group.index)
             {
@@ -530,6 +440,8 @@ namespace EditorSystem
                     DeleteUnit(unit);
                     AddUnit(unit, newGroup);
                 }
+                group.dirty = true;
+                newGroup.dirty = true;
             }
             else
             {
@@ -538,6 +450,7 @@ namespace EditorSystem
                 {
                     AdjustUnit(unit);
                 }
+                group.dirty = true;
             }
         }
         public static void AddUnit(MapUnit unit, MapGroup group)
@@ -556,6 +469,8 @@ namespace EditorSystem
             {
                 list[j].index = j;
             }
+
+            group.dirty = true;
         }
         public static void DeleteUnit(MapUnit unit)
         {
@@ -568,6 +483,7 @@ namespace EditorSystem
             {
                 group.unitList[j].index = j;
             }
+            group.dirty = true;
         }
         public static void AdjustUnit(MapUnit unit)
         {

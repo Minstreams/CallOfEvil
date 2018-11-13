@@ -16,7 +16,7 @@ public class ReadmeEditor : Editor
         get
         {
             if (((Readme)target).styleOverride != null) return ((Readme)target).styleOverride;
-            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)AssetDatabase.LoadMainAssetAtPath("Assets/Editor Default Resources/Styles/Default.asset");
+            if (m_Styles == null) m_Styles = (ReadmeGUIStyles)EditorGUIUtility.Load("Styles/Default.asset");
             return m_Styles;
         }
     }
