@@ -26,23 +26,31 @@ public class MapGroupAssetEditor : Editor
     //Asset的创建/删除功能
     //底层维护方法
 
+    public static string GetScenePath(MapGroupAsset asset, int index)
+    {
+        return AssetPath + asset.groupName + "/" + asset.groupName + index % 3 + ".unity";
+    }
+    private static void LoadGroupDirect(MapGroupAsset asset, int index)
+    {
+        Scene newScene = EditorSceneManager.OpenScene(GetScenePath(asset, index), OpenSceneMode.Additive);
+        MapGroup newGroup = newScene.GetRootGameObjects()[0].GetComponent<MapGroup>();
+        newGroup.index = index;
+        MapSystem.groupList[index] = newGroup;
+    }
+
     /// <summary>
     /// 保存到Asset中
     /// </summary>
     public static void SaveToAsset(MapGroup group, MapGroupAsset asset)
     {
+        int index = group.index;
+        group.index = -1;
         Quaternion rot = group.transform.rotation;
         group.transform.rotation = Quaternion.identity;
         PrefabUtility.ReplacePrefab(group.gameObject, asset.groupPrefab, ReplacePrefabOptions.ConnectToPrefab);
+        asset.baked = false;
         group.transform.rotation = rot;
-    }
-
-    private static void LoadGroupDirect(MapGroupAsset asset, int index)
-    {
-        Scene newScene = EditorSceneManager.OpenScene(AssetPath + asset.groupName + "/" + asset.groupName + index % 3 + ".unity", OpenSceneMode.Additive);
-        MapGroup newGroup = newScene.GetRootGameObjects()[0].GetComponent<MapGroup>();
-        newGroup.index = index;
-        MapSystem.groupList[index] = newGroup;
+        group.index = index;
     }
     /// <summary>
     /// 创建Asset，请调用前确保没有重名Asset
@@ -60,8 +68,9 @@ public class MapGroupAssetEditor : Editor
 
         //初始化
         group.transform.position = Vector3.zero;
-        group.index = 0;
+        group.index = -1;
         group.transform.rotation = Quaternion.identity;
+        bool isRootOfScene = group.transform.parent == null;
         group.transform.SetParent(null);
 
         //绑定Prefab
@@ -71,7 +80,11 @@ public class MapGroupAssetEditor : Editor
         Scene activeScene = EditorSceneManager.GetActiveScene();
         Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         EditorSceneManager.SetActiveScene(activeScene);
+
+        Scene oldScene = group.gameObject.scene;
         EditorSceneManager.MoveGameObjectToScene(group.gameObject, scene);
+        if (isRootOfScene)
+            EditorSceneManager.CloseScene(oldScene, true);
 
         //保存场景
         //这里path的命名不是很懂，scene居然不能直接改名？
@@ -95,6 +108,7 @@ public class MapGroupAssetEditor : Editor
         AssetDatabase.CreateAsset(asset, AssetPath + groupName + ".asset");
 
         MapGroupAssets.Add(asset);
+        EditorUtility.SetDirty(EditorMatrix.Prefs);
     }
     /// <summary>
     /// 生成烘焙数据
@@ -102,9 +116,29 @@ public class MapGroupAssetEditor : Editor
     public static void BakeGroupAsset(MapGroupAsset groupAsset)
     {
         //TODO:设置实时光照配置
-        //Lightmapping.realtimeGI = true;
+        //保护现场
+        SceneSetup[] sceneSetup = EditorSceneManager.GetSceneManagerSetup();
+
+        //Setting
+        for (int i = 0; i < 3; i++)
+        {
+            Scene s = EditorSceneManager.OpenScene(GetScenePath(groupAsset, i), OpenSceneMode.Single);
+            {
+                Lightmapping.bakedGI = false;
+                Lightmapping.realtimeGI = true;
+                LightmapEditorSettings.realtimeResolution = 4;
+            }
+            EditorSceneManager.SaveScene(s);
+        }
+
+        //恢复现场
+        EditorSceneManager.RestoreSceneManagerSetup(sceneSetup);
+
         //Bake
-        throw new System.NotImplementedException();
+        string[] paths = { GetScenePath(groupAsset, 0), GetScenePath(groupAsset, 1), GetScenePath(groupAsset, 2) };
+        Lightmapping.BakeMultipleScenes(paths); //这个API是异步的！
+
+        groupAsset.baked = true;
     }
     /// <summary>
     /// 删除Asset
@@ -120,7 +154,7 @@ public class MapGroupAssetEditor : Editor
             if (group != null && group.groupName == groupAsset.groupName)
             {
                 //PrefabUtility.DisconnectPrefabInstance(group.gameObject);
-                
+
                 //转移，删除场景
                 if (group.transform.parent == null)
                 {
@@ -137,6 +171,8 @@ public class MapGroupAssetEditor : Editor
         //删除文件夹
         AssetDatabase.DeleteAsset(AssetPath + groupAsset.groupName + ".asset");
         AssetDatabase.DeleteAsset(AssetPath + groupAsset.groupName);
+
+        EditorUtility.SetDirty(EditorMatrix.Prefs);
     }
     /// <summary>
     /// 重命名

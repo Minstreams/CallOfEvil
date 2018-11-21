@@ -28,6 +28,17 @@ public class MapSystemComponentEditor : Editor
     private static AnimFloat outline1 = new AnimFloat(0);
     private static AnimFloat outline2 = new AnimFloat(0);
 
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if (EditorApplication.isPlaying)
+        {
+            if (GUILayout.Button("Generate")) MapSystem.GenerateMap(MapSystem.ChooseMapGenerationInfo(0), 0);
+            if (GUILayout.Button("Init")) MapSystem.InitGroupActiveState();
+        }
+    }
+
+
     [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
     static void OnGizmo(MapSystemComponent manager, GizmoType type)
     {
@@ -86,10 +97,12 @@ public class MapSystemComponentEditor : Editor
 
 
         //绘制可见范围
-        Handles.color = Prefs.arcColor;
-        Handles.DrawSolidArc(Vector3.zero, Vector3.up, Quaternion.Euler(-Vector3.up * (MapSystem.currentAngle - MapSystem.AnglePerGroup)) * Vector3.right, 360 - 2 * MapSystem.AnglePerGroup, Prefs.arcRadius * handleSize);
-        Handles.color = Color.white;
-
+        if (MapManager.Active)
+        {
+            Handles.color = Prefs.arcColor;
+            Handles.DrawSolidArc(Vector3.zero, Vector3.up, Quaternion.Euler(-Vector3.up * (MapSystem.currentAngle - MapSystem.AnglePerGroup)) * Vector3.right, 360 - 2 * MapSystem.AnglePerGroup, Prefs.arcRadius * handleSize);
+            Handles.color = Color.white;
+        }
 
 
 

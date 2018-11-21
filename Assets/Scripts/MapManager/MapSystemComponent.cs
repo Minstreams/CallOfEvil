@@ -8,10 +8,14 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class MapSystemComponent : MonoBehaviour
 {
-
+#if UNITY_EDITOR
     private void OnEnable()
     {
-        GameSystem.MapSystem.mapSystemComponent = this;
-
+        GameSystem.MapSystem.Init(this);
+    }
+#endif
+    private void Awake()
+    {
+        GameSystem.MapSystem.Init(this);
     }
 }

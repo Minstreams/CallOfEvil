@@ -14,6 +14,7 @@ public class MapGroupAsset : ScriptableObject
     /// 组名和场景名一样
     /// </summary>
     public string groupName;
-
     public GameObject groupPrefab;
+    public bool baked = false;
+    public string information = "地图介绍";
 }

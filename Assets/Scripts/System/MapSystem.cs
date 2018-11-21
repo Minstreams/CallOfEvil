@@ -22,18 +22,28 @@ namespace GameSystem
         public const float AnglePerGroup = 360 / GroupCountPerCircle;
 
 
-        //引用
-        public static MapSystemComponent mapSystemComponent = null;
+        //引用/Basic
+        public static MapSystemComponent mapSystemComponent { get; private set; }
 
-
-        /// <summary>
-        /// 是否所有Group都已经加载好？(场景加载时向左移一位，加载完毕右移，这意味着支持最多同时31个场景加载，足够用了)
-        /// </summary>
-        public static int loaded = 1;
         /// <summary>
         /// 系统是否激活（可工作）
         /// </summary>
         public static bool Active { get { return mapSystemComponent != null && loaded == 1; } }
+
+        public static void Init(MapSystemComponent instance)
+        {
+            mapSystemComponent = instance;
+            groupList.Clear();
+            while (groupList.Count < CircleCount * 3)
+            {
+                groupList.Add(null);
+            }
+            currentAngle = 60;
+            _currentGroupIndex = 0;
+        }
+
+
+
 
 
 
@@ -45,6 +55,11 @@ namespace GameSystem
         /// 当前最大圈数,游戏流程推进的时候，更改这个值并重新生成地图
         /// </summary>
         public static int CircleCount { get { return circleCount; } set { throw new System.NotImplementedException(); } }
+
+        /// <summary>
+        /// 是否所有Group都已经加载好？(场景加载时向左移一位，加载完毕右移，这意味着支持最多同时31个场景加载，足够用了)
+        /// </summary>
+        public static int loaded = 1;
 
 #if UNITY_EDITOR
         //显示在Setting编辑器上的说明，放在这个位置好改
@@ -171,7 +186,8 @@ namespace GameSystem
             }
 
             //引用置为空
-            groupList[index] = null;
+            if (index >= 0)
+                groupList[index] = null;
         }
 
 
@@ -190,17 +206,17 @@ namespace GameSystem
         {
             get
             {
-                //while (_groupList.Count < CircleCount * 3)
-                //{
-                //    _groupList.Add(null);
-                //}
-                //while (_groupList.Count > CircleCount * 3)
-                //{
-                //    if (_groupList[_groupList.Count - 1] != null)
-                //        MapSystem.UnLoadGroup(_groupList[_groupList.Count - 1]);
-                //    _groupList.RemoveAt(_groupList.Count - 1);
-                //}
-                return Setting.groupList;
+                while (_groupList.Count < CircleCount * 3)
+                {
+                    _groupList.Add(null);
+                }
+                while (_groupList.Count > CircleCount * 3)
+                {
+                    if (_groupList[_groupList.Count - 1] != null)
+                        MapSystem.UnLoadGroup(_groupList[_groupList.Count - 1]);
+                    _groupList.RemoveAt(_groupList.Count - 1);
+                }
+                return _groupList;
             }
         }
 
@@ -209,6 +225,9 @@ namespace GameSystem
         /// 当前组序号
         /// </summary>
         public static int currentGroupIndex { get { return _currentGroupIndex; } set { if (_currentGroupIndex != value) { if (OnIndexChanged != null) OnIndexChanged(); _currentGroupIndex = value; } } }
+        /// <summary>
+        /// event invoked when current group index is changed
+        /// </summary>
         public static event System.Action OnIndexChanged;
 
         /// <summary>

@@ -165,7 +165,36 @@ namespace EditorSystem
         }
 
 
-
+        //卸载场上失效场景组-----------------------------------------------
+        [MenuItem("开发者工具/重新组织场景")]
+        public static void RearrangeInvalidMapGroup()
+        {
+            if (!GameSystem.MapSystem.Active)
+            {
+                Debug.Log("请先加载地图场景！");
+                return;
+            }
+            MapGroup[] groups = Resources.FindObjectsOfTypeAll<MapGroup>();
+            Debug.Log(groups.Length + " Groups Found!");
+            List<MapGroup> groupList = GameSystem.MapSystem.groupList;
+            foreach (MapGroup mg in groups)
+            {
+                if (PrefabUtility.GetPrefabType(mg) == PrefabType.Prefab) continue;
+                if (mg.index < 0 || mg.index >= groupList.Count || (groupList[mg.index] != null && groupList[mg.index] != mg))
+                {
+                    Debug.Log("Delete " + mg.groupName);
+                    GameSystem.MapSystem.UnLoadGroup(mg);
+                    continue;
+                }
+                else if (groupList[mg.index] == null)
+                {
+                    Debug.Log("Rearrange " + mg.groupName + " to " + mg.index);
+                    groupList[mg.index] = mg;
+                }
+            }
+            GameSystem.MapSystem.InitGroupActiveState();
+            Debug.Log("Done.");
+        }
 
         private void OnGUI()
         {

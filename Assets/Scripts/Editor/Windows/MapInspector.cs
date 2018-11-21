@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using GameSystem;
 
 namespace EditorSystem
@@ -11,252 +12,254 @@ namespace EditorSystem
     /// </summary>
     public class MapInspector : EditorWindow
     {
-        //引用
+        //引用，定义
         private static EditorMatrixPrefs Prefs { get { return EditorMatrix.Prefs; } }
+        public enum SelectionType
+        {
+            GameObject,
+            Prefab,
+            Group,
+            GroupAsset,
+            Map
+        }
+
 
         //获取选择对象---------------------------------------------------
-        private GameObject target;
-        private GameObject prefab;
-        private Editor selectedEditor;
-        private MapGroup currentGroup { get { return MapSystem.groupList[MapSystem.currentGroupIndex]; } }
+        private static Object target;
+        private static Editor selectedEditor;
+        private static SelectionType selectionType = SelectionType.Map;
 
-
-        //选择检查/修正---------------------------------------------------
-        public void OnSelectionChanged()
+        public static void FocusOn(Object focusTarget, SelectionType type)
         {
-            if (editing)
+            //Debug.Log("Focus!");
+            if (target == focusTarget && selectionType == type) return;
+            target = focusTarget;
+            selectionType = type;
+            switch (type)
             {
-                editing = false;
-                SaveInformation();
-                Debug.Log("刚才的信息编辑已经自动保存！");
+                case SelectionType.GameObject:
+                case SelectionType.Prefab:
+                    selectedEditor = target == null ? null : Editor.CreateEditor(target);
+                    break;
+                case SelectionType.Group:
+                    selectedEditor = target == null ? null : Editor.CreateEditor((target as MapGroup).gameObject);
+                    break;
+                case SelectionType.GroupAsset:
+                    selectedEditor = Editor.CreateEditor(((MapGroupAsset)target).groupPrefab);
+                    break;
+                case SelectionType.Map:
+                    selectedEditor = null;
+                    break;
             }
 
-            //这里封装一层是为了避免过多SelectionCheck
-            result = SelectionCheck();
-
-            information = Prefs.prefabDictionary.ContainsKey(prefab) ? Prefs.prefabDictionary[prefab] : "这个物体还没有介绍，点击编辑添加介绍！";
-
-            Repaint();
-        }
-        /// <summary>
-        /// 检查选择项
-        /// </summary>
-        private SelectionCheckResult SelectionCheck()
-        {
-            checkd = false;
-            if (Selection.gameObjects.Length > 1)
-            {
-                target = null;
-                selectedEditor = null;
-                return SelectionCheckResult.Multiple;
-            }
-            target = Selection.activeGameObject;
-            if (target == null)
-            {
-                selectedEditor = null;
-                return SelectionCheckResult.None;
-            }
-
-            selectedEditor = Editor.CreateEditor(target);
-            switch (PrefabUtility.GetPrefabType(target))
-            {
-                case PrefabType.Prefab:
-                    prefab = target;
-                    return SelectionCheckResult.Prefab;
-                case PrefabType.PrefabInstance:
-                    prefab = PrefabUtility.GetCorrespondingObjectFromSource(target) as GameObject;
-                    return SelectionCheckResult.Instance;
-                default:
-                    return SelectionCheckResult.Invalid;
-            }
-        }
-        /// <summary>
-        /// 选择项检查结果
-        /// </summary>
-        private enum SelectionCheckResult
-        {
-            None,    //没有选中任何
-            Multiple,   //选中多项
-            Prefab,     //选中Prefab
-            Instance,   //选中实例
-            Invalid
-        }
-        private SelectionCheckResult result = SelectionCheckResult.Invalid;
-        private bool checkd;
-        /// <summary>
-        /// 修正选择
-        /// </summary>
-        private void AfterSelectionCheck()
-        {
-            if (checkd) return;
-            if (result == SelectionCheckResult.Instance)
-            {
-                GameObject rootObj = target;
-                while (rootObj.transform.parent != null && rootObj.transform.parent.tag != "MapSystem")
-                {
-                    rootObj = rootObj.transform.parent.gameObject;
-                }
-                if (Selection.activeGameObject != rootObj)
-                    Selection.activeGameObject = rootObj;
-            }
-            checkd = true;
+            if (instance != null) instance.Repaint();
+            editing = false;
         }
 
 
 
-        //Debug相关------------------------------------------------------
+        //Debug/General--------------------------------------------------
+        private static MapInspector instance = null;
+        private void OnEnable()
+        {
+            instance = this;
+            selectedEditor = null;
+            Input.imeCompositionMode = IMECompositionMode.On;
+            autoRepaintOnSceneChange = true;
+        }
         private string debugMessage = "";
-        private bool debugGUILog = false;
-        private void DebugMessageUpdate()
+        private void ShowDebugMessage()
         {
             debugMessage =
                 "【Debug Message】\n" +
-                "Current Object: " + Selection.activeObject + "\n" +
-                "Current GameObject: " + Selection.activeGameObject + "\n" +
-                "Target: " + target + "\n" +
-                "GameObject Count: " + Selection.gameObjects.Length + "\n" +
-                "target Type: " + (Selection.activeGameObject == null ? 0 : PrefabUtility.GetPrefabType(Selection.activeGameObject)) + "\n" +
-                "target Prefab: " + prefab + "\n" +
-                "GameObject Parent Prefab: " + (Selection.activeGameObject == null ? null : PrefabUtility.FindValidUploadPrefabInstanceRoot(Selection.activeGameObject)) + "\n" +
-                "\nSceneView Count: " + SceneView.sceneViews.Count + "\n" +
-                "currentSceneView: " + SceneView.currentDrawingSceneView + "\n" +
-                "lastSceneView: " + SceneView.lastActiveSceneView + "\n";
+                "Target:" + target + (target == null ? "" : target.name) + "\n" +
+                "SelectedEditor:" + selectedEditor + "\n" +
+                "SelectionType:" + selectionType + "\n" +
+                "";
 
 
+            //~
+            GUILayout.Label(debugMessage, Prefs.debugMessageStyle);
+        }
+        private void DrawPreview()
+        {
+            if (selectedEditor != null && selectedEditor.HasPreviewGUI()) selectedEditor.DrawPreview(GUILayoutUtility.GetRect(10, 200, GUILayout.ExpandWidth(true)));
+        }
 
 
-            foreach (SceneView sv in SceneView.sceneViews)
+        //Tools
+        private static bool editing = false;
+        private string EditableNameField(string name)
+        {
+            GUILayout.BeginHorizontal(GUILayout.Height(25));
             {
-                debugMessage += "\nScene " + sv.name + ";camera: " + sv.camera.name + ";cPos: " + sv.camera.transform.position;
+                if (editing) name = EditorGUILayout.TextField(name, Prefs.nameStyle, GUILayout.Height(25));
+                else GUILayout.Label(name, Prefs.nameStyle);
+                if (GUILayout.Button(editing ? "完成" : "重命名", GUILayout.Width(60))) editing = !editing;
             }
+            GUILayout.EndHorizontal();
+
+            return name;
         }
 
 
 
-        //Prefab编辑相关-----------------------------------------------
-        private bool editing = false;
-        private string information;
-        public void SaveInformation()
+        //Sub GUIs-------------------------------------------------------
+        private void OnGameObjectGUI()
         {
-            if (!Prefs.prefabDictionary.ContainsKey(prefab))
+            if (target == null)
             {
-                Prefs.prefabDictionary.Add(prefab, information);
+                FocusOn(null, SelectionType.Map);
+                return;
             }
-            else
+            DrawPreview();
+            GameObject gameObject = target as GameObject;
+
+            gameObject.name = EditableNameField(gameObject.name);
+
+            GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+            GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
             {
-                Prefs.prefabDictionary[prefab] = information;
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("放到地面", GUILayout.Width(60))) (target as GameObject).transform.Translate(Vector3.down * (target as GameObject).transform.position.y);
             }
+            GUILayout.EndHorizontal();
         }
 
-
-
-        //组界面相关---------------------------------------------------
-        private MapGroupAsset groupAsset;
-
-
-        //GUI封装
-        public void DrawPrefabInformation()
+        private void OnPrefabGUI()
         {
-            if (selectedEditor != null) selectedEditor.DrawPreview(GUILayoutUtility.GetRect(10, 200, GUILayout.ExpandWidth(true)));
-            GUILayout.Label(target.name, Prefs.nameStyle);
+            DrawPreview();
+            GameObject prefab = target as GameObject;
 
-            if (editing)
+            prefab.name = EditableNameField(prefab.name);
+
+
+            if (MapAssetManager.ContainsPrefab(prefab))
             {
-                information = EditorGUILayout.TextArea(information, Prefs.informationStyle);
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("保存"))
+                //在表列
+                MapAssetManager.CurrentInformation = EditorGUILayout.TextArea(MapAssetManager.CurrentInformation, Prefs.informationStyle);
+
+                GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+                GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
                 {
-                    SaveInformation();
-                    editing = false;
-                }
-                if (GUILayout.Button("取消"))
-                {
-                    information = Prefs.prefabDictionary.ContainsKey(prefab) ? Prefs.prefabDictionary[prefab] : "这个物体还没有介绍，点击编辑添加介绍！";
-                    editing = false;
+                    GUILayout.FlexibleSpace();
                 }
                 GUILayout.EndHorizontal();
             }
             else
             {
-                GUILayout.Label(information, Prefs.informationStyle);
-                if (GUILayout.Button("编辑"))
+                //不在表列
+
+                GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+                GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
                 {
-                    editing = true;
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("加入物品表列", GUILayout.Width(120))) { MapAssetManager.AddPrefab(prefab); }
                 }
+                GUILayout.EndHorizontal();
+            }
+
+
+        }
+
+        private void OnGroupGUI()
+        {
+            MapGroup group = target as MapGroup;
+
+            if (group == null)
+            {
+                GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.Height(200));
+                GUILayout.Label("当前组为空", Prefs.informationStyle);
+
+                GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+                GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("新建组", GUILayout.Width(60))) { MapGroupAssetEditor.NewEmptyGroup(MapSystem.currentGroupIndex); FocusOn(MapSystem.groupList[MapSystem.currentGroupIndex], SelectionType.Group); }
+                    if (MapAssetManager.CurrentAsset != null && GUILayout.Button("加载组", GUILayout.Width(60))) { MapGroupAssetEditor.LoadGroup(MapAssetManager.CurrentAsset, MapSystem.currentGroupIndex); FocusOn(MapSystem.groupList[MapSystem.currentGroupIndex], SelectionType.Group); }
+                }
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                DrawPreview();
+                group.groupName = EditableNameField(group.groupName);
+
+                GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+                GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
+                {
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("保存组", GUILayout.Width(60))) { MapGroupAssetEditor.SaveGroup(group); FocusOn(MapSystem.groupList[MapSystem.currentGroupIndex], SelectionType.Group); }
+                    if (GUILayout.Button("卸载组", GUILayout.Width(60))) MapGroupAssetEditor.UnLoadGroup(group);
+                    if (MapAssetManager.CurrentAsset != null && GUILayout.Button("加载组", GUILayout.Width(60))) { MapGroupAssetEditor.LoadGroup(MapAssetManager.CurrentAsset, MapSystem.currentGroupIndex); FocusOn(MapSystem.groupList[MapSystem.currentGroupIndex], SelectionType.Group); }
+                }
+                GUILayout.EndHorizontal();
             }
         }
 
-
-
-
-        private void OnEnable()
+        private void OnGroupAssetGUI()
         {
-            Input.imeCompositionMode = IMECompositionMode.On;
-            autoRepaintOnSceneChange = true;
-            Selection.selectionChanged += OnSelectionChanged;
-            MapSystem.OnIndexChanged += Repaint;
+            MapGroupAsset groupAsset = target as MapGroupAsset;
+            DrawPreview();
+            GUILayout.Label(groupAsset.groupName, Prefs.nameStyle);
+            groupAsset.information = EditorGUILayout.TextArea(groupAsset.information, Prefs.informationStyle);
+            GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+            GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
+            {
+                GUILayout.FlexibleSpace();
+                if (!groupAsset.baked && GUILayout.Button("烘焙", GUILayout.Width(60))) MapGroupAssetEditor.BakeGroupAsset(groupAsset);
+                if (GUILayout.Button("加载组", GUILayout.Width(60))) { MapGroupAssetEditor.LoadGroup(MapAssetManager.CurrentAsset, MapSystem.currentGroupIndex); FocusOn(MapSystem.groupList[MapSystem.currentGroupIndex], SelectionType.Group); }
+            }
+            GUILayout.EndHorizontal();
         }
+
+        private void OnMapGUI()
+        {
+            GUILayout.Label("", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
+            GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
+            {
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("重新组织场景", GUILayout.Width(120))) TemporaryTool.RearrangeInvalidMapGroup();
+            }
+            GUILayout.EndHorizontal();
+        }
+
+
+
+
+
+
+
         private void OnGUI()
         {
             if (!MapManager.Active)
             {
                 GUILayout.Label("地图没打开，地图编辑器未激活！");
+                ShowDebugMessage();
                 return;
             }
 
-            AfterSelectionCheck();
-
-            switch (result)
+            switch (selectionType)
             {
-                case SelectionCheckResult.None:
-                    //没有选中东西
-                    //显示当前组信息
-                    if (currentGroup == null)
-                    {
-                        GUILayout.Label("当前组为空！");
-                        GUILayout.Label("当前组序号：" + MapSystem.currentGroupIndex);
-                        if (GUILayout.Button("新建组")) MapGroupAssetEditor.NewEmptyGroup(MapSystem.currentGroupIndex);
-                        groupAsset = EditorGUILayout.ObjectField("To 加载", groupAsset, typeof(MapGroupAsset), false) as MapGroupAsset;
-                        if (GUILayout.Button("载入组")) MapGroupAssetEditor.LoadGroup(groupAsset, MapSystem.currentGroupIndex);
-                    }
-                    else
-                    {
-                        currentGroup.gameObject.name = currentGroup.groupName = EditorGUILayout.TextField(currentGroup.groupName);
-                        GUILayout.Label("当前组序号：" + currentGroup.index);
-                        if (GUILayout.Button("保存组")) MapGroupAssetEditor.SaveGroup(currentGroup);
-                        if (GUILayout.Button("卸载组")) MapGroupAssetEditor.UnLoadGroup(currentGroup);
-                        if (MapGroupAssetEditor.ContainsAsset(currentGroup.groupName) && GUILayout.Button("删除组")) MapGroupAssetEditor.DeleteGroupAsset(MapGroupAssetEditor.GetGroupAssetByName(currentGroup.groupName));
-                    }
+                case SelectionType.GameObject:
+                    OnGameObjectGUI();
                     break;
-
-                case SelectionCheckResult.Multiple:
-                    //选中多个东西
+                case SelectionType.Prefab:
+                    OnPrefabGUI();
                     break;
-
-                case SelectionCheckResult.Prefab:
-                    //选中一个Prefab
-                    DrawPrefabInformation();
+                case SelectionType.Group:
+                    OnGroupGUI();
                     break;
-
-                case SelectionCheckResult.Instance:
-                    //选中的是一个实例
-                    DrawPrefabInformation();
+                case SelectionType.GroupAsset:
+                    OnGroupAssetGUI();
                     break;
-
-                case SelectionCheckResult.Invalid:
-                    //选中没有Prefab的物体
-                    GUILayout.Label("这个东西不在地图系统里。", Prefs.informationStyle);
+                case SelectionType.Map:
+                    OnMapGUI();
                     break;
             }
 
-            DebugMessageUpdate();
-            GUILayout.Label(debugMessage, Prefs.debugMessageStyle);
-
-            debugGUILog = EditorGUILayout.Toggle("Debug GUI Log", debugGUILog);
-            if (debugGUILog) Debug.Log("OnGUI():EventType - " + Event.current.type);
+            ShowDebugMessage();
         }
-
-
 
 
     }

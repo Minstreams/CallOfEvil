@@ -18,8 +18,7 @@ public class MapGroup : MonoBehaviour
     /// <summary>
     /// 在MapSystem注册的index，用于网络同步
     /// </summary>
-    [System.NonSerialized]
-    public int index;
+    public int index = -1;
 
     /// <summary>
     /// 按angle排序的有序表
@@ -41,10 +40,6 @@ public class MapGroup : MonoBehaviour
 
             //TODO:激活时的动作
             gameObject.SetActive(value);
-
-#if UNITY_EDITOR
-            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
-#endif
         }
     }
 

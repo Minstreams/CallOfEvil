@@ -420,14 +420,17 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   groupNumDistance: 1.5
-  elementRadius: 8
+  elementRadius: 6
   elementOutlineWidth: 2
   minScale: 0.003
   maxScale: 0.1
   scaleSensitivity: 0.002
   dragSensitivity: 0.6
+  elementColorMixRate: 0.35
   elementBackColor: {r: 0, g: 0, b: 0, a: 0}
   elementOutLineColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 0.56078434}
+  elementNormalColor: {r: 0, g: 0, b: 0, a: 1}
+  elementInvalidColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   elementAlpha: 0.1
   elementNameStyle:
     m_Name: element
@@ -642,13 +645,13 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   nameStyle:
-    m_Name: nameStyle
+    m_Name: CurveEditorBackground
     m_Normal:
-      m_Background: {fileID: 0}
+      m_Background: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
-      m_Background: {fileID: 0}
+      m_Background: {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Active:
@@ -676,34 +679,34 @@ MonoBehaviour:
       m_ScaledBackgrounds: []
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Border:
+      m_Left: 13
+      m_Right: 13
+      m_Top: 13
+      m_Bottom: 13
+    m_Margin:
       m_Left: 0
       m_Right: 0
       m_Top: 0
-      m_Bottom: 0
-    m_Margin:
+      m_Bottom: 1
+    m_Padding:
       m_Left: 10
       m_Right: 10
-      m_Top: 10
-      m_Bottom: 10
-    m_Padding:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Top: 2
+      m_Bottom: 2
     m_Overflow:
       m_Left: 0
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 12800000, guid: 12138c7ac118d2a4489a6c23f7d612ee, type: 3}
-    m_FontSize: 20
+    m_Font: {fileID: 12800000, guid: a6a44ff4df040fc45bf0e4a3112ca584, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_Alignment: 0
-    m_WordWrap: 0
-    m_RichText: 1
+    m_WordWrap: 1
+    m_RichText: 0
     m_TextClipping: 0
     m_ImagePosition: 0
-    m_ContentOffset: {x: 0, y: 0}
+    m_ContentOffset: {x: 0, y: -2}
     m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
@@ -748,13 +751,13 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Margin:
-      m_Left: 10
-      m_Right: 10
-      m_Top: 10
-      m_Bottom: 10
-    m_Padding:
       m_Left: 0
       m_Right: 0
+      m_Top: 0
+      m_Bottom: 6
+    m_Padding:
+      m_Left: 10
+      m_Right: 10
       m_Top: 0
       m_Bottom: 0
     m_Overflow:
@@ -781,7 +784,7 @@ MonoBehaviour:
       m_Background: {fileID: 6029984632204043670, guid: 0000000000000000d000000000000000,
         type: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -790,7 +793,7 @@ MonoBehaviour:
       m_Background: {fileID: -1089754296853649291, guid: 0000000000000000d000000000000000,
         type: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0.7075472, g: 0.13683695, b: 0.13683695, a: 1}
     m_Focused:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -799,7 +802,7 @@ MonoBehaviour:
       m_Background: {fileID: 6309649621493563145, guid: 0000000000000000d000000000000000,
         type: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0.47058824, g: 0.17254905, b: 0.17254905, a: 1}
     m_OnHover:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -808,7 +811,7 @@ MonoBehaviour:
       m_Background: {fileID: -984941480587451815, guid: 0000000000000000d000000000000000,
         type: 0}
       m_ScaledBackgrounds: []
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0.7075472, g: 0.18356179, b: 0.18356179, a: 1}
     m_OnFocused:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds: []
@@ -833,8 +836,8 @@ MonoBehaviour:
       m_Right: 1
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 12800000, guid: a6a44ff4df040fc45bf0e4a3112ca584, type: 3}
-    m_FontSize: 18
+    m_Font: {fileID: 12800000, guid: 12138c7ac118d2a4489a6c23f7d612ee, type: 3}
+    m_FontSize: 16
     m_FontStyle: 0
     m_Alignment: 4
     m_WordWrap: 0
@@ -843,11 +846,228 @@ MonoBehaviour:
     m_ImagePosition: 0
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 0
+    m_FixedHeight: 28
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  mapAssetBackgroundStyle:
+    m_Name: CurveEditorBackground
+    m_Normal:
+      m_Background: {fileID: -341762447361974832, guid: 0000000000000000d000000000000000,
+        type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 10910, guid: 0000000000000000f000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 13
+      m_Right: 13
+      m_Top: 13
+      m_Bottom: 13
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 1
+    m_Padding:
+      m_Left: 10
+      m_Right: 10
+      m_Top: 2
+      m_Bottom: 2
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: cfbf9a83b64123c48a7f4dfda4b1d766, type: 3}
+    m_FontSize: 16
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 1
+    m_RichText: 1
+    m_TextClipping: 1
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: -2}
+    m_FixedWidth: 0
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  mapGroupAssets: []
+  mapAssetIconStyle:
+    m_Name: Icon.Curves
+    m_Normal:
+      m_Background: {fileID: 6950551440750328270, guid: 0000000000000000d000000000000000,
+        type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 4493301469751221514, guid: 0000000000000000d000000000000000,
+        type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 4493301469751221514, guid: 0000000000000000d000000000000000,
+        type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 4493301469751221514, guid: 0000000000000000d000000000000000,
+        type: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 2
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 4
+    m_WordWrap: 0
+    m_RichText: 0
+    m_TextClipping: 1
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 20
+    m_FixedHeight: 20
+    m_StretchWidth: 0
+    m_StretchHeight: 0
+  mapAssetLabelStyle:
+    m_Name: label
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 0.01960784}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 0.01960784}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 0.01960784}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 4
+      m_Right: 4
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 2
+      m_Right: 2
+      m_Top: 1
+      m_Bottom: 2
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 12800000, guid: cfbf9a83b64123c48a7f4dfda4b1d766, type: 3}
+    m_FontSize: 16
+    m_FontStyle: 0
+    m_Alignment: 3
+    m_WordWrap: 0
+    m_RichText: 0
+    m_TextClipping: 1
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: -1}
+    m_FixedWidth: 0
+    m_FixedHeight: 25
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  mapAssetUnbakedStateMark: '*'
+  mapGroupAssets:
+  - {fileID: 11400000, guid: 8724e8d0f8fda19468718ac9e246aa37, type: 2}
+  - {fileID: 11400000, guid: aeca57137f7c4994fb06ae7211839bb7, type: 2}
   prefabDictionary:
-    keyList: []
-    valueList: []
-    count: 0
+    keyList:
+    - {fileID: 1057620302555706, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 2}
+    - {fileID: 1820764255379150, guid: 9582b09fc454f1b4b8daddf05071e951, type: 2}
+    - {fileID: 1768777403871786, guid: ac99bdb80ac66294f91c9509d555f4fe, type: 2}
+    - {fileID: 1943504709096164, guid: f4248f9877240464889ca9e2e2d154e7, type: 2}
+    valueList:
+    - "\u8FD9\u662F\u4E00\u4E9B\u706F\u706F"
+    - "\u7269\u54C1\u8BF4\u660E"
+    - "\u7269\u54C1\u8BF4\u660E\u5B9E\u6253\u5B9E\u5927\u82CF\u6253\u6492\u5927\u90FD\u5E02\n\n\n\n\nsdfsdf"
+    - "\u7269\u54C1\u8BF4\u660E"
+    count: 4

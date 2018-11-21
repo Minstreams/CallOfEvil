@@ -42,6 +42,8 @@ public class SerializableDictionary<Key, Value>
         }
     }
 
+    public List<Key> Keys { get { return keyList; } }
+    public List<Value> Values { get { return valueList; } }
     public int Count { get { return count; } }
 
     public bool ContainsKey(Key key)

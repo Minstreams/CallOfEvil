@@ -57,8 +57,11 @@ namespace EditorSystem
         public float maxScale = 0.1f;
         public float scaleSensitivity = 0.01f;
         public float dragSensitivity = 0.6f;
+        public float elementColorMixRate = 0.5f;
         public Color elementBackColor = Color.clear;
         public Color elementOutLineColor = Color.white;
+        public Color elementNormalColor = Color.black;
+        public Color elementInvalidColor = Color.yellow;
         public float elementAlpha = 0.5f;
         public GUIStyle elementNameStyle;
         public float sideWidth = 40;
@@ -82,7 +85,10 @@ namespace EditorSystem
 
         [Header("资源面板Style")]
         public GUIStyle toolbarStyle;
-
+        public GUIStyle mapAssetBackgroundStyle;
+        public GUIStyle mapAssetIconStyle;
+        public GUIStyle mapAssetLabelStyle;
+        public string mapAssetUnbakedStateMark = "*";
 
 
 

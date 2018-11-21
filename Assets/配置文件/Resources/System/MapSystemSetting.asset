@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapGernerationPlans:
   - planList:
-    - groupAsset: {fileID: 11400000, guid: 03c4f771b48df3d42b42066bbd63e05f, type: 2}
+    - groupAsset: {fileID: 11400000, guid: cf7539a8d1f1dc54c957c60a95a8940e, type: 2}
       weight: 1
   groupList:
   - {fileID: 0}
