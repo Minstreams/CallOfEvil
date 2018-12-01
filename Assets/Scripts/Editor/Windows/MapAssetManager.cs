@@ -12,6 +12,7 @@ namespace EditorSystem
     public class MapAssetManager : EditorWindow
     {
         //引用
+        private static MapAssetManager instance = null;
         private static EditorMatrixPrefs Prefs { get { return EditorMatrix.Prefs; } }
         private static PrefabDictionary PrefabInformation { get { return Prefs.prefabDictionary; } }
         private static List<MapGroupAsset> MapGroupAssets { get { return Prefs.mapGroupAssets; } }
@@ -26,8 +27,8 @@ namespace EditorSystem
         public static GameObject CurrentPrefab { get { return PrefabInformation.Count == 0 ? null : PrefabInformation.Keys[prefabSelected]; } }
         public static string CurrentInformation { get { return PrefabInformation.Count == 0 ? "" : PrefabInformation[CurrentPrefab]; } set { PrefabInformation[CurrentPrefab] = value; } }
         public static bool ContainsPrefab(GameObject prefab) { return PrefabInformation.ContainsKey(prefab); }
-        public static void AddPrefab(GameObject prefab) { PrefabInformation.Add(prefab, "物品说明"); prefabSelected = PrefabInformation.Count - 1; }
-        public static void DeletePrefab(GameObject prefab) { PrefabInformation.Remove(prefab); }
+        public static void AddPrefab(GameObject prefab) { PrefabInformation.Add(prefab, "物品说明"); prefabSelected = PrefabInformation.Count - 1; if (instance != null) instance.Repaint(); }
+        public static void DeletePrefab(GameObject prefab) { PrefabInformation.Remove(prefab); if (instance != null) instance.Repaint(); }
 
         private GameObject tempPrefabInstance = null;
         private bool validPos;//所在位置是否合法？当鼠标悬停在场景或编辑器窗口时位置是合法的
@@ -40,10 +41,12 @@ namespace EditorSystem
 
 
 
-
+        private void OnEnable()
+        {
+            instance = this;
+        }
         private void OnGUI()
         {
-            EditorGUI.BeginChangeCheck();
             toolbarSelected = GUILayout.Toolbar(toolbarSelected, toolbarTitle, Prefs.toolbarStyle);
 
             if (toolbarSelected == 0)
@@ -53,12 +56,10 @@ namespace EditorSystem
                 if (PrefabInformation.Count == 0)
                 {
                     //大小为空
-                    EditorGUI.EndChangeCheck();
                     GUILayout.Label("……", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
                 }
                 else
                 {
-                    if (EditorGUI.EndChangeCheck()) MapInspector.FocusOn(CurrentPrefab, MapInspector.SelectionType.Prefab);
                     //selection list
                     scollVector = GUILayout.BeginScrollView(scollVector);
                     {
@@ -80,7 +81,7 @@ namespace EditorSystem
                     GUILayout.BeginHorizontal(Prefs.mapAssetBackgroundStyle, GUILayout.Height(28));
                     {
                         GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("删除", GUILayout.Width(60))) DeletePrefab(cp);
+                        if (GUILayout.Button("删除", GUILayout.Width(60))) { DeletePrefab(cp); prefabSelected--; MapInspector.FocusOn(CurrentPrefab, MapInspector.SelectionType.Prefab); }
                     }
                     GUILayout.EndHorizontal();
 
@@ -93,6 +94,7 @@ namespace EditorSystem
                             Debug.Log(tempPrefabInstance);
                             break;
                         case EventType.MouseDrag:
+                            if (tempPrefabInstance == null) break;
                             Vector3 prefabPos = Vector3.zero;
                             if (mouseOverWindow == null)
                             {
@@ -147,12 +149,10 @@ namespace EditorSystem
                 if (MapGroupAssets.Count == 0)
                 {
                     //大小为空
-                    EditorGUI.EndChangeCheck();
                     GUILayout.Label("……", Prefs.mapAssetBackgroundStyle, GUILayout.ExpandHeight(true));
                 }
                 else
                 {
-                    if (EditorGUI.EndChangeCheck()) MapInspector.FocusOn(CurrentAsset, MapInspector.SelectionType.GroupAsset);
                     //selection list
                     scollVector = GUILayout.BeginScrollView(scollVector);
                     {
@@ -175,7 +175,7 @@ namespace EditorSystem
                     {
                         GUILayout.FlexibleSpace();
                         if (!mga.baked && GUILayout.Button("烘焙", GUILayout.Width(60))) MapGroupAssetEditor.BakeGroupAsset(mga);
-                        if (GUILayout.Button("删除", GUILayout.Width(60))) { MapGroupAssetEditor.DeleteGroupAsset(mga); mapAssetSelected = 0; }
+                        if (GUILayout.Button("删除", GUILayout.Width(60))) { MapGroupAssetEditor.DeleteGroupAsset(mga); mapAssetSelected = 0; MapInspector.FocusOn(CurrentAsset, MapInspector.SelectionType.GroupAsset); }
                     }
                     GUILayout.EndHorizontal();
                 }

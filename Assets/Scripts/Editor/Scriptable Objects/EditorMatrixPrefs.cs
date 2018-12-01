@@ -82,6 +82,7 @@ namespace EditorSystem
         public GUIStyle debugMessageStyle;
         public GUIStyle nameStyle;
         public GUIStyle informationStyle;
+        public float previewHeight = 200;
 
         [Header("资源面板Style")]
         public GUIStyle toolbarStyle;

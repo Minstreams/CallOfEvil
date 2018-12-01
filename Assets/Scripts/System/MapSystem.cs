@@ -23,7 +23,7 @@ namespace GameSystem
 
 
         //引用/Basic
-        public static MapSystemComponent mapSystemComponent { get; private set; }
+        public static MapSystemComponent mapSystemComponent = null;
 
         /// <summary>
         /// 系统是否激活（可工作）
@@ -32,6 +32,12 @@ namespace GameSystem
 
         public static void Init(MapSystemComponent instance)
         {
+            if (mapSystemComponent != null)
+            {
+                Debug.Log("MapSystem already inited!");
+                return;
+            }
+            Debug.Log("MapSystem inited by" + instance);
             mapSystemComponent = instance;
             groupList.Clear();
             while (groupList.Count < CircleCount * 3)
@@ -41,7 +47,6 @@ namespace GameSystem
             currentAngle = 60;
             _currentGroupIndex = 0;
         }
-
 
 
 
@@ -163,6 +168,10 @@ namespace GameSystem
         {
             int index = group.index;
 
+            //引用置为空
+            if (index >= 0)
+                groupList[index] = null;
+
             //卸载多余场景
             if (group.gameObject.scene != SceneManager.GetActiveScene())
             {
@@ -177,19 +186,12 @@ namespace GameSystem
             {
 #if UNITY_EDITOR
                 if (!UnityEditor.EditorApplication.isPlaying)
-                    UnityEditor.Undo.DestroyObjectImmediate(group.gameObject);
+                    Object.DestroyImmediate(group.gameObject);
                 else
-                    GameObject.Destroy(group.gameObject);
-#else
-                    GameObject.Destroy(group.gameObject);
 #endif
+                    GameObject.Destroy(group.gameObject);
             }
-
-            //引用置为空
-            if (index >= 0)
-                groupList[index] = null;
         }
-
 
 
 

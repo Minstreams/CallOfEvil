@@ -23,7 +23,6 @@ namespace EditorSystem
         {
             public Object obj;
             public System.Type type { get { return obj.GetType(); } }
-            public Editor editor;
             public Stack<FieldInfo[]> fieldStack = new Stack<FieldInfo[]>();
             public List<string> popupNames = new List<string>();
             public int selection;
@@ -200,6 +199,5 @@ namespace EditorSystem
         {
             CopyDataGUI();
         }
-
     }
 }

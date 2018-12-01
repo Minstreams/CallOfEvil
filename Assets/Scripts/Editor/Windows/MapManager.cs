@@ -43,13 +43,13 @@ namespace EditorSystem
         private void OnEnable()
         {
             isWindowOpen = true;
-            if (!Active) return;
             autoRepaintOnSceneChange = true;
             Selection.SetActiveObjectWithContext(null, null);
             SceneView.onSceneGUIDelegate += RepaintOnSceneGUI;    //随AnimatedMaterials刷新而刷新，几乎是一直刷新了
             Selection.selectionChanged += OnSelectionChanged;
             invalidObjectList = new List<GameObject>();
             Debug.Log("Map Manager Enabled!");
+            if (!Active) return;
             TemporaryTool.RearrangeInvalidMapGroup();
         }
         private void OnDisable()
@@ -99,7 +99,6 @@ namespace EditorSystem
             if (PrefabUtility.GetPrefabType(Selection.activeGameObject) == PrefabType.Prefab)
             {
                 MapInspector.FocusOn(Selection.activeGameObject, MapInspector.SelectionType.Prefab);
-                selectionChecked = false;
                 return;
             }
 
@@ -110,6 +109,7 @@ namespace EditorSystem
                 if (parent.tag != "MapSystem")
                 {
                     Selection.activeGameObject = parent.gameObject;
+                    selectionChecked = false;
                     return;
                 }
                 else
@@ -121,6 +121,37 @@ namespace EditorSystem
             {
                 SetMapObject(Selection.activeGameObject);
                 MapInspector.FocusOn(Selection.activeGameObject, MapInspector.SelectionType.GameObject);
+            }
+        }
+
+        //Debug
+        private static bool debug;
+        private static List<string> debugMessage = new List<string>();
+        public static void Log(string message, int id = 0)
+        {
+            if (debug) Debug.Log(message);
+            if (id >= debugMessage.Count) while (debugMessage.Count <= id) debugMessage.Add("");
+            debugMessage[id] = message;
+        }
+        private void ShowDebugMessage()
+        {
+            try
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(Prefs.edge + radius * 2);
+                GUILayout.BeginVertical();
+                debug = GUILayout.Toggle(debug, "Debug Console");
+                foreach (string m in debugMessage)
+                {
+                    GUILayout.Label(m);
+                }
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+            catch (System.ArgumentException)
+            {
+                Debug.Log("Layout Problem from MapManager, event type :" + Event.current.type);
+                return;
             }
         }
 
@@ -409,6 +440,7 @@ namespace EditorSystem
                             SceneView.lastActiveSceneView.pivot = deltaRot * SceneView.lastActiveSceneView.pivot;
                             SceneView.lastActiveSceneView.rotation = deltaRot * SceneView.lastActiveSceneView.rotation;
                         }
+
                     }
                     break;
                 case EventType.MouseDown:
@@ -440,7 +472,6 @@ namespace EditorSystem
                             //选中物体
                             GameObject objectSelected = areaIndex >= 0 ? GroupList[MapSystem.currentGroupIndex].transform.GetChild(areaIndex).gameObject : invalidObjectList[-areaIndex - 1];
                             Selection.activeGameObject = objectSelected;
-                            MapInspector.FocusOn(objectSelected, MapInspector.SelectionType.GameObject);
 
                             break;
                         case MouseArea.Invalid:
@@ -453,32 +484,29 @@ namespace EditorSystem
                     }
                     break;
                 case EventType.MouseDrag:
-                    switch (mouseArea)
+                    if (Event.current.button == 1)
                     {
-                        case MouseArea.ScollArea:
-                        case MouseArea.GroupArea:
-                        case MouseArea.DragArea:
-                            if (Event.current.button == 1)
-                            {
-                                //right click
-                                SceneView.lastActiveSceneView.rotation = Quaternion.Euler(0, Event.current.delta.x / 2, 0) * SceneView.lastActiveSceneView.rotation * Quaternion.Euler(Event.current.delta.y / 2, 0, 0);
-                            }
-                            else
-                            {
+                        //right click
+                        SceneView.lastActiveSceneView.rotation = Quaternion.Euler(0, Event.current.delta.x / 2, 0) * SceneView.lastActiveSceneView.rotation * Quaternion.Euler(Event.current.delta.y / 2, 0, 0);
+                    }
+                    else switch (mouseArea)
+                        {
+                            case MouseArea.ScollArea:
+                            case MouseArea.GroupArea:
+                            case MouseArea.DragArea:
                                 Vector3 mouseDir = Event.current.mousePosition - center;
                                 float mouseDirSqrLength = mouseDir.sqrMagnitude;
                                 float dragAngle = -Vector3.Cross(mouseDir, Event.current.delta).z / mouseDirSqrLength * 180 / Mathf.PI * Prefs.dragSensitivity;
 
                                 mouseDragAngle.value = dragAngle;
                                 mouseDragAngle.target = 0;
-                            }
 
-                            break;
-                        case MouseArea.ObjectArea:
-                            Undo.RecordObject(Selection.activeGameObject.transform, "Moving Object");
-                            Selection.activeGameObject.transform.position = GetElementWorldPos(Event.current.mousePosition, Selection.activeGameObject.transform.position.y);
-                            break;
-                    }
+                                break;
+                            case MouseArea.ObjectArea:
+                                Undo.RecordObject(Selection.activeGameObject.transform, "Moving Object");
+                                Selection.activeGameObject.transform.position = GetElementWorldPos(Event.current.mousePosition, Selection.activeGameObject.transform.position.y);
+                                break;
+                        }
                     break;
                 case EventType.MouseUp:
                     switch (mouseArea)
@@ -492,6 +520,9 @@ namespace EditorSystem
                     viewScale.target = Mathf.Clamp(viewScale.target - Event.current.delta.y * Prefs.scaleSensitivity, Prefs.minScale, Prefs.maxScale);
                     break;
             }
+
+            //Debug Message
+            ShowDebugMessage();
         }
 
 
@@ -505,7 +536,7 @@ namespace EditorSystem
         /// </summary>
         public static void SetMapObject(GameObject g)
         {
-            if (!g.CompareTag("Untagged")) return;
+            if (g == null || !g.CompareTag("Untagged")) return;
             if (invalidObjectList.Contains(g)) invalidObjectList.Remove(g);
             MapGroup group = g.GetComponentInParent<MapGroup>();
             float gAngle = MapSystem.GetAngle(g.transform.position);
@@ -515,6 +546,7 @@ namespace EditorSystem
             if (group == null)
             {
                 //新添加
+                Log("Adding " + g);
                 MapGroup newGroup = GroupList[gIndex];
                 if (newGroup == null)
                 {
@@ -534,6 +566,7 @@ namespace EditorSystem
             else if (gIndex != group.index)
             {
                 //换组
+                Log("Change " + g);
                 MapGroup newGroup = GroupList[gIndex];
                 if (newGroup == null)
                 {
@@ -554,6 +587,7 @@ namespace EditorSystem
             else
             {
                 //调整
+                Log("Adjust " + g);
                 foreach (MapUnit unit in units)
                 {
                     AdjustUnit(unit);

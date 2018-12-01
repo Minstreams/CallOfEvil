@@ -91,6 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Manager: {fileID: 0}
+  ServerList: {fileID: 0}
+  discovery: {fileID: 0}
   ServerAddress: 
   RoomName: 
   Address: {fileID: 114682524200732056}

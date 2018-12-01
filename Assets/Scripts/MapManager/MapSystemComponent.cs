@@ -11,11 +11,23 @@ public class MapSystemComponent : MonoBehaviour
 #if UNITY_EDITOR
     private void OnEnable()
     {
-        GameSystem.MapSystem.Init(this);
+
+        Debug.Log("MapSystemComponent OnEnable.");
+        if (!UnityEditor.EditorApplication.isPlaying)
+            GameSystem.MapSystem.Init(this);
     }
 #endif
+    private void OnDisable()
+    {
+        Debug.Log("MapSystemComponent OnDisable.");
+    }
+
     private void Awake()
     {
-        GameSystem.MapSystem.Init(this);
+        Debug.Log("MapSystemComponent Awake.");
+#if UNITY_EDITOR
+        if (UnityEditor.EditorApplication.isPlaying)
+#endif
+            GameSystem.MapSystem.Init(this);
     }
 }

@@ -778,6 +778,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  previewHeight: 200
   toolbarStyle:
     m_Name: toolbarbutton
     m_Normal:
@@ -1056,18 +1057,14 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   mapAssetUnbakedStateMark: '*'
-  mapGroupAssets:
-  - {fileID: 11400000, guid: 8724e8d0f8fda19468718ac9e246aa37, type: 2}
-  - {fileID: 11400000, guid: aeca57137f7c4994fb06ae7211839bb7, type: 2}
+  mapGroupAssets: []
   prefabDictionary:
     keyList:
     - {fileID: 1057620302555706, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 2}
     - {fileID: 1820764255379150, guid: 9582b09fc454f1b4b8daddf05071e951, type: 2}
-    - {fileID: 1768777403871786, guid: ac99bdb80ac66294f91c9509d555f4fe, type: 2}
-    - {fileID: 1943504709096164, guid: f4248f9877240464889ca9e2e2d154e7, type: 2}
+    - {fileID: 1970440436094408, guid: a9682e9f83459b348aaa808515b5a29e, type: 2}
     valueList:
     - "\u8FD9\u662F\u4E00\u4E9B\u706F\u706F"
     - "\u7269\u54C1\u8BF4\u660E"
-    - "\u7269\u54C1\u8BF4\u660E\u5B9E\u6253\u5B9E\u5927\u82CF\u6253\u6492\u5927\u90FD\u5E02\n\n\n\n\nsdfsdf"
     - "\u7269\u54C1\u8BF4\u660E"
-    count: 4
+    count: 3
