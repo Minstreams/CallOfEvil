@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -13,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groupName: "\u9ED8\u8BA4\u573A\u666F\u7EC4"
   groupPrefab: {fileID: 1295612113305810, guid: d5320c72566cb744b9a725ee872ba157,
-    type: 2}
+    type: 3}
   baked: 0
   information: "\u5730\u56FE\u4ECB\u7ECD"

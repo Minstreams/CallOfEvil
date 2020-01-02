@@ -160,6 +160,7 @@ namespace EditorSystem
                 Debug.LogAssertion("不支持的类型！ type:" + type + " ; from " + fromField.Name + " to " + toField.Name);
                 return;
             }
+            EditorUtility.SetDirty(destination.obj);
             Debug.Log("复制成功！ type:" + type + " ; from " + fromField.Name + " to " + toField.Name);
         }
 
@@ -178,7 +179,7 @@ namespace EditorSystem
             List<MapGroup> groupList = GameSystem.MapSystem.groupList;
             foreach (MapGroup mg in groups)
             {
-                if (PrefabUtility.GetPrefabType(mg) == PrefabType.Prefab) continue;
+                if (PrefabUtility.GetPrefabAssetType(mg) != PrefabAssetType.NotAPrefab) continue;
                 if (mg.index < 0 || mg.index >= groupList.Count || (groupList[mg.index] != null && groupList[mg.index] != mg))
                 {
                     Debug.Log("Delete " + mg.groupName);

@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -24,7 +25,7 @@ MonoBehaviour:
   - heading: 
     picture: {fileID: 2800000, guid: fb2cdda11cac81745b8135696f46cefb, type: 3}
     text: 
-    linkText: "\u968F\u65F6\u6309\u952E\u76D8\u4E0A\u7684F12\u6253\u5F00\u6B64\u5E2E\u52A9\u754C\u9762\u3002"
+    linkText: "\u968F\u65F6\u6309\u952E\u76D8\u4E0A\u7684F1\u6253\u5F00\u6B64\u5E2E\u52A9\u754C\u9762\u3002"
     url: 
     selectedObject: {fileID: 11400000}
   - heading: 

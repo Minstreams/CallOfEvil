@@ -44,6 +44,7 @@ public class ReadmeGUIStyles : ScriptableObject
         {
             style = new GUIStyle();
         }
+        EditorUtility.SetDirty(this);
     }
 
     void Setheader() { SetStyle(ref header); }

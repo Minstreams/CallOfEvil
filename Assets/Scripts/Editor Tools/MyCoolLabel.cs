@@ -16,6 +16,8 @@ public class MyCoolLabel : MonoBehaviour
     public string text = "新标签";
     [Range(0.1f, 2)]
     public float size = 1f;
+    [ContextMenu("ResetSize")]
+    private void ResetSize() { size = 1f; }
 
     [MenuItem("自制工具/给选中的游戏物体添加标签 %L")]
     static void AddToActiveGameObject()

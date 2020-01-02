@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -1057,14 +1058,19 @@ MonoBehaviour:
     m_StretchWidth: 1
     m_StretchHeight: 0
   mapAssetUnbakedStateMark: '*'
-  mapGroupAssets: []
+  mapGroupAssets:
+  - {fileID: 11400000, guid: a18e73a94ae6d2d4dac28ba9c9488b0e, type: 2}
   prefabDictionary:
     keyList:
-    - {fileID: 1057620302555706, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 2}
-    - {fileID: 1820764255379150, guid: 9582b09fc454f1b4b8daddf05071e951, type: 2}
-    - {fileID: 1970440436094408, guid: a9682e9f83459b348aaa808515b5a29e, type: 2}
+    - {fileID: 1057620302555706, guid: 96fe51ca2266f2549bb3b93ac7b9eb5b, type: 3}
+    - {fileID: 1820764255379150, guid: 9582b09fc454f1b4b8daddf05071e951, type: 3}
+    - {fileID: 1970440436094408, guid: a9682e9f83459b348aaa808515b5a29e, type: 3}
+    - {fileID: 1943504709096164, guid: f4248f9877240464889ca9e2e2d154e7, type: 3}
+    - {fileID: 1768777403871786, guid: ac99bdb80ac66294f91c9509d555f4fe, type: 3}
     valueList:
     - "\u8FD9\u662F\u4E00\u4E9B\u706F\u706F"
     - "\u7269\u54C1\u8BF4\u660E"
     - "\u7269\u54C1\u8BF4\u660E"
-    count: 3
+    - "\u706F"
+    - "\u7269\u54C1\u8BF4\u660E"
+    count: 5

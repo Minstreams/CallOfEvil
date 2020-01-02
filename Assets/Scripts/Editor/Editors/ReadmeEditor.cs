@@ -50,7 +50,7 @@ public class ReadmeEditor : Editor
     //    method.Invoke(null, new object[] { Path.Combine(Application.dataPath, "Layout.wlt"), false });
     //}
 
-    [MenuItem("自制工具/Help _F12")]
+    [MenuItem("自制工具/Help _F1")]
     static void SelectReadme()
     {
         var ids = AssetDatabase.FindAssets("Help t:Readme");
